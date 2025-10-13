@@ -1,15 +1,23 @@
 import { Suspense } from "react";
+import Footer from "@/components/ui/footer";
+import Header from "@/components/ui/header";
+import { LayoutPage } from "@/components/ui/layout";
+/*--------------------------------------------------------------------------------------------------------------------*/
 
-export default async function NetworkSpecificLayout(props: {
+export default async function NetworkLayout(props: {
   params: any;
   children: any;
 }) {
   const { children } = props;
-  const params = (await props.params) || {};
   return (
-    <div>
-      <h1 className={"text-xl font-bold"}>{params.network}</h1>
-      <Suspense>{children}</Suspense>
-    </div>
+    <LayoutPage>
+      <Header />
+
+      <main className={"flex flex-col h-full"}>
+        <Suspense>{children}</Suspense>
+      </main>
+
+      <Footer />
+    </LayoutPage>
   );
 }
