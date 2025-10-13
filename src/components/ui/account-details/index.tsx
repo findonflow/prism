@@ -5,7 +5,7 @@ import { Database, DatabaseZap, Wallet } from "lucide-react";
 import { TypeLabel } from "@/components/ui/typography";
 import Odometer from "@/components/flowscan/Odometer";
 import FlowTokens from "@/components/flowscan/FlowTokens";
-import JumpingDots from "@/components/flowscan/JumpingDots";
+import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function BasicAccountDetails(props: { address?: string }) {
@@ -16,7 +16,7 @@ export default function BasicAccountDetails(props: { address?: string }) {
   const showData = !isLoading && Boolean(data);
   return (
     <div className={"grid grid-cols-2 items-start justify-start gap-10"}>
-      {isLoading && <JumpingDots />}
+      {isLoading && <LoadingBlock title={"Loading basic details"} />}
       {showData && (
         <>
           <div className={"grid grid-cols-2 items-start justify-start gap-1"}>

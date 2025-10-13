@@ -1,12 +1,11 @@
-export default async function AccountDetailsPage(props: { params: any }) {
-  const params = await props.params;
-  const address = params.id;
+/*--------------------------------------------------------------------------------------------------------------------*/
+import RelativeLink from "@/components/ui/relative-link";
 
-
-
+/*--------------------------------------------------------------------------------------------------------------------*/
+export default async function AccountDetailsPage() {
   return (
     <div>
-      Show more content here for starting page
+      <RelativeLink to={"keys"}>Show keys</RelativeLink>
     </div>
   );
 }

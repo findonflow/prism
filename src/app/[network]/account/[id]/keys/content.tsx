@@ -7,10 +7,18 @@ import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { AnimatePresence, motion } from "motion/react";
 import { variants } from "@/lib/animate";
 import { TypeLabel } from "@/components/ui/typography";
+import useAccountResolver from "@/hooks/useAccountResolver";
+import { useParams } from "next/navigation";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function AccountKeysContent(props: { address: string }) {
-  const { address } = props;
+export default function AccountKeysContent() {
+  const { id } = useParams();
+
+  const { data: resolved, isPending: isResolving } = useAccountResolver(
+    id as string,
+  );
+  const address = resolved?.owner;
+
   const { data, isLoading } = useAccountDetails(address);
 
   const keys =
@@ -45,9 +53,10 @@ export default function AccountKeysContent(props: { address: string }) {
         <>
           <div className={"flex flex-row justify-between gap-4"}>
             <input
+              className={"border-1 border-gray-300 p-2 px-3 w-full round-md"}
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              placeholder={"Filter keys"}
+              placeholder={"Enter query to filter keys"}
             />
             <label
               className={
@@ -87,7 +96,9 @@ export default function AccountKeysContent(props: { address: string }) {
                   animate={{ opacity: 1, scale: 1 }}
                   key={"no-keys-to-show"}
                 >
-                  <TypeLabel className={"opacity-50"}>No keys to show.</TypeLabel>
+                  <TypeLabel className={"opacity-50"}>
+                    No keys to show.
+                  </TypeLabel>
                 </motion.div>
               )}
             </AnimatePresence>

@@ -7,20 +7,22 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { config } from "@onflow/fcl";
+import { FIND } from "@/lib/address-book";
+import { useParams } from "next/navigation";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function initFCL(network: string) {
+  const key = network as keyof typeof FIND;
+
   config({
     "accessNode.api": `https://rest-${network}.onflow.org`,
+    "0xFIND": FIND[key],
   });
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function QueryProvider(props: {
-  children: React.ReactNode;
-  network: string;
-}) {
-  const { children, network } = props;
+export default function QueryProvider(props: { children: React.ReactNode }) {
+  const { children } = props;
 
   const [queryClient] = useState(
     () =>
@@ -36,11 +38,19 @@ export default function QueryProvider(props: {
       }),
   );
 
-  useEffect(() => {
-    initFCL(network);
-  }, [network]);
-
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
+}
+
+export function FCLProvider() {
+  const { network } = useParams();
+
+  useEffect(() => {
+    if (network) {
+      initFCL(network as string);
+    }
+  }, [network]);
+
+  return null;
 }

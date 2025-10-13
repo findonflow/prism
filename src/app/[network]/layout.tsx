@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
 import { LayoutPage } from "@/components/ui/layout";
-import MainContent from "@/app/[network]/content";
+import QueryProvider, { FCLProvider } from "@/fetch/provider";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface NetworkLayoutProps {
@@ -19,13 +19,15 @@ export default async function NetworkLayout(props: NetworkLayoutProps) {
 
   return (
     <LayoutPage>
+      <FCLProvider />
+
       <Suspense>
         <Header network={network} />
       </Suspense>
 
       <main className={"flex flex-col h-full w-full"}>
         <Suspense>
-          <MainContent>{children}</MainContent>
+          <QueryProvider>{children}</QueryProvider>
         </Suspense>
       </main>
 
