@@ -1,0 +1,60 @@
+.jumping-dots {
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.1em;
+}
+
+.jumping-dots i {
+  width: 0.25em;
+  height: 0.25em;
+  background-color: currentColor;
+  border-radius: 50%;
+  --max-height: 0.3em;
+  animation: jumping 500ms infinite ease-in-out;
+}
+
+.jumping-dots i:nth-child(1) {
+  animation-delay: 0ms;
+  --max-height: 0.3em;
+}
+
+.jumping-dots i:nth-child(2) {
+  animation-delay: 60ms;
+  --max-height: 0.26em;
+}
+
+.jumping-dots i:nth-child(3) {
+  animation-delay: 120ms;
+  --max-height: 0.22em;
+}
+
+.jumping-dots i:nth-child(4) {
+  animation-delay: 180ms;
+  --max-height: 0.18em;
+}
+
+.jumping-dots i:nth-child(5) {
+  animation-delay: 220ms;
+  --max-height: 0.16em;
+}
+
+@keyframes jumping {
+  0%,
+  100% {
+    transform: translateY(var(--max-height)) scale(0.8, 0.8);
+    opacity: 0.5;
+  }
+  25% {
+    transform: translateY(calc(-1 * var(--max-height))) scale(0.92, 1.1);
+  }
+  32% {
+    transform: translateY(calc(-1 * var(--max-height) - 0.01em)) scale(1, 1);
+    opacity: 1;
+  }
+
+  5%,
+  95% {
+    transform: translateY(var(--max-height)) scale(0.82, 0.72);
+  }
+}

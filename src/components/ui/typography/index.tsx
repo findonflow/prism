@@ -70,3 +70,10 @@ export function TypeTextBlock(props: TextProps) {
 
   return <div className={cn("space-y-2", className)}>{children}</div>;
 }
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function TypeLabel(props: TextProps) {
+  const { children, className } = props;
+
+  return <span className={cn("text-sm", className)}>{children}</span>;
+}

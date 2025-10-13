@@ -1,0 +1,10 @@
+number-flow-react::part(fraction) {
+  font-weight: 300;
+  opacity: 0.35;
+  color: currentColor;
+}
+
+number-flow-react.full::part(fraction) {
+  font-weight: inherit;
+  opacity: 1;
+}

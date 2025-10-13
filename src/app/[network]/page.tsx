@@ -1,10 +1,27 @@
-export default async function NetworkPage(props: { params: any }) {
-  const params = (await props.params) || {};
+import { TypeH1, TypeP, TypeTextBlock } from "@/components/ui/typography";
+import BigSearch from "@/components/ui/big-search";
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+interface NetworkPageProps {
+  params: Promise<{ network: string }>;
+}
+/*--------------------------------------------------------------------------------------------------------------------*/
+export default async function NetworkPage(props: NetworkPageProps) {
+  const params = await props.params;
 
   return (
-    <div>
-      <h2>{params.network} Details</h2>
-      <p>Page is aware about it's context as well</p>
+    <div className={"space-y-6"}>
+      <TypeTextBlock>
+        <TypeH1 className={"font-light"}>
+          Explore <span className={"font-bold"}>{params.network}</span> data
+        </TypeH1>
+        <TypeP>
+          Enter account address, transaction hash or{" "}
+          <span className={"font-bold"}>.find</span> name
+        </TypeP>
+      </TypeTextBlock>
+
+      <BigSearch />
     </div>
   );
 }

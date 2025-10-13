@@ -17,10 +17,19 @@ function PrismLogo(props: { link: string }) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function Header() {
+export default function Header(props: { network: string }) {
+  const { network } = props;
   return (
     <div className={"flex flex-row justify-between items-center w-full gap-2"}>
-      <PrismLogo link={"/"} />
+      <div className={"flex flex-row gap-2 items-center justify-start"}>
+        <PrismLogo link={"/"} />
+        <span
+          className={"px-2 py-1 text-sm border-gray-300 border-1 rounded-sm"}
+        >
+          {network}
+        </span>
+      </div>
+
       <ConnectWallet />
     </div>
   );
