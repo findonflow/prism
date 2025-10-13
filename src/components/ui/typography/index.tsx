@@ -27,10 +27,30 @@ export function TypeH1(props: TextProps) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
+export function TypeH2(props: TextProps) {
+  const { children, className } = props;
+
+  return (
+    <h1
+      className={cn(
+        "text-2xl text-center font-bold",
+        "tracking-tight text-balance", // tight interline space and balanced wrap
+        "scroll-m-12", // add space when navigating to this header
+        className,
+      )}
+    >
+      {children}
+    </h1>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 export function TypeP(props: TextProps) {
   const { children, className } = props;
 
-  return <p className={cn("text-md leading-6 opacity-80", className)}>{children}</p>;
+  return (
+    <p className={cn("text-md leading-6 opacity-80", className)}>{children}</p>
+  );
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
