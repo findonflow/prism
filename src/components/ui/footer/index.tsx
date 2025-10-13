@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="flex flex-row flex-wrap items-center justify-between gap-1 w-full">
       <TypeFineprint>
-        Created by heart and minds of people at{" "}
+        Created by hearts and minds of people at{" "}
         <a href={"https://www.findlabs.io/"} className={"underline"}>
           Find Labs
         </a>
