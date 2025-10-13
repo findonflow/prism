@@ -1,6 +1,7 @@
 {
-  "name": "flow-view",
+  "name": "prism",
   "version": "0.1.0",
+  "author":  "Find Labs",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
