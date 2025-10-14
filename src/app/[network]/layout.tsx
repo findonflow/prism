@@ -25,7 +25,7 @@ export default async function NetworkLayout(props: NetworkLayoutProps) {
         <Header network={network} />
       </Suspense>
 
-      <main className={"flex flex-col h-full w-full"}>
+      <main className={"flex flex-col h-full w-full items-start justify-start flex-1 py-6"}>
         <Suspense>
           <QueryProvider>{children}</QueryProvider>
         </Suspense>

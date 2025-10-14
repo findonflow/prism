@@ -11,7 +11,7 @@ export default function AccountDetailsLayout(props: AccountProps) {
   const { children } = props;
 
   return (
-    <div className={"flex w-full flex-col gap-4"}>
+    <div className={"flex w-full flex-col gap-4 items-start justify-start"}>
       <Suspense>
         <AccountHeader/>
       </Suspense>

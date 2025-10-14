@@ -25,6 +25,7 @@ export default function BigSearch() {
       type="text"
       value={value}
       className={cn(
+        "w-full",
         "p-4 pr-12 text-main border-2 border-gray-300 w-full rounded-md font-bold text-lg",
         // "focus:border-green-600 focus:text-green-600",
         "truncate",
@@ -37,7 +38,7 @@ export default function BigSearch() {
       }}
       placeholder={"Type your search query here"}
       autoFocus={true}
-      autoComplete="off"
+      autoComplete="on"
       autoCapitalize="off"
       autoCorrect="off"
       spellCheck="false"

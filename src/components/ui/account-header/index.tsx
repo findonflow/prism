@@ -7,6 +7,7 @@ import BasicAccountDetails from "@/components/ui/account-details";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useParams } from "next/navigation";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
+import { cn } from "@/lib/utils";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountHeader() {
@@ -25,7 +26,7 @@ export default function AccountHeader() {
 
   return (
     <div
-      className={"flex flex-col w-full space-y-6 justify-between items-stretch"}
+      className={"flex flex-col w-full space-y-6 justify-between items-start py-4"}
     >
       <div className={"w-32 aspect-square"}>
         <QRCode
@@ -35,8 +36,8 @@ export default function AccountHeader() {
           style={{ height: "auto", maxWidth: "100%", width: "100%" }}
         />
       </div>
-      <div className={"flex flex-col items-start justify-start gap-4"}>
-        <div className={"flex flex-col items-start justify-start"}>
+      <div className={cn("flex flex-col items-start justify-start gap-4 w-full", "md:w-auto")}>
+        <div className={"flex flex-col items-start justify-start w-full"}>
           {isResolving && <LoadingBlock title={"Resolving account owner"} />}
           {address && (
             <>

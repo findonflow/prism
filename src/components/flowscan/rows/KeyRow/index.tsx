@@ -18,24 +18,32 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
   const { hashAlgorithm, signatureAlgorithm } = keyInfo;
   const { weight } = keyInfo;
 
-  const keyStatus = revoked ? "Inactive" : "Active";
-  const inactive = revoked && "text-colors-gray-medium line-through opacity-35";
+  const keyStatus = revoked ? "Revoked" : "Active";
+  const inactive = revoked && "opacity-50";
 
   const keyWeight = formatNumberToAccounting(weight || 0);
+  const haveNonce = Boolean(keyInfo.sequenceNumber);
 
   return (
-    <div className="flex w-full flex-shrink-0 flex-row items-center justify-start gap-4 overflow-hidden bg-gray-100 p-4 hover:bg-gray-200">
-      <div className="flex h-6 w-6 flex-shrink-0 flex-row items-center justify-center rounded-full border-1 border-current/50 text-xs font-bold text-gray-500">
-        <span className={"translate-y-[1px]"}>{index}</span>
-      </div>
-
+    <div
+      className={cn(
+        "flex w-full flex-row flex-wrap items-center justify-start gap-4 overflow-hidden bg-gray-100 p-4 hover:bg-gray-200",
+        "md:flex-nowrap",
+        revoked && "bg-gray-50 hover:bg-gray-50"
+      )}
+    >
       <div
         className={cn(
-          "flex flex-row items-center justify-start gap-1 overflow-hidden text-copy text-colors-gray-medium w-full",
-          "@md/page:flex-row @md/page:gap-2",
+          "flex flex-row items-center justify-start flex-wrap overflow-hidden text-copy text-colors-gray-medium w-full gap-2",
+          "@md/page:flex-row md:gap-2",
           inactive,
         )}
       >
+        <div className="flex h-6 w-6 flex-shrink-0 flex-row items-center justify-center rounded-full border-1 border-current/50 text-xs font-bold text-gray-500">
+          <span className={"translate-y-[1px]"} title={`Key index: ${index}`}>
+            {index}
+          </span>
+        </div>
         <div
           className={cn(
             "flex items-center justify-center px-1.5 py-0.5 text-sm round-md",
@@ -46,21 +54,37 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
         >
           {keyStatus}
         </div>
-        <SimpleTag
-          className={"text-gray-500 text-sm"}
-          label={signatureAlgorithm}
-        />
-        <SimpleTag className={"text-gray-500 text-sm"} label={hashAlgorithm} />
-        <div className="flex flex-row items-center gap-1 overflow-hidden">
-          <p className={cn("truncate", inactive)}>
-            {key?.slice(0, 10) + "..." + key?.slice(-10)}
-          </p>
+
+        <div className={"flex flex-row gap-2"}>
+          <SimpleTag
+            className={"text-gray-500 text-sm"}
+            label={signatureAlgorithm}
+          />
+          <SimpleTag
+            className={"text-gray-500 text-sm"}
+            label={hashAlgorithm}
+          />
+        </div>
+
+        <div
+          className={cn(
+            "flex flex-row items-center gap-1 overflow-hidden",
+            inactive,
+          )}
+        >
           <CopyText text={key || ""} />
+          <p className={cn("truncate max-w-3/4", revoked && "line-through")}>{key}</p>
         </div>
       </div>
 
-      <div className="flex flex-row items-center justify-end gap-4 flex-shrink-0">
-        {keyInfo.sequenceNumber && (
+      <div
+        className={cn(
+          "flex flex-row items-center justify-between gap-4 flex-shrink-0 w-full",
+          "md:justify-end md:w-auto",
+          inactive,
+        )}
+      >
+        {haveNonce && (
           <div className={"flex flex-row items-center gap-2 text-sm"}>
             <TypeLabel>Sequence #:</TypeLabel>
             <SimpleTag

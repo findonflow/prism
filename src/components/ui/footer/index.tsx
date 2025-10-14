@@ -4,7 +4,7 @@ import { GithubOctaCat } from "@/components/ui/icons";
 
 export default function Footer() {
   return (
-    <footer className="flex flex-row flex-wrap items-center justify-between gap-1 w-full">
+    <footer className="flex flex-row flex-wrap items-center justify-between w-full">
       <TypeFineprint>
         Created by hearts and minds of people at{" "}
         <a href={"https://www.findlabs.io/"} className={"underline"}>

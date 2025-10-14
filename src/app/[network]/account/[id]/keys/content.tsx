@@ -48,6 +48,7 @@ export default function AccountKeysContent() {
 
   return (
     <div className={"flex w-full flex-col gap-4"}>
+      <TypeLabel>Account Keys:</TypeLabel>
       {isLoading && <LoadingBlock title={"Loading account keys "} />}
       {dataReady && (
         <>

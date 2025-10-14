@@ -10,13 +10,13 @@ export default async function NetworkPage(props: NetworkPageProps) {
   const params = await props.params;
 
   return (
-    <div className={"space-y-6"}>
+    <div className={"space-y-6 mx-auto w-full max-w-[30rem]"}>
       <TypeTextBlock>
         <TypeH1 className={"font-light"}>
           Explore <span className={"font-bold"}>{params.network}</span> data
         </TypeH1>
-        <TypeP>
-          Enter account address, transaction hash or{" "}
+        <TypeP className={"text-center text-sm"}>
+          Search address, transaction hash or{" "}
           <span className={"font-bold"}>.find</span> name
         </TypeP>
       </TypeTextBlock>
