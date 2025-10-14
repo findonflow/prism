@@ -1,5 +1,6 @@
 import { ReactNode, Suspense } from "react";
 import AccountHeader from "@/components/ui/account-header";
+import AccountNavigation from "@/app/[network]/account/[id]/navigation";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface AccountProps {
@@ -14,6 +15,7 @@ export default function AccountDetailsLayout(props: AccountProps) {
     <div className={"flex w-full flex-col gap-4 items-start justify-start"}>
       <Suspense>
         <AccountHeader/>
+        <AccountNavigation/>
       </Suspense>
 
       {children}

@@ -1,0 +1,11 @@
+.fat-row-column:has(> .fat-row-expanded) .fat-row {
+  transition: opacity ease-in-out 0.1s;
+}
+
+.fat-row-column:has(> .fat-row-expanded) > .fat-row:hover {
+  opacity: 1 !important;
+}
+
+.fat-row-column:has(> .fat-row-expanded) > .fat-row:not(.fat-row-expanded) {
+  opacity: 0.5;
+}

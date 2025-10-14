@@ -23,3 +23,17 @@ interface FlowKeyFormatted {
   signatureAlgorithm?: string;
   weight?: number;
 }
+
+interface FlowPublicPath {
+  address: string;
+  path: string;
+  targetPath: string;
+}
+
+interface FlowPublicPathInfo extends FlowPublicPath {
+  balance?: string;
+  isBalanceCap?: boolean;
+  isCollectionCap?: boolean;
+  tokenIDs: string[];
+  type: any;
+}

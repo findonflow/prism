@@ -1,5 +1,15 @@
-import { cn } from "@/lib/utils";
+/*--------------------------------------------------------------------------------------------------------------------*/
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export const buttonClasses = cn(
+  "rounded-md px-3 py-2 border-1 cursor-pointer",
+  "bg-gray-50 border-gray-400",
+  "hover:bg-gray-300",
+  "text-sm font-normal",
+  "transition-colors duration-150",
+);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface ButtonProps {
@@ -8,6 +18,7 @@ interface ButtonProps {
   title?: string;
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 export function Button(props: ButtonProps) {
   const { onClick, title } = props;
   const { children } = props;
@@ -17,13 +28,7 @@ export function Button(props: ButtonProps) {
       title={title || ""}
       onClick={onClick}
       type={"button"}
-      className={cn(
-        "rounded-md px-3 py-2 border-1 cursor-pointer",
-        "bg-gray-50 border-gray-400",
-        "hover:bg-gray-200",
-        "text-sm font-normal",
-        "transition-colors duration-150",
-      )}
+      className={buttonClasses}
     >
       {children}
     </button>

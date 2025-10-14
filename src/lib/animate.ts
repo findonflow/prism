@@ -11,3 +11,13 @@ export const variants = {
     },
   },
 };
+
+
+export const rowBoundaries = {
+  initial: {
+    margin: 0,
+  },
+  selected: {
+    margin: "1.25rem 0",
+  },
+};
