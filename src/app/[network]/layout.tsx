@@ -19,19 +19,23 @@ export default async function NetworkLayout(props: NetworkLayoutProps) {
 
   return (
     <LayoutPage>
-      <FCLProvider />
-
-      <Suspense>
-        <Header network={network} />
-      </Suspense>
-
-      <main className={"flex flex-col h-full w-full items-start justify-start flex-1 py-6"}>
+      <FCLProvider>
         <Suspense>
-          <QueryProvider>{children}</QueryProvider>
+          <Header network={network} />
         </Suspense>
-      </main>
 
-      <Footer />
+        <main
+          className={
+            "flex flex-col h-full w-full items-start justify-start flex-1 py-6"
+          }
+        >
+          <Suspense>
+            <QueryProvider>{children}</QueryProvider>
+          </Suspense>
+        </main>
+
+        <Footer />
+      </FCLProvider>
     </LayoutPage>
   );
 }

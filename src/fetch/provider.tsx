@@ -1,14 +1,21 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { useEffect, useState } from "react";
+import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
+import { FIND, FUNGIBLE_TOKEN, NON_FUNGIBLE_TOKEN } from "@/lib/address-book";
+import { config, currentUser } from "@onflow/fcl";
 import {
   QueryCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { config } from "@onflow/fcl";
-import { FIND, FUNGIBLE_TOKEN, NON_FUNGIBLE_TOKEN } from "@/lib/address-book";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type NetworkKey = "mainnet" | "testnet";
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -38,7 +45,7 @@ export default function QueryProvider(props: { children: React.ReactNode }) {
             }
           },
         }),
-      }),
+      })
   );
 
   return (
@@ -46,8 +53,40 @@ export default function QueryProvider(props: { children: React.ReactNode }) {
   );
 }
 
-export function FCLProvider() {
+const LoginContext = createContext<{
+  user: any;
+  isLoadingUser: boolean;
+  loginUser: () => void;
+  logoutUser: () => void;
+} | null>(null);
+
+export function FCLProvider(props: { children: ReactNode }) {
   const { network } = useParams();
+  const router = useRouter();
+  const navigate = (path: string) => {
+    router.push(path);
+  };
+
+  const { children } = props;
+  const [user, setUser] = useState({});
+  const [isLoadingUser, setIsLoadingUser] = useState(false);
+
+  function loginUser() {
+    setIsLoadingUser(true);
+    loginFlow(network as NetworkKey, (res) => {
+      setUser({
+        address: res.addr,
+      });
+      setIsLoadingUser(false);
+    });
+  }
+
+  function logoutUser() {
+    logoutFlow();
+    setUser({});
+    setIsLoadingUser(false);
+    navigate("/");
+  }
 
   useEffect(() => {
     if (network) {
@@ -55,5 +94,34 @@ export function FCLProvider() {
     }
   }, [network]);
 
-  return null;
+  useEffect(() => {
+    currentUser.subscribe((user: any) => {
+      const walletNetwork = user.services.find((el: any) => el.network).network;
+      if (walletNetwork !== network) {
+        logoutFlow();
+        return;
+      }
+      if (user.addr) {
+        setUser({
+          address: user.addr,
+          loggedIn: user.loggedIn,
+        });
+      }
+    });
+  }, []);
+
+  return (
+    <LoginContext.Provider
+      value={{ user, isLoadingUser, loginUser, logoutUser }}
+    >
+      {children}
+    </LoginContext.Provider>
+  );
 }
+
+export const useLoginContext = () => {
+  const context = useContext(LoginContext);
+  if (!context)
+    throw new Error("useLoginContext must be used within a FCLProvider");
+  return context;
+};

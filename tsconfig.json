@@ -19,7 +19,28 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+       "@ui/*": ["./src/components/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@design/*": ["./src/design/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@state/*": ["./src/state/*"],
+      "@consts/*": ["./src/consts/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@generated/*": ["./src/generated/*"],
+
+      "@atoms/*": ["./src/components/atoms/*"],
+      "@molecules/*": ["./src/components/molecules/*"],
+      "@organisms/*": ["./src/components/organisms/*"],
+      "@views/*": ["./src/views/*"],
+
+      "@containers/*": ["./src/containers/*"],
+      "@gen/*": ["./gen/*"],
+
+      "~/sb/consts": ["./.storybook/consts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
