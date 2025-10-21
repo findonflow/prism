@@ -71,7 +71,7 @@ export default function AccountPublicStorageContent() {
         />
       </div>
 
-      {isLoading && <LoadingBlock title={"Loading public storage items... "} />}
+      {isLoading && <LoadingBlock title={`Loading ${address} public items... `} />}
       {haveItemsBuHidden && (
         <p className={"text-md opacity-50"}>
           There are {data?.length} items, but all of them are hidden. Try to

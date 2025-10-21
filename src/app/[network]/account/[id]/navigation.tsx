@@ -47,6 +47,9 @@ export default function AccountNavigation() {
       <NavigationLink to={"public-storage"} baseUrl={baseUrl}>
         Public Storage
       </NavigationLink>
+      <NavigationLink to={"stored-items"} baseUrl={baseUrl}>
+        Stored Items
+      </NavigationLink>
       <NavigationLink to={"contracts"} baseUrl={baseUrl}>
         Contracts
       </NavigationLink>

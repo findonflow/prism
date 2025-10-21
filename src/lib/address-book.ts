@@ -12,3 +12,8 @@ export const NON_FUNGIBLE_TOKEN = {
   mainnet: "0x1d7e57aa55817448",
   testnet: "0x631e88ae7f1d7c20",
 };
+
+export const METADATA_VIEWS = {
+  mainnet: "0x1d7e57aa55817448",
+  testnet: "0x631e88ae7f1d7c20",
+}

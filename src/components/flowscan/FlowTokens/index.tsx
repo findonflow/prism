@@ -36,7 +36,8 @@ export default function FlowTokens(props: FlowTokensProps) {
     isFormatted ? value : formatToFlowValue(value as number, digits)
   ) as string;
   const decimal = formattedValue.slice(-digits);
-  const integer = formattedValue.slice(0, -digits - 1).replaceAll(" ", "");
+  // const integer = formattedValue.slice(0, -digits - 1).replaceAll(" ", "");
+
 
   return (
     <div
@@ -45,15 +46,7 @@ export default function FlowTokens(props: FlowTokensProps) {
         className,
       )}
     >
-      <div className={"order-2 inline-flex justify-start"}>
-        <span className="">
-          {animated ? <Odometer value={integer} /> : integer}
-        </span>
-        <span>.</span>
-        <span className="font-normal opacity-75">
-          {animated ? <Odometer value={decimal} /> : decimal}
-        </span>
-      </div>
+      <Odometer value={value} minFraction={digits} maxFraction={digits}/>
       <FlowIcon
         className={cn(
           iconClassName,
