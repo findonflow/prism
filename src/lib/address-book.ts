@@ -12,3 +12,8 @@ export const NON_FUNGIBLE_TOKEN = {
   mainnet: "0x1d7e57aa55817448",
   testnet: "0x631e88ae7f1d7c20",
 };
+
+export const FLOW_MAP = {
+  mainnet: "0x483f0fe77f0d59fb",
+  testnet: "0x72ed11a540a52efc",
+};

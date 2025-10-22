@@ -1,7 +1,12 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
-import { FIND, FUNGIBLE_TOKEN, NON_FUNGIBLE_TOKEN } from "@/lib/address-book";
+import {
+  FIND,
+  FLOW_MAP,
+  FUNGIBLE_TOKEN,
+  NON_FUNGIBLE_TOKEN,
+} from "@/lib/address-book";
 import { config, currentUser } from "@onflow/fcl";
 import {
   QueryCache,
@@ -27,6 +32,7 @@ function initFCL(network: string) {
     "0xFIND": FIND[key],
     "0xNonFungibleToken": NON_FUNGIBLE_TOKEN[key],
     "0xFungibleToken": FUNGIBLE_TOKEN[key],
+    "0xFlowMap": FLOW_MAP[key],
   });
 }
 
