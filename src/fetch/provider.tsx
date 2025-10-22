@@ -10,6 +10,7 @@ import {
 import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
 import {
   FIND,
+  FLOW_MAP,
   FUNGIBLE_TOKEN,
   METADATA_VIEWS,
   NON_FUNGIBLE_TOKEN,
@@ -33,6 +34,7 @@ function initFCL(network: string) {
     "0xNonFungibleToken": NON_FUNGIBLE_TOKEN[key],
     "0xFungibleToken": FUNGIBLE_TOKEN[key],
     "0xMetadataViews": METADATA_VIEWS[key],
+    "0xFlowMap": FLOW_MAP[key],
   });
 }
 
