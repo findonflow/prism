@@ -11,6 +11,5 @@ export default function usePublicStorageList(
     },
     enabled: Boolean(address),
     refetchInterval: 5000,
-    gcTime: 5000,
   });
 }

@@ -1,17 +1,18 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useQuery } from "@tanstack/react-query";
-import { getAccountDetails } from "@/fetch/get-account-details";
+import { getStoredResource } from "@/fetch/get-stored-resource";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export function useAccountDetails(address?: string | null) {
+export default function useStoredResource(
+  address: string | undefined | null,
+  path: string,
+) {
   return useQuery({
-    queryKey: [`prism-account-details-${address}`],
+    queryKey: [`prism-stored-resource-${address}-${path}`],
     queryFn: () => {
-      if (!address) {
-        return null;
-      }
-      return getAccountDetails(address);
+      return getStoredResource(address || "", path);
     },
     enabled: Boolean(address),
+    refetchInterval: false,
   });
 }

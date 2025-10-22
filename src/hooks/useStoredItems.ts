@@ -1,17 +1,15 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useQuery } from "@tanstack/react-query";
-import { getAccountDetails } from "@/fetch/get-account-details";
+import { collectStoredItems } from "@/fetch/get-stored-items";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export function useAccountDetails(address?: string | null) {
+export default function useStoredItems(address: string | undefined | null) {
   return useQuery({
-    queryKey: [`prism-account-details-${address}`],
+    queryKey: [`prism-stored-items-${address}`],
     queryFn: () => {
-      if (!address) {
-        return null;
-      }
-      return getAccountDetails(address);
+      return collectStoredItems(address || "");
     },
     enabled: Boolean(address),
+    refetchInterval: false,
   });
 }

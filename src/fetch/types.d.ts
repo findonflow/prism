@@ -37,3 +37,39 @@ interface FlowPublicPathInfo extends FlowPublicPath {
   tokenIDs: string[];
   type: any;
 }
+
+interface FlowPathInfo{
+  domain: string;
+  identifier: string;
+}
+
+interface FlowStorageInfo {
+  address: string;
+  balance?: string;
+  collectionData?: {
+    publicPath: FlowPathInfo;
+    storagePath: FlowPathInfo;
+  }
+  display?: {
+    name?: string;
+    squareImage: {
+      file: {
+        url?: string;
+        cid?: string;
+        path?: string;
+      },
+      mediaType?: string;
+    }
+  },
+  isNFTCollection: boolean;
+  isResource: boolean;
+  isVault: boolean;
+  path: string;
+  tokenIDs?: Array<string>;
+  type: {
+    initializers: Array<any>,
+    kind: string;
+    type: string;
+    typeID: string;
+  }
+}

@@ -9,7 +9,5 @@ export function useBasicDetails(address: string | undefined | null) {
       return getBasicAccountDetails(address || "");
     },
     enabled: Boolean(address),
-    refetchInterval: 5000,
-    gcTime: 5000,
   });
 }

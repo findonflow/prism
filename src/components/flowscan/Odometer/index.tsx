@@ -57,6 +57,7 @@ export default function Odometer(props: OdometerProps) {
     <NumberFlow
       value={fixedValue as number}
       format={{
+        useGrouping: "false",
         notation: "standard",
         minimumFractionDigits: minFraction,
         maximumFractionDigits: maxFraction,

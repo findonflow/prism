@@ -1,0 +1,11 @@
+@import 'react18-json-view/src/style.css';
+
+.json-view {
+  color: #4d4d4d;
+  --json-property: #009033;
+  --json-index: #676dff;
+  --json-number: #676dff;
+  --json-string: #b2762e;
+  --json-boolean: #dc155e;
+  --json-null: #dc155e;
+}

@@ -37,7 +37,7 @@ export default function AccountNavigation() {
   const baseUrl = `/${network}/account/${id}`;
 
   return (
-    <div className={"flex flex-row gap-2 items-center"}>
+    <div className={"flex flex-row gap-2 flex-wrap items-center"}>
       <NavigationLink to={""} baseUrl={baseUrl}>
         Linked Accounts
       </NavigationLink>
@@ -46,6 +46,9 @@ export default function AccountNavigation() {
       </NavigationLink>
       <NavigationLink to={"public-storage"} baseUrl={baseUrl}>
         Public Storage
+      </NavigationLink>
+      <NavigationLink to={"stored-items"} baseUrl={baseUrl}>
+        Stored Items
       </NavigationLink>
       <NavigationLink to={"contracts"} baseUrl={baseUrl}>
         Contracts
