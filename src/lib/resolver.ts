@@ -1,6 +1,8 @@
+/*--------------------------------------------------------------------------------------------------------------------*/
 import { isAddress, isFindName, withPrefix } from "@/lib/validate";
 import { fetchFindAddress } from "@/fetch/get-find-address";
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 export async function resolveAccountAddress(id: string) {
   if (isAddress(id)) {
     const owner = withPrefix(id);
