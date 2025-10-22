@@ -1,19 +1,22 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import useAccountResolver from "@/hooks/useAccountResolver";
-import { useParams } from "next/navigation";
-import { TypeLabel } from "@/components/ui/typography";
-import usePublicStorageList from "@/hooks/usePublicStorageList";
-import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { useState } from "react";
+import { useParams } from "next/navigation";
+import { BadgeJapaneseYen, Blend, Bolt, Package, Plug } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+
+import { TypeLabel } from "@/components/ui/typography";
+import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import CopyText from "@/components/flowscan/CopyText";
 import SimpleTag from "@/components/flowscan/SimpleTag";
-import { BadgeJapaneseYen, Blend, Bolt, Package, Plug } from "lucide-react";
+import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
+
+import useAccountResolver from "@/hooks/useAccountResolver";
+import usePublicStorageList from "@/hooks/usePublicStorageList";
+
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
-import { AnimatePresence, motion } from "motion/react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountPublicStorageContent() {
@@ -29,6 +32,7 @@ export default function AccountPublicStorageContent() {
   const [refKind, setRefKind] = useState("All");
 
   const [filter, setFilter] = useState("");
+
   const filteredList =
     data?.filter((pp: FlowPublicPathInfo) => {
       let typeFilter = true;
@@ -71,7 +75,9 @@ export default function AccountPublicStorageContent() {
         />
       </div>
 
-      {isLoading && <LoadingBlock title={`Loading ${address} public items... `} />}
+      {isLoading && (
+        <LoadingBlock title={`Loading ${address} public items... `} />
+      )}
       {haveItemsBuHidden && (
         <p className={"text-md opacity-50"}>
           There are {data?.length} items, but all of them are hidden. Try to
@@ -87,109 +93,12 @@ export default function AccountPublicStorageContent() {
         >
           <AnimatePresence mode="popLayout">
             {filteredList?.map((capability) => {
-              const cap = capability?.type?.type;
-              // const capabilityKind = cap?.kind;
-              const reference = cap?.type;
-              const referenceKind = reference?.kind;
-              const title = `Reference Kind: ${referenceKind}`;
-
               return (
-                <FatRow
+                <PublicCapability
+                  address={address}
+                  capability={capability}
                   key={capability.path}
-                  id={capability.path}
-                  details={
-                    <PublicCapabilityDetails
-                      capability={capability}
-                      address={address || ""}
-                      key={capability.path}
-                    />
-                  }
-                  className={[]}
-                >
-                  <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
-                    <div
-                      className={
-                        "flex flex-row items-center justify-start gap-2"
-                      }
-                    >
-                      <SimpleTag
-                        label={"public"}
-                        category={<Plug className={"h-4 w-4"} />}
-                        className={"text-gray-800"}
-                      />
-
-                      {referenceKind === "Intersection" && (
-                        <SimpleTag
-                          label={<Blend className={"h-4 w-4"} />}
-                          title={title}
-                        />
-                      )}
-
-                      {referenceKind === "Resource" && (
-                        <SimpleTag
-                          label={<Bolt className={"h-4 w-4"} />}
-                          title={title}
-                          className={"text-green-600"}
-                        />
-                      )}
-
-                      {capability.isCollectionCap && (
-                        <SimpleTag
-                          label={"Collection"}
-                          category={<Package className={"h-4 w-4"} />}
-                          className={"text-blue-500"}
-                        />
-                      )}
-
-                      {capability.isBalanceCap && (
-                        <SimpleTag
-                          label={"Balance"}
-                          category={<BadgeJapaneseYen className={"h-4 w-4"} />}
-                          className={"text-green-600"}
-                        />
-                      )}
-                      <p className={"text-sm truncate font-bold"}>
-                        {capability.path}
-                      </p>
-                    </div>
-
-                    {capability.isBalanceCap && (
-                      <div
-                        className={cn(
-                          "flex flex-row items-center justify-end gap-1",
-                          Number(capability?.balance) === 0
-                            ? "text-grey-200/10"
-                            : "text-green-600",
-                        )}
-                      >
-                        <BadgeJapaneseYen className={"h-4 w-4"} />
-                        <b className={"text-md"}>
-                          {formatNumberToAccounting(
-                            Number(capability?.balance),
-                            4,
-                            2,
-                          )}
-                        </b>
-                      </div>
-                    )}
-
-                    {capability.isCollectionCap && (
-                      <div
-                        className={cn(
-                          "flex flex-row items-center justify-end gap-1",
-                          capability?.tokenIDs?.length === 0
-                            ? "text-grey-200/10"
-                            : "text-blue-500",
-                        )}
-                      >
-                        <Package className={"h-4 w-4"} />
-                        <b className={"text-copy"}>
-                          {capability?.tokenIDs?.length}
-                        </b>
-                      </div>
-                    )}
-                  </div>
-                </FatRow>
+                />
               );
             })}
           </AnimatePresence>
@@ -199,6 +108,105 @@ export default function AccountPublicStorageContent() {
   );
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
+function PublicCapability(props: {
+  capability: FlowPublicPathInfo;
+  address?: string | null;
+}) {
+  const { capability, address } = props;
+
+  const cap = capability?.type?.type;
+  // const capabilityKind = cap?.kind;
+  const reference = cap?.type;
+  const referenceKind = reference?.kind;
+  const title = `Reference Kind: ${referenceKind}`;
+
+  return (
+    <FatRow
+      key={capability.path}
+      id={capability.path}
+      details={
+        <PublicCapabilityDetails
+          capability={capability}
+          address={address || ""}
+          key={capability.path}
+        />
+      }
+      className={[]}
+    >
+      <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
+        <div className={"flex flex-row items-center justify-start gap-2 flex-wrap truncate"}>
+          <SimpleTag
+            label={"public"}
+            category={<Plug className={"h-4 w-4"} />}
+            className={"text-gray-800"}
+          />
+
+          {referenceKind === "Intersection" && (
+            <SimpleTag label={<Blend className={"h-4 w-4"} />} title={title} />
+          )}
+
+          {referenceKind === "Resource" && (
+            <SimpleTag
+              label={<Bolt className={"h-4 w-4"} />}
+              title={title}
+              className={"text-green-600"}
+            />
+          )}
+
+          {capability.isCollectionCap && (
+            <SimpleTag
+              label={"Collection"}
+              category={<Package className={"h-4 w-4"} />}
+              className={"text-blue-500"}
+            />
+          )}
+
+          {capability.isBalanceCap && (
+            <SimpleTag
+              label={"Balance"}
+              category={<BadgeJapaneseYen className={"h-4 w-4"} />}
+              className={"text-green-600"}
+            />
+          )}
+          <p className={"text-sm truncate font-bold"}>{capability.path}</p>
+        </div>
+
+        {capability.isBalanceCap && (
+          <div
+            className={cn(
+              "flex flex-row items-center justify-end gap-1",
+              Number(capability?.balance) === 0
+                ? "text-grey-200/10"
+                : "text-green-600",
+            )}
+          >
+            <BadgeJapaneseYen className={"h-4 w-4"} />
+            <b className={"text-md"}>
+              {formatNumberToAccounting(Number(capability?.balance), 4, 2)}
+            </b>
+          </div>
+        )}
+
+        {capability.isCollectionCap && (
+          <div
+            className={cn(
+              "flex flex-row items-center justify-end gap-1",
+              capability?.tokenIDs?.length === 0
+                ? "text-grey-200/10"
+                : "text-blue-500",
+            )}
+          >
+            <Package className={"h-4 w-4"} />
+            <b className={"text-copy"}>{capability?.tokenIDs?.length}</b>
+          </div>
+        )}
+      </div>
+    </FatRow>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 function PublicCapabilityDetails(props: {
   address: string;
   capability: FlowPublicPathInfo;
