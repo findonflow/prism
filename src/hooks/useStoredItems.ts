@@ -10,7 +10,6 @@ export default function useStoredItems(address: string | undefined | null) {
       return collectStoredItems(address || "");
     },
     enabled: Boolean(address),
-    refetchInterval: 5000,
-    gcTime: 5000,
+    refetchInterval: false,
   });
 }
