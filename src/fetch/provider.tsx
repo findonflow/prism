@@ -1,14 +1,5 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
-import { FIND, FUNGIBLE_TOKEN, NON_FUNGIBLE_TOKEN } from "@/lib/address-book";
-import { config, currentUser } from "@onflow/fcl";
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import { useParams, useRouter } from "next/navigation";
 import {
   createContext,
   ReactNode,
@@ -16,6 +7,20 @@ import {
   useEffect,
   useState,
 } from "react";
+import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
+import {
+  FIND,
+  FUNGIBLE_TOKEN,
+  METADATA_VIEWS,
+  NON_FUNGIBLE_TOKEN,
+} from "@/lib/address-book";
+import { config, currentUser } from "@onflow/fcl";
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
 
 type NetworkKey = "mainnet" | "testnet";
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -27,6 +32,7 @@ function initFCL(network: string) {
     "0xFIND": FIND[key],
     "0xNonFungibleToken": NON_FUNGIBLE_TOKEN[key],
     "0xFungibleToken": FUNGIBLE_TOKEN[key],
+    "0xMetadataViews": METADATA_VIEWS[key],
   });
 }
 
@@ -37,6 +43,12 @@ export default function QueryProvider(props: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            refetchInterval: false,
+          },
+        },
         queryCache: new QueryCache({
           onError: (error: any) => {
             if (error?.response?.status === 401) {
@@ -45,7 +57,7 @@ export default function QueryProvider(props: { children: React.ReactNode }) {
             }
           },
         }),
-      })
+      }),
   );
 
   return (
