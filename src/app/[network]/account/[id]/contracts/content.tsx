@@ -14,7 +14,7 @@ import SimpleTag from "@/components/flowscan/SimpleTag";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountContractsContent() {
-  const { id, network } = useParams();
+  const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
     id as string,
