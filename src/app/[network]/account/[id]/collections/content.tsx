@@ -2,18 +2,14 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Package } from "lucide-react";
 
-import FatRow from "@/components/flowscan/FatRow";
+import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import ImageClient from "@/components/flowscan/ImageClient";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
 import useAccountResolver from "@/hooks/useAccountResolver";
-import { cn } from "@/lib/utils";
-import {
-  NFTCollection,
-  usePrismCollectionItems,
-  usePrismCollectionList,
-} from "@interfaces/fcl";
+import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
+import { useCollectionItems } from "@/hooks/useCollectionItems";
+import { NumberOfItems } from "@/components/ui/tags";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function extractCollectionName(collection: NFTCollection): string {
@@ -30,7 +26,7 @@ export default function AccountCollectionsContent() {
   );
   const address = resolved?.owner;
 
-  const { data, isPending } = usePrismCollectionList(address);
+  const { data, isPending } = useAccountCollectionList(address);
 
   const showList = !isPending && Boolean(data);
   const filtered =
@@ -52,7 +48,7 @@ export default function AccountCollectionsContent() {
     <div className={"flex w-full flex-col"}>
       {isPending && <JumpingDots />}
       {showList && (
-        <div className={"fat-row-column w-full"}>
+        <div className={"fat-row-column w-full flex flex-col gap-px"}>
           {sorted?.map((collection) => (
             <SingleCollection
               collection={collection}
@@ -67,10 +63,12 @@ export default function AccountCollectionsContent() {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-function SingleCollection(props: {
+interface SingleCollectionProps {
   address: string;
   collection: NFTCollection;
-}) {
+}
+/*--------------------------------------------------------------------------------------------------------------------*/
+function SingleCollection(props: SingleCollectionProps) {
   const { address, collection } = props;
   const name = extractCollectionName(collection);
 
@@ -83,13 +81,12 @@ function SingleCollection(props: {
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row items-center justify-center bg-white/20"
+        "flex h-full w-full flex-row items-center justify-center bg-gray-300/50 text-gray-400/50 font-bold"
       }
     >
       ?
     </div>
   );
-  const numberOfItems = collection.tokenIDs.length;
 
   return (
     <FatRow
@@ -99,50 +96,43 @@ function SingleCollection(props: {
       }
       className={[]}
     >
-      <div
-        className={cn(
-          "relative flex w-full flex-col items-start justify-start gap-2 p-4",
-          "md:gap-2 md:p-4",
-        )}
-      >
+      <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
         <div
           className={"flex w-full flex-row items-center justify-start gap-4"}
         >
           <div className={"h-8 w-8 overflow-hidden rounded-full"}>
             {previewImage}
           </div>
+
           <div className={"flex flex-col"}>
             <div
               className={
-                "flex flex-row items-center justify-start gap-2 font-bold text-white"
+                "flex flex-col flex-wrap items-start justify-start font-bold truncate w-full"
               }
             >
               <span>{name}</span>
-              <span
-                title={`This collection has ${numberOfItems} item${numberOfItems > 1 ? "s" : ""} in it`}
-                className={
-                  "flex flex-row items-center justify-start gap-1 text-fineprint opacity-30"
-                }
-              >
-                <Package className={"h-4 w-4"} /> {numberOfItems}
-              </span>
+              <p className={"text-sm font-normal"}>{collection.path}</p>
             </div>
-            <p className={"text-fineprint"}>{collection.path}</p>
           </div>
         </div>
+
+        <NumberOfItems items={collection?.tokenIDs?.length} />
       </div>
     </FatRow>
   );
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-function CollectionItems(props: {
+interface CollectionItemsProps {
   address: string;
   collection: NFTCollection;
-}) {
+}
+/*--------------------------------------------------------------------------------------------------------------------*/
+function CollectionItems(props: CollectionItemsProps) {
   const { address, collection } = props;
   const path = collection.path.split("/")[2];
-  const { data, isPending } = usePrismCollectionItems(
+
+  const { data, isPending } = useCollectionItems(
     address,
     path,
     collection.tokenIDs,
@@ -152,19 +142,16 @@ function CollectionItems(props: {
   const reverseIds = collection.tokenIDs.reverse();
 
   return (
-    <div
-      className={
-        "flex w-full flex-col items-start justify-start gap-2 bg-neutral-500 p-4"
-      }
-    >
+    <FatRowDetails>
       {isPending && <JumpingDots />}
-      <div className="grid grid-cols-2 gap-3 @3xl:grid-cols-3 @3xl:gap-4 @4xl:grid-cols-4 @5xl:grid-cols-5 @7xl:grid-cols-7">
+
+      <div className="flex flex-row gap-2 flex-wrap">
         {data?.map((token: any, i: number) => {
           const nftId = reverseIds[i];
 
           return (
             <div
-              className="h-full overflow-hidden rounded-md bg-widgets-bg shadow-subtle hover:bg-neutral-300"
+              className="h-full overflow-hidden rounded-xs bg-gray-300 shadow-subtle hover:bg-gray-400/50"
               key={`i-${path}`}
             >
               <div className="bg relative min-h-[200px] w-full overflow-hidden">
@@ -200,6 +187,6 @@ function CollectionItems(props: {
           );
         })}
       </div>
-    </div>
+    </FatRowDetails>
   );
 }

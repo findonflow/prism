@@ -22,7 +22,7 @@ export default function AccountKeysContent() {
   const { data, isLoading } = useAccountDetails(address);
 
   const keys =
-    data?.keys.map((key) => {
+    data?.keys.map((key: FlowKey): FlowKeyFormatted => {
       return {
         hashAlgorithm: key.hashAlgoString,
         index: key.index.toString(),
