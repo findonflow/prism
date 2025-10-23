@@ -10,8 +10,12 @@ import {
 import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
 import {
   FIND,
+  FLOW_EPOCH,
   FLOW_MAP,
+  FLOW_STAKING_COLLECTION,
+  FLOWID_TABLE_STAKING,
   FUNGIBLE_TOKEN,
+  LOCKED_FLOW,
   METADATA_VIEWS,
   NON_FUNGIBLE_TOKEN,
 } from "@/lib/address-book";
@@ -35,6 +39,10 @@ function initFCL(network: string) {
     "0xFungibleToken": FUNGIBLE_TOKEN[key],
     "0xMetadataViews": METADATA_VIEWS[key],
     "0xFlowMap": FLOW_MAP[key],
+    "0xLockedTokens": LOCKED_FLOW[key],
+    "0xFlowIDTableStaking": FLOWID_TABLE_STAKING[key],
+    "0xFlowEpoch": FLOW_EPOCH[key],
+    "0xFlowStakingCollection": FLOW_STAKING_COLLECTION[key],
   });
 }
 
@@ -59,7 +67,7 @@ export default function QueryProvider(props: { children: React.ReactNode }) {
             }
           },
         }),
-      }),
+      })
   );
 
   return (
