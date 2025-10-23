@@ -53,8 +53,8 @@ export default function AccountNavigation() {
       <NavigationLink to={"contracts"} baseUrl={baseUrl}>
         Contracts
       </NavigationLink>
-      <NavigationLink to={"collection"} baseUrl={baseUrl}>
-        Collection
+      <NavigationLink to={"collections"} baseUrl={baseUrl}>
+        Collections
       </NavigationLink>
     </div>
   );
