@@ -18,6 +18,7 @@ import useStoredResource from "@/hooks/useStoredResource";
 
 import "@/components/ui/json-view/style.css";
 import { formatNumberToAccounting } from "@/lib/format";
+import { NumberOfItems } from "@/components/ui/tags";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStoredItemsContent() {
@@ -128,7 +129,11 @@ function StorageInfo(props: {
       className={[]}
     >
       <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
-        <div className={"flex flex-row items-center justify-start gap-2 flex-wrap truncate"}>
+        <div
+          className={
+            "flex flex-row items-center justify-start gap-2 flex-wrap truncate"
+          }
+        >
           <SimpleTag
             label={"storage"}
             category={<Database className={"h-4 w-4"} />}
@@ -172,17 +177,7 @@ function StorageInfo(props: {
 
         <div>
           {storageInfo.isNFTCollection && (
-            <div
-              className={cn(
-                "flex flex-row items-center justify-end gap-1",
-                storageInfo?.tokenIDs?.length === 0
-                  ? "text-grey-200/10"
-                  : "text-blue-500",
-              )}
-            >
-              <Package className={"h-4 w-4"} />
-              <b className={"text-copy"}>{storageInfo?.tokenIDs?.length}</b>
-            </div>
+            <NumberOfItems items={storageInfo?.tokenIDs?.length} />
           )}
 
           {storageInfo.isVault && (
@@ -244,22 +239,36 @@ function StorageInfoDetails(props: {
             </div>
           </div>
         )}
-        <div className={"flex flex-row items-center justify-start gap-2 truncate flex-wrap"}>
+        <div
+          className={
+            "flex flex-row items-center justify-start gap-2 truncate flex-wrap"
+          }
+        >
           <TypeLabel>Path:</TypeLabel>
           <div className={"flex flex-row gap-2 flex-wrap w-full"}>
-            <span className={"text-sm font-bold truncate"}>{storageInfo.path}</span>
+            <span className={"text-sm font-bold truncate"}>
+              {storageInfo.path}
+            </span>
             <CopyText text={storageInfo.path} />
           </div>
         </div>
 
-        <div className={"flex flex-row items-center justify-start gap-2 truncate flex-wrap"}>
+        <div
+          className={
+            "flex flex-row items-center justify-start gap-2 truncate flex-wrap"
+          }
+        >
           <TypeLabel>Type Kind:</TypeLabel>
           <div className={"flex flex-row gap-2 flex-wrap"}>
             <span className={"text-sm font-bold"}>{storageInfo.type.kind}</span>
           </div>
         </div>
 
-        <div className={"flex flex-row items-center justify-start gap-2 truncate flex-wrap"}>
+        <div
+          className={
+            "flex flex-row items-center justify-start gap-2 truncate flex-wrap"
+          }
+        >
           <TypeLabel>Type ID:</TypeLabel>
           <div className={"flex flex-row gap-2"}>
             <span className={"text-sm font-bold"}>

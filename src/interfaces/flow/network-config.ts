@@ -1,12 +1,12 @@
-import network from "@consts/network";
-import * as fcl from "@onflow/fcl";
-
+/*--------------------------------------------------------------------------------------------------------------------*/
 const appDetails = {
   "app.detail.icon": "https://placekitten.com/g/200/200",
-  "app.detail.title": ".find registrar",
-  "app.detail.description": "Register human readable identity to use on Flow",
+  "app.detail.title": "Prism: Flow Account Explorer",
+  "app.detail.description":
+    "Explore Flow accounts in fine details using data directly from chain!",
 };
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 export const RAW_PARAMS = {
   testnet: {
     env: "testnet",
@@ -50,13 +50,3 @@ export const RAW_PARAMS = {
     "0xFIND": "0x097bafa4e0b48eef",
   },
 };
-
-export const fclConfigParams = RAW_PARAMS[network as keyof typeof RAW_PARAMS];
-
-export function configureFlow(
-  fclConfigParams:
-    | (typeof RAW_PARAMS)["mainnet"]
-    | (typeof RAW_PARAMS)["testnet"]
-) {
-  fcl.config(fclConfigParams);
-}

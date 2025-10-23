@@ -1,0 +1,192 @@
+"use client";
+/*--------------------------------------------------------------------------------------------------------------------*/
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
+import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
+import ImageClient from "@/components/flowscan/ImageClient";
+import JumpingDots from "@/components/flowscan/JumpingDots/index";
+import useAccountResolver from "@/hooks/useAccountResolver";
+import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
+import { useCollectionItems } from "@/hooks/useCollectionItems";
+import { NumberOfItems } from "@/components/ui/tags";
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+function extractCollectionName(collection: NFTCollection): string {
+  const rawName = collection.type.typeID.split(".")[2];
+  return collection.display?.name || rawName;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export default function AccountCollectionsContent() {
+  const { id } = useParams();
+
+  const { data: resolved, isPending: isResolving } = useAccountResolver(
+    id as string,
+  );
+  const address = resolved?.owner;
+
+  const { data, isPending } = useAccountCollectionList(address);
+
+  const showList = !isPending && Boolean(data);
+  const filtered =
+    data?.filter((collection) => collection.tokenIDs.length > 0) || [];
+
+  const sorted = filtered.sort((a: NFTCollection, b: NFTCollection) => {
+    const aName = extractCollectionName(a);
+    const bName = extractCollectionName(b);
+
+    return aName.localeCompare(bName, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    });
+  });
+
+  if (!address) return <div>Please provide a valid account identifier.</div>;
+
+  return (
+    <div className={"flex w-full flex-col"}>
+      {isPending && <JumpingDots />}
+      {showList && (
+        <div className={"fat-row-column w-full flex flex-col gap-px"}>
+          {sorted?.map((collection) => (
+            <SingleCollection
+              collection={collection}
+              key={collection.path}
+              address={address}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+interface SingleCollectionProps {
+  address: string;
+  collection: NFTCollection;
+}
+/*--------------------------------------------------------------------------------------------------------------------*/
+function SingleCollection(props: SingleCollectionProps) {
+  const { address, collection } = props;
+  const name = extractCollectionName(collection);
+
+  const previewImage = collection.display?.squareImage ? (
+    <img
+      src={collection.display.squareImage.file.url}
+      alt={"name"}
+      className={"h-full w-full"}
+    />
+  ) : (
+    <div
+      className={
+        "flex h-full w-full flex-row items-center justify-center bg-gray-300/50 text-gray-400/50 font-bold"
+      }
+    >
+      ?
+    </div>
+  );
+
+  return (
+    <FatRow
+      id={"collection-item"}
+      details={
+        <CollectionItems collection={collection} address={address} key={name} />
+      }
+      className={[]}
+    >
+      <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
+        <div
+          className={"flex w-full flex-row items-center justify-start gap-4"}
+        >
+          <div className={"h-8 w-8 overflow-hidden rounded-full"}>
+            {previewImage}
+          </div>
+
+          <div className={"flex flex-col"}>
+            <div
+              className={
+                "flex flex-col flex-wrap items-start justify-start font-bold truncate w-full"
+              }
+            >
+              <span>{name}</span>
+              <p className={"text-sm font-normal"}>{collection.path}</p>
+            </div>
+          </div>
+        </div>
+
+        <NumberOfItems items={collection?.tokenIDs?.length} />
+      </div>
+    </FatRow>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+interface CollectionItemsProps {
+  address: string;
+  collection: NFTCollection;
+}
+/*--------------------------------------------------------------------------------------------------------------------*/
+function CollectionItems(props: CollectionItemsProps) {
+  const { address, collection } = props;
+  const path = collection.path.split("/")[2];
+
+  const { data, isPending } = useCollectionItems(
+    address,
+    path,
+    collection.tokenIDs,
+  );
+
+  // TODO: this is a bit more tricky since we are stiching them together and I am not sure if order is always preserved
+  const reverseIds = collection.tokenIDs.reverse();
+
+  return (
+    <FatRowDetails>
+      {isPending && <JumpingDots />}
+
+      <div className="flex flex-row gap-2 flex-wrap">
+        {data?.map((token: any, i: number) => {
+          const nftId = reverseIds[i];
+
+          return (
+            <div
+              className="h-full overflow-hidden rounded-xs bg-gray-300 shadow-subtle hover:bg-gray-400/50"
+              key={`i-${path}`}
+            >
+              <div className="bg relative min-h-[200px] w-full overflow-hidden">
+                <ImageClient
+                  src={token?.thumbnail.url || ""}
+                  alt={token?.id || ""}
+                  dimension={"width"}
+                />
+              </div>
+              <div className="flex flex-col gap-2 p-4">
+                <p className="text-main font-bold text-text-color">
+                  {token.name}
+                </p>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1">
+                    <p className="text-tiny text-tabs-bg-active-text">
+                      Token ID:
+                    </p>
+                    <p className="text-fineprint text-text-color">{nftId}</p>
+                  </div>
+                  <div className="flex items-center gap-1 overflow-hidden">
+                    <p className="text-tiny text-tabs-bg-active-text">Owner:</p>
+                    <Link
+                      href={"/account/" + address}
+                      className="truncate text-fineprint text-transaction-table-cell-author-link"
+                    >
+                      {address}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </FatRowDetails>
+  );
+}

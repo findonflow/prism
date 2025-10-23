@@ -1,13 +1,18 @@
-import { configureFlow, RAW_PARAMS } from "@interfaces/flow/network-config";
-import { authenticate, currentUser } from "@onflow/fcl";
+/*--------------------------------------------------------------------------------------------------------------------*/
+import { authenticate, config, currentUser } from "@onflow/fcl";
+import { RAW_PARAMS } from "./network-config";
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 type NetworkKey = "mainnet" | "testnet";
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 export async function loginFlow(
   network: NetworkKey,
-  callback: (res: any) => void
+  callback: (res: any) => void,
 ) {
-  configureFlow(RAW_PARAMS[network as keyof typeof RAW_PARAMS]);
+  // TODO: update params to use necessary imports
+  const params = RAW_PARAMS[network as keyof typeof RAW_PARAMS];
+  config(params);
 
   currentUser.subscribe((user: any) => {
     console.log("Current user:", user);
@@ -16,8 +21,6 @@ export async function loginFlow(
 
   //const auth = await fcl.authz;
   await authenticate();
-
-  //console.log(JSON.stringify(auth), JSON.stringify(fcl.WalletUtils));
 }
 
 export async function logoutFlow() {
