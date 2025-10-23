@@ -53,7 +53,7 @@ export default function AccountStakingContent() {
         <SimpleTag
           title={`Current epoch number is ${stakingInfo?.epochInfo.currentEpochCounter}`}
           category={<CalendarClock className={"h-4 w-4"} />}
-          label={`Epoch: ${stakingInfo?.epochInfo.currentEpochCounter}`}
+          label={`Epoch: ${isPending ? "Loading" : stakingInfo?.epochInfo.currentEpochCounter}`}
           className="text-green-800"
         />
       </div>
