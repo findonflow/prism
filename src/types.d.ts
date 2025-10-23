@@ -118,6 +118,53 @@ interface FlowStakingInfo {
   };
 }
 
+interface ValueType {
+  type?: string | null;
+  kind?: string | null;
+  typeID?: string | null;
+  fields?: FieldType | null;
+  initializers?: Array<any> | null;
+}
+
+interface FieldType {
+  id: string;
+  type?: {
+    kind: string;
+  };
+}
+
+interface FlowChildAccount {
+  address: string;
+  display?: {
+    description?: string;
+    name?: string;
+    thumbnail?: {
+      url?: string;
+    };
+  };
+  factorySupportedTypes?: Array<{
+    kind: string;
+    type: ValueType;
+    authorization: {
+      type: {
+        kind?: string;
+        typeID: string;
+        types: Array<{
+          ValueType;
+        }>;
+      };
+      kind: string;
+      entitlements: Array<ValueType>;
+    };
+  }>;
+  filterDetails: {
+    type: ValueType;
+    allowedTypes: Array<FieldType>;
+  };
+  managerFilterDetails: {
+    type: ValueType;
+  }
+}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface DisplayFile {
