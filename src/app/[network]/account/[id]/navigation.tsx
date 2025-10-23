@@ -41,7 +41,9 @@ export default function AccountNavigation() {
       <NavigationLink to={""} baseUrl={baseUrl}>
         Linked Accounts
       </NavigationLink>
-
+      <NavigationLink to={"staking"} baseUrl={baseUrl}>
+        Staking
+      </NavigationLink>
       <NavigationLink to={"public-storage"} baseUrl={baseUrl}>
         Public Storage
       </NavigationLink>
@@ -51,18 +53,14 @@ export default function AccountNavigation() {
       <NavigationLink to={"collections"} baseUrl={baseUrl}>
         Collections
       </NavigationLink>
-      <span
-        className={"w-[1px] flex-1 self-stretch mx-2 h-auto bg-gray-300"}
-      ></span>
+      <span className={"w-[1px] flex-1 self-stretch mx-2 h-auto bg-gray-300 hidden md:block"} />
       <NavigationLink to={"keys"} baseUrl={baseUrl}>
         Public Keys
       </NavigationLink>
       <NavigationLink to={"contracts"} baseUrl={baseUrl}>
         Contracts
       </NavigationLink>
-      <NavigationLink to={"staking"} baseUrl={baseUrl}>
-        Staking
-      </NavigationLink>
+
     </div>
   );
 }
