@@ -45,6 +45,24 @@ export function TypeH2(props: TextProps) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
+export function TypeH3(props: TextProps) {
+  const { children, className } = props;
+
+  return (
+    <h1
+      className={cn(
+        "text-md text-center font-bold",
+        "tracking-tight text-balance", // tight interline space and balanced wrap
+        "scroll-m-6", // add space when navigating to this header
+        className,
+      )}
+    >
+      {children}
+    </h1>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 export function TypeP(props: TextProps) {
   const { children, className } = props;
 

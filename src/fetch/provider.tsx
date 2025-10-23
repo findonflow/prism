@@ -1,30 +1,23 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
 import {
+  CAPABILITY_UTILS,
   FIND,
   FLOW_EPOCH,
   FLOW_MAP,
   FLOW_STAKING_COLLECTION,
   FLOWID_TABLE_STAKING,
   FUNGIBLE_TOKEN,
+  HYBRID_CUSTODY,
   LOCKED_FLOW,
   METADATA_VIEWS,
   NON_FUNGIBLE_TOKEN,
+  SERVICE_ADDRESS
 } from "@/lib/address-book";
 import { config, currentUser } from "@onflow/fcl";
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 
 type NetworkKey = "mainnet" | "testnet";
@@ -39,6 +32,10 @@ function initFCL(network: string) {
     "0xFungibleToken": FUNGIBLE_TOKEN[key],
     "0xMetadataViews": METADATA_VIEWS[key],
     "0xFlowMap": FLOW_MAP[key],
+    "0xServiceAddress": SERVICE_ADDRESS[key],
+    "0xHybridCustody": HYBRID_CUSTODY[key],
+    "0xCapabilityFilter": CAPABILITY_UTILS[key],
+    "0xCapabilityFactory": CAPABILITY_UTILS[key],
     "0xLockedTokens": LOCKED_FLOW[key],
     "0xFlowIDTableStaking": FLOWID_TABLE_STAKING[key],
     "0xFlowEpoch": FLOW_EPOCH[key],
@@ -115,22 +112,6 @@ export function FCLProvider(props: { children: ReactNode }) {
       initFCL(network as string);
     }
   }, [network]);
-
-  useEffect(() => {
-    currentUser.subscribe((user: any) => {
-      const walletNetwork = user.services.find((el: any) => el.network).network;
-      if (walletNetwork !== network) {
-        logoutFlow();
-        return;
-      }
-      if (user.addr) {
-        setUser({
-          address: user.addr,
-          loggedIn: user.loggedIn,
-        });
-      }
-    });
-  }, []);
 
   return (
     <LoginContext.Provider
