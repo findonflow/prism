@@ -1,5 +1,5 @@
 // eslint-disable-file
-export const getNftDisplays = `
+export const cadenceGetNftDisplays = `
   import NonFungibleToken from 0xNonFungibleToken
   import MetadataViews from 0xNonFungibleToken
   import FindViews from 0xFIND

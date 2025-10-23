@@ -1,4 +1,4 @@
-export const getStakingInfo = `
+export const cadenceGetStakingInfo = `
 import LockedTokens from 0xLockedTokens 
 import FlowIDTableStaking from 0xFlowIDTableStaking 
 import FlowEpoch from 0xFlowEpoch 
