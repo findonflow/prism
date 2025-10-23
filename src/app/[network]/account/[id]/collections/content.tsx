@@ -1,5 +1,9 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Package } from "lucide-react";
+
 import FatRow from "@/components/flowscan/FatRow";
 import ImageClient from "@/components/flowscan/ImageClient";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
@@ -10,20 +14,19 @@ import {
   usePrismCollectionItems,
   usePrismCollectionList,
 } from "@interfaces/fcl";
-import { Package } from "lucide-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 function extractCollectionName(collection: NFTCollection): string {
   const rawName = collection.type.typeID.split(".")[2];
   return collection.display?.name || rawName;
 }
 
-export default function ViewPrismCollectionList() {
+/*--------------------------------------------------------------------------------------------------------------------*/
+export default function AccountCollectionsContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string
+    id as string,
   );
   const address = resolved?.owner;
 
@@ -63,6 +66,7 @@ export default function ViewPrismCollectionList() {
   );
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 function SingleCollection(props: {
   address: string;
   collection: NFTCollection;
@@ -98,7 +102,7 @@ function SingleCollection(props: {
       <div
         className={cn(
           "relative flex w-full flex-col items-start justify-start gap-2 p-4",
-          "md:gap-2 md:p-4"
+          "md:gap-2 md:p-4",
         )}
       >
         <div
@@ -131,6 +135,7 @@ function SingleCollection(props: {
   );
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 function CollectionItems(props: {
   address: string;
   collection: NFTCollection;
@@ -140,7 +145,7 @@ function CollectionItems(props: {
   const { data, isPending } = usePrismCollectionItems(
     address,
     path,
-    collection.tokenIDs
+    collection.tokenIDs,
   );
 
   // TODO: this is a bit more tricky since we are stiching them together and I am not sure if order is always preserved
