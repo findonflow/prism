@@ -41,6 +41,13 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --text-tiny: 11px;
+  --text-fineprint: 12px;
+  --text-copy: 14px;
+  --text-main: 16px;
+  --text-attention: 16px;
+  --text-title: 20px;
+  --text-bsn-title: 20px;
 }
 
 :root {
@@ -76,6 +83,12 @@
   --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
   --sidebar-border: oklch(0.923 0.003 48.717);
   --sidebar-ring: oklch(0.709 0.01 56.259);
+
+  --role-collection: #00a5fe;
+  --role-consensus: #5fa572;
+  --role-access: #949d1c;
+  --role-verification: #cf8224;
+  --role-execution: #b65bea;
 }
 
 .dark {
