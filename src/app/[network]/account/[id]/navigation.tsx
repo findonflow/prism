@@ -50,17 +50,28 @@ export default function AccountNavigation() {
       <NavigationLink to={"stored-items"} baseUrl={baseUrl}>
         Stored Items
       </NavigationLink>
+      <span
+        className={
+          "w-[1px] flex-1 self-stretch mx-2 h-auto bg-gray-300 hidden md:block"
+        }
+      />
+      <NavigationLink to={"tokens"} baseUrl={baseUrl}>
+        Tokens
+      </NavigationLink>
       <NavigationLink to={"collections"} baseUrl={baseUrl}>
         Collections
       </NavigationLink>
-      <span className={"w-[1px] flex-1 self-stretch mx-2 h-auto bg-gray-300 hidden md:block"} />
+      <span
+        className={
+          "w-[1px] flex-1 self-stretch mx-2 h-auto bg-gray-300 hidden md:block"
+        }
+      />
       <NavigationLink to={"keys"} baseUrl={baseUrl}>
         Public Keys
       </NavigationLink>
       <NavigationLink to={"contracts"} baseUrl={baseUrl}>
         Contracts
       </NavigationLink>
-
     </div>
   );
 }

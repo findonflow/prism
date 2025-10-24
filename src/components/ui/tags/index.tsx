@@ -1,6 +1,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { cn } from "@/lib/utils";
-import { Package } from "lucide-react";
+import {cn} from "@/lib/utils";
+import {Package} from "lucide-react";
+import {formatNumberToAccounting} from "@/lib/format";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function NumberOfItems(props: { items?: number }) {
@@ -18,6 +19,23 @@ export function NumberOfItems(props: { items?: number }) {
     >
       <Package className={"h-4 w-4"} />
       <b className={"text-copy"}>{items}</b>
+    </div>
+  );
+}
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function VaultBalance(props: { balance?: string; symbol?: string }) {
+  const { balance, symbol } = props;
+  const formatted = Number(balance);
+
+  return (
+    <div
+      className={cn(
+        "flex flex-row items-center justify-end gap-1",
+        formatted === 0 ? "text-gray-400" : "text-green-600",
+      )}
+    >
+      <span className={"opacity-75"}>{symbol}</span>
+      <b className={cn("text-md")}>{formatNumberToAccounting(formatted, 4, 2)}</b>
     </div>
   );
 }

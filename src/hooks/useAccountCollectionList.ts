@@ -4,13 +4,11 @@ import { getCollectionList } from "@/fetch/get-collections";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function useAccountCollectionList(address: string | undefined | null) {
-  const result = useQuery({
+  return useQuery({
     queryKey: [`prism-public-collection-list-${address}`],
     queryFn: () => {
-      return getCollectionList(address || "");
+      return getCollectionList(address || "", (item) => item.isNFTCollection);
     },
     enabled: Boolean(address),
   });
-
-  return result;
 }
