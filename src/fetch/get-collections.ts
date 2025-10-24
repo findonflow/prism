@@ -1,9 +1,9 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { query } from "@onflow/fcl";
+import {query} from "@onflow/fcl";
 
-import { cadenceGetStoredItems } from "@/fetch/cadence/cadence-get-stored-items";
-import { cadenceGetNftDisplays } from "@/fetch/cadence/cadence-get-nft-displays";
-import { cadenceGetStoragePaths } from "@/fetch/cadence/cadence-get-storage-paths";
+import {cadenceGetStoredItems} from "@/fetch/cadence/cadence-get-stored-items";
+import {cadenceGetNftDisplays} from "@/fetch/cadence/cadence-get-nft-displays";
+import {cadenceGetStoragePaths} from "@/fetch/cadence/cadence-get-storage-paths";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 async function getAccountCollectionList(address: string) {
@@ -37,6 +37,7 @@ async function reconstructList(address: string, slice: Array<string>) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 export async function getCollectionList(
   address: string,
+  itemFilter: (item: any) => boolean,
 ): Promise<NFTCollection[] | null> {
   try {
     const fullList = await getAccountCollectionList(address || "");
@@ -54,7 +55,7 @@ export async function getCollectionList(
       i += chunkSize;
     }
 
-    return mergedData.filter((item) => item.isNFTCollection === true);
+    return mergedData.filter(itemFilter);
   } catch (e) {
     return null;
   }
