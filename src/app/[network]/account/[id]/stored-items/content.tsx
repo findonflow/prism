@@ -1,23 +1,25 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
+import { BadgeJapaneseYen, Bolt, Database, Package, Plug } from "lucide-react";
+import JsonView from "react18-json-view";
+
 import CopyText from "@/components/flowscan/CopyText";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import SimpleTag from "@/components/flowscan/SimpleTag";
+import { NumberOfItems, VaultBalance } from "@/components/ui/tags";
+import Select from "@/components/flowscan/Select";
+import { SearchBar } from "@/components/flowscan/SearchBar";
 import { TypeLabel } from "@/components/ui/typography";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import useStoredItems from "@/hooks/useStoredItems";
 import useStoredResource from "@/hooks/useStoredResource";
-import { cn } from "@/lib/utils";
-import { BadgeJapaneseYen, Bolt, Database, Package, Plug } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import Image from "next/image";
-import { useParams } from "next/navigation";
-import {useEffect, useState} from "react";
-import JsonView from "react18-json-view";
+
 import "@/components/ui/json-view/style.css";
-import { NumberOfItems } from "@/components/ui/tags";
-import { formatNumberToAccounting } from "@/lib/format";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStoredItemsContent() {
@@ -114,7 +116,7 @@ export default function AccountStoredItemsContent() {
                   }
                   return typeFilter;
                 })
-                .map((item) => item.type.kind)
+                .map((item) => item.type.kind),
             ),
           ]}
           onChange={setRefKind}
