@@ -1,20 +1,22 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { useState } from "react";
-import { useParams } from "next/navigation";
 import { BadgeJapaneseYen, Blend, Bolt, Package, Plug } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import { TypeLabel } from "@/components/ui/typography";
-import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import CopyText from "@/components/flowscan/CopyText";
-import SimpleTag from "@/components/flowscan/SimpleTag";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
+import { LoadingBlock } from "@/components/flowscan/JumpingDots";
+import SimpleTag from "@/components/flowscan/SimpleTag";
+import { TypeLabel } from "@/components/ui/typography";
 
 import useAccountResolver from "@/hooks/useAccountResolver";
 import usePublicStorageList from "@/hooks/usePublicStorageList";
 
+import { SearchBar } from "@/components/flowscan/SearchBar";
+import Select from "@/components/flowscan/Select";
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +25,7 @@ export default function AccountPublicStorageContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string,
+    id as string
   );
   const address = resolved?.owner;
 
@@ -32,6 +34,10 @@ export default function AccountPublicStorageContent() {
   const [refKind, setRefKind] = useState("All");
 
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    setRefKind("All");
+  }, [type]);
 
   const filteredList =
     data?.filter((pp: FlowPublicPathInfo) => {
@@ -65,13 +71,46 @@ export default function AccountPublicStorageContent() {
   return (
     <div className={"flex w-full flex-col gap-4"}>
       <TypeLabel>Account Public Storage:</TypeLabel>
-
-      <div className={"flex flex-row gap-4 justify-between"}>
-        <input
-          className={"border-1 border-gray-300 p-2 px-3 w-full round-md"}
+      <div
+        className={
+          "flex w-full flex-row max-md:flex-wrap items-center justify-start gap-4"
+        }
+      >
+        <SearchBar
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder={"Enter query to filter keys"}
+          onChange={setFilter}
+          placeholder={"Filter by path"}
+        />
+        <Select
+          value={type}
+          className={"min-w-[160px] max-md:grow"}
+          initialValue={"All"}
+          options={["All", "Balance", "Collection"]}
+          onChange={setType}
+        />
+        <Select
+          className={"min-w-[160px] max-md:grow"}
+          value={refKind}
+          initialValue={"All"}
+          options={[
+            "All",
+            ...new Set(
+              data
+                ?.filter((storageInfo) => {
+                  let typeFilter = true;
+                  if (type === "Balance") {
+                    typeFilter = Boolean(storageInfo.balance);
+                  }
+                  if (type === "Collection") {
+                    typeFilter = Boolean(storageInfo.isCollectionCap);
+                  }
+                  return typeFilter;
+                })
+                .map((item) => item.type?.type.type.kind)
+                .filter(Boolean)
+            ),
+          ]}
+          onChange={setRefKind}
         />
       </div>
 
@@ -135,7 +174,11 @@ function PublicCapability(props: {
       className={[]}
     >
       <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
-        <div className={"flex flex-row items-center justify-start gap-2 flex-wrap truncate"}>
+        <div
+          className={
+            "flex flex-row items-center justify-start gap-2 flex-wrap truncate"
+          }
+        >
           <SimpleTag
             label={"public"}
             category={<Plug className={"h-4 w-4"} />}
@@ -178,7 +221,7 @@ function PublicCapability(props: {
               "flex flex-row items-center justify-end gap-1",
               Number(capability?.balance) === 0
                 ? "text-grey-200/10"
-                : "text-green-600",
+                : "text-green-600"
             )}
           >
             <BadgeJapaneseYen className={"h-4 w-4"} />
@@ -194,7 +237,7 @@ function PublicCapability(props: {
               "flex flex-row items-center justify-end gap-1",
               capability?.tokenIDs?.length === 0
                 ? "text-grey-200/10"
-                : "text-blue-500",
+                : "text-blue-500"
             )}
           >
             <Package className={"h-4 w-4"} />
