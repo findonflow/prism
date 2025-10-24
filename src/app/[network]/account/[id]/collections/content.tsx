@@ -1,6 +1,7 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
 import Link from "next/link";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
@@ -73,7 +74,10 @@ function SingleCollection(props: SingleCollectionProps) {
   const name = extractCollectionName(collection);
 
   const previewImage = collection.display?.squareImage ? (
-    <img
+    <Image
+      unoptimized
+      width={20}
+      height={20}
       src={collection.display.squareImage.file.url}
       alt={"name"}
       className={"h-full w-full"}
@@ -100,7 +104,11 @@ function SingleCollection(props: SingleCollectionProps) {
         <div
           className={"flex w-full flex-row items-center justify-start gap-4"}
         >
-          <div className={"h-8 w-8 overflow-hidden rounded-full"}>
+          <div
+            className={
+              "h-8 w-8 overflow-hidden rounded-full flex flex-col items-center justify-center"
+            }
+          >
             {previewImage}
           </div>
 
