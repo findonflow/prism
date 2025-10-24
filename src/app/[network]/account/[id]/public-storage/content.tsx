@@ -88,7 +88,24 @@ export default function AccountPublicStorageContent() {
           className={"min-w-[160px] max-md:grow"}
           value={refKind}
           initialValue={"All"}
-          options={["All", "Resource", "Intersection"]}
+          options={[
+            "All",
+            ...new Set(
+              data
+                ?.filter((storageInfo) => {
+                  let typeFilter = true;
+                  if (type === "Balance") {
+                    typeFilter = Boolean(storageInfo.balance);
+                  }
+                  if (type === "Collection") {
+                    typeFilter = Boolean(storageInfo.isCollectionCap);
+                  }
+                  return typeFilter;
+                })
+                .map((item) => item.type?.type.type.kind)
+                .filter(Boolean)
+            ),
+          ]}
           onChange={setRefKind}
         />
       </div>
