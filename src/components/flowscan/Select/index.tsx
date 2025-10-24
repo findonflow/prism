@@ -18,20 +18,9 @@ export interface SelectProps {
 
 export default function Select(props: SelectProps) {
   const { className = "" } = props;
-  const {
-    initialValue,
-    options = [],
-    onChange,
-    width,
-    overlay,
-    children,
-  } = props;
+  const { initialValue, options = [], onChange } = props;
   const { value, overlayText } = props;
   const [_value, setValue] = useState<string>(initialValue);
-  const [open, setOpen] = useState(false);
-
-  const borderRadius = open ? "rounded-[2px_2px_0_0]" : "rounded-[2px]";
-  const rotate = open ? "rotate-180" : "rotate-0";
 
   useEffect(() => {
     console.log(value, initialValue, _value);
@@ -48,23 +37,21 @@ export default function Select(props: SelectProps) {
   }
 
   return (
-    <div className={clsx(className)}>
-      <select
-        onChange={({ target }) => handleChange(target.value)}
-        className="select bg-background border-border border-px border-solid p-2 [&:focus]:outline-none"
-      >
-        <div className="absolute border-border border-1 border-solid w-full h-full top-0 left-0 rounded-md pointer-events-none" />
-        {options.map((option) => (
-          <option
-            className="hover:bg-gray-200"
-            key={option}
-            value={option}
-            selected={option === _value}
-          >
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
+    <select
+      value={_value}
+      onChange={({ target }) => handleChange(target.value)}
+      className={clsx(
+        "select bg-background border-border border-px border-solid p-2 [&:focus]:outline-none",
+        "[&:after]:absolute [&:after]:border-border [&:after]:border-1 [&:after]:border-solid [&:after]:w-full [&:after]:h-full [&:after]:top-0 [&:after]:left-0 [&:after]:rounded-md [&:after]:pointer-events-none",
+        className
+      )}
+    >
+      <div className="absolute border-border border-1 border-solid w-full h-full top-0 left-0 rounded-md pointer-events-none" />
+      {options.map((option) => (
+        <option className="hover:bg-gray-200" key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
   );
 }
