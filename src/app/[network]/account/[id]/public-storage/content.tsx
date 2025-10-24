@@ -4,7 +4,7 @@
 import { BadgeJapaneseYen, Blend, Bolt, Package, Plug } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CopyText from "@/components/flowscan/CopyText";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
@@ -34,6 +34,10 @@ export default function AccountPublicStorageContent() {
   const [refKind, setRefKind] = useState("All");
 
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    setRefKind("All");
+  }, [type]);
 
   const filteredList =
     data?.filter((pp: FlowPublicPathInfo) => {
