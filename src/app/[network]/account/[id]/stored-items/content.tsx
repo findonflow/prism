@@ -1,31 +1,33 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { useParams } from "next/navigation";
-import JsonView from "react18-json-view";
-import useAccountResolver from "@/hooks/useAccountResolver";
-import { TypeLabel } from "@/components/ui/typography";
-import { LoadingBlock } from "@/components/flowscan/JumpingDots";
-import useStoredItems from "@/hooks/useStoredItems";
-import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
-import SimpleTag from "@/components/flowscan/SimpleTag";
-import { BadgeJapaneseYen, Bolt, Database, Package, Plug } from "lucide-react";
 import CopyText from "@/components/flowscan/CopyText";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
+import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
+import { LoadingBlock } from "@/components/flowscan/JumpingDots";
+import SimpleTag from "@/components/flowscan/SimpleTag";
+import { TypeLabel } from "@/components/ui/typography";
+import useAccountResolver from "@/hooks/useAccountResolver";
+import useStoredItems from "@/hooks/useStoredItems";
 import useStoredResource from "@/hooks/useStoredResource";
+import { cn } from "@/lib/utils";
+import { BadgeJapaneseYen, Bolt, Database, Package, Plug } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import JsonView from "react18-json-view";
 
+import { SearchBar } from "@/components/flowscan/SearchBar";
+import Select from "@/components/flowscan/Select";
 import "@/components/ui/json-view/style.css";
-import { formatNumberToAccounting } from "@/lib/format";
 import { NumberOfItems } from "@/components/ui/tags";
+import { formatNumberToAccounting } from "@/lib/format";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStoredItemsContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string,
+    id as string
   );
   const address = resolved?.owner;
 
@@ -34,6 +36,10 @@ export default function AccountStoredItemsContent() {
   const [refKind, setRefKind] = useState("All");
 
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    setRefKind("All");
+  }, [type]);
 
   const filteredList =
     data?.filter((storageInfo: FlowStorageInfo) => {
@@ -46,17 +52,24 @@ export default function AccountStoredItemsContent() {
       }
 
       let refFilter = true;
-      /*      const cap = pp?.type?.type;
-      const reference = cap?.type;
+      const reference = storageInfo?.type;
       const referenceKind = reference?.kind;
+
+      console.log("filtering", referenceKind);
 
       if (refKind !== "All") {
         refFilter = referenceKind === refKind;
-      }*/
+      }
+
+      let nftCollectionFilter = true;
+
+      let vaultFilter = true;
 
       return (
         refFilter &&
         typeFilter &&
+        nftCollectionFilter &&
+        vaultFilter &&
         storageInfo.path?.toLowerCase().includes(filter.toLowerCase())
       );
     }) || [];
@@ -70,12 +83,46 @@ export default function AccountStoredItemsContent() {
     <div className={"flex w-full flex-col gap-4"}>
       <TypeLabel>Account Stored Items:</TypeLabel>
 
-      <div className={"flex flex-row gap-4 justify-between"}>
-        <input
-          className={"border-1 border-gray-300 p-2 px-3 w-full round-md"}
+      <div
+        className={
+          "flex w-full flex-row max-md:flex-wrap items-center justify-start gap-4"
+        }
+      >
+        <SearchBar
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder={"Enter query to filter keys"}
+          onChange={setFilter}
+          placeholder={"Filter by path"}
+        />
+        <Select
+          value={type}
+          className={"min-w-[160px] max-md:grow"}
+          initialValue={"All"}
+          options={["All", "Balance", "Collection"]}
+          onChange={setType}
+        />
+
+        <Select
+          className={"min-w-[160px] max-md:grow"}
+          initialValue={"All"}
+          value={refKind}
+          options={[
+            "All",
+            ...new Set(
+              data
+                ?.filter((storageInfo) => {
+                  let typeFilter = true;
+                  if (type === "Balance") {
+                    typeFilter = Boolean(storageInfo.balance);
+                  }
+                  if (type === "Collection") {
+                    typeFilter = Boolean(storageInfo.isNFTCollection);
+                  }
+                  return typeFilter;
+                })
+                .map((item) => item.type.kind)
+            ),
+          ]}
+          onChange={setRefKind}
         />
       </div>
 
@@ -186,7 +233,7 @@ function StorageInfo(props: {
                 "flex flex-row items-center justify-end gap-1",
                 Number(storageInfo?.balance) === 0
                   ? "text-grey-200/10"
-                  : "text-green-600",
+                  : "text-green-600"
               )}
             >
               <BadgeJapaneseYen className={"h-4 w-4"} />

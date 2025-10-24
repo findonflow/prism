@@ -86,6 +86,7 @@ export default function AccountPublicStorageContent() {
         />
         <Select
           className={"min-w-[160px] max-md:grow"}
+          value={refKind}
           initialValue={"All"}
           options={["All", "Resource", "Intersection"]}
           onChange={setRefKind}
