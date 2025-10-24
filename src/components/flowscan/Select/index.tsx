@@ -23,7 +23,6 @@ export default function Select(props: SelectProps) {
   const [_value, setValue] = useState<string>(initialValue);
 
   useEffect(() => {
-    console.log(value, initialValue, _value);
     if (value) {
       setValue(value);
     } else {
