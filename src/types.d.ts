@@ -182,6 +182,14 @@ interface FlowChildAccount {
   };
 }
 
+interface FINDLeaseInfo {
+  name?: string;
+  address?: string;
+  cost?: string;
+  status?: string;
+  validUntil?: string;
+}
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface DisplayFile {
   url: string;
