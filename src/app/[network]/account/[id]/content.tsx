@@ -13,6 +13,7 @@ import { useHybridCustody } from "@/hooks/useHybridCustody";
 import Image from "next/image";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import BasicAccountDetails from "@/components/ui/account-details";
+import { useOwnedAccountInfo } from "@/hooks/useOwnedAccountInfo";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function LinkedAccountsContent() {
@@ -30,6 +31,7 @@ export default function LinkedAccountsContent() {
       )}
       {address && <AccountCoa address={address} />}
       {address && <AccountHybrid address={address} />}
+      {address && <AccountOwnedInfo address={address} />}
     </div>
   );
 }
@@ -85,8 +87,6 @@ function AccountHybrid(props: { address?: string | null }) {
   const { address } = props;
   const { network } = useParams();
   const { data, isPending } = useHybridCustody(address);
-
-  console.log("hybrid", data);
 
   return (
     <div className={"flex flex-col gap-2 items-start justify-start"}>
@@ -148,6 +148,7 @@ function AccountHybrid(props: { address?: string | null }) {
   );
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 function ChildAccountDetails(props: { account: FlowChildAccount }) {
   const { account } = props;
 
@@ -218,5 +219,23 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
         </div>
       )}
     </FatRowDetails>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+function AccountOwnedInfo(props: { address?: string | null }) {
+  const { address } = props;
+  const { network } = useParams();
+  const { data, isPending } = useOwnedAccountInfo(address);
+
+  return (
+    <div className={"flex flex-col gap-2 items-start justify-start"}>
+      <TypeLabel>Parent Accounts:</TypeLabel>
+      {isPending && (
+        <LoadingBlock
+          title={`Loading hybrid custody info for ${address} ... `}
+        />
+      )}
+    </div>
   );
 }

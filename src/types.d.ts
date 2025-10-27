@@ -118,6 +118,20 @@ interface FlowStakingInfo {
   };
 }
 
+interface FlowOwnerAccountInfo {
+  display?: any;
+  isOwnedAccountExists: boolean;
+  owner?: string;
+  parents: Array<{
+    address?: string;
+    childAccount: {
+      filter: any;
+      factory: any;
+    };
+    isClaimed: boolean;
+  }>;
+}
+
 interface ValueType {
   type?: string | null;
   kind?: string | null;
@@ -163,7 +177,7 @@ interface FlowChildAccount {
   };
   managerFilterDetails: {
     type: ValueType;
-  }
+  };
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
