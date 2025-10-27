@@ -122,14 +122,16 @@ interface FlowOwnerAccountInfo {
   display?: any;
   isOwnedAccountExists: boolean;
   owner?: string;
-  parents: Array<{
-    address?: string;
-    childAccount: {
-      filter: any;
-      factory: any;
-    };
-    isClaimed: boolean;
-  }>;
+  parents: Array<FlowParentAccount>;
+}
+
+interface FlowParentAccount {
+  address?: string;
+  childAccount: {
+    filter: any;
+    factory: any;
+  };
+  isClaimed: boolean;
 }
 
 interface ValueType {

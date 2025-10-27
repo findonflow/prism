@@ -7,13 +7,15 @@ import { TypeH3, TypeLabel } from "@/components/ui/typography";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { useAccountCoa } from "@/hooks/useAccountCoa";
 import CopyText from "@/components/flowscan/CopyText";
-import { Wallet } from "lucide-react";
+import { Check, Wallet } from "lucide-react";
 import FlowTokens from "@/components/flowscan/FlowTokens";
 import { useHybridCustody } from "@/hooks/useHybridCustody";
 import Image from "next/image";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import BasicAccountDetails from "@/components/ui/account-details";
 import { useOwnedAccountInfo } from "@/hooks/useOwnedAccountInfo";
+import SimpleTag from "@/components/flowscan/SimpleTag";
+import { cn } from "@/lib/utils";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function LinkedAccountsContent() {
@@ -46,7 +48,7 @@ function AccountCoa(props: { address?: string | null }) {
 
   return (
     <div className={"flex flex-col gap-2 items-start justify-start"}>
-      <TypeLabel>Cadence Owned Account (COA):</TypeLabel>
+      <TypeH3>Cadence Owned Account (COA):</TypeH3>
       {isPending && <LoadingBlock title={`Loading coa for ${address} ... `} />}
       {!coa && (
         <p className={"opacity-50"}>This account doesn't have COA set up</p>
@@ -78,6 +80,7 @@ function AccountCoa(props: { address?: string | null }) {
           </div>
         </>
       )}
+      <hr className={"w-full border-gray-400/50 "} />
     </div>
   );
 }
@@ -90,7 +93,7 @@ function AccountHybrid(props: { address?: string | null }) {
 
   return (
     <div className={"flex flex-col gap-2 items-start justify-start"}>
-      <TypeLabel>Hybrid Custody:</TypeLabel>
+      <TypeH3>Hybrid Custody</TypeH3>
       {isPending && (
         <LoadingBlock
           title={`Loading hybrid custody info for ${address} ... `}
@@ -225,16 +228,68 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 function AccountOwnedInfo(props: { address?: string | null }) {
   const { address } = props;
-  const { network } = useParams();
   const { data, isPending } = useOwnedAccountInfo(address);
+  const { network } = useParams();
+
+  console.log({ data });
 
   return (
     <div className={"flex flex-col gap-2 items-start justify-start"}>
-      <TypeLabel>Parent Accounts:</TypeLabel>
+      <TypeH3>Owned Account</TypeH3>
       {isPending && (
         <LoadingBlock
           title={`Loading hybrid custody info for ${address} ... `}
         />
+      )}
+
+      {!isPending && data && (
+        <>
+          {data.owner && (
+            <div className={"flex flex-row gap-2 items-center justify-start"}>
+              <TypeLabel>Owned by:</TypeLabel>
+              <a
+                href={`/${network}/account/${data.owner}`}
+                className={"underline"}
+              >
+                {data.owner}
+              </a>
+            </div>
+          )}
+
+          {data.parents.length > 0 && (
+            <div
+              className={"w-full flex flex-col gap-2 items-start justify-start"}
+            >
+              <TypeH3>Parents</TypeH3>
+              {data.parents.map((item: FlowParentAccount) => {
+                return (
+                  <div
+                    key={item.address}
+                    className={cn(
+                      "flex w-full flex-col items-center justify-between bg-gray-100",
+                    )}
+                  >
+                    <div className="flex w-full flex-row items-center justify-start gap-4 p-4">
+                      {item.isClaimed && (
+                        <SimpleTag
+                          label={"Claimed"}
+                          className={"text-green-600"}
+                          category={<Check />}
+                        />
+                      )}
+                      <a
+                        href={`/${network}/account/${item.address}`}
+                        className={"underline font-bold"}
+                      >
+                        {item.address}
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
