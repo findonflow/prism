@@ -3,8 +3,13 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { BadgeJapaneseYen, Blend, Bolt, Package, Plug } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+import { use, useEffect, useState } from "react";
 
 import CopyText from "@/components/flowscan/CopyText";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
@@ -19,6 +24,7 @@ import { SearchBar } from "@/components/flowscan/SearchBar";
 import Select from "@/components/flowscan/Select";
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountPublicStorageContent() {
@@ -35,9 +41,19 @@ export default function AccountPublicStorageContent() {
 
   const [filter, setFilter] = useState("");
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const offset = searchParams.get("offset") || "0";
+  const limit = searchParams.get("limit") || "25";
+
   useEffect(() => {
     setRefKind("All");
   }, [type]);
+
+  useEffect(() => {
+    router.replace(pathname, { scroll: false });
+  }, [type, refKind]);
 
   const filteredList =
     data?.filter((pp: FlowPublicPathInfo) => {
@@ -65,6 +81,10 @@ export default function AccountPublicStorageContent() {
       );
     }) || [];
 
+  const itemsList = filteredList?.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit)
+  );
   const haveItemsBuHidden =
     filteredList.length === 0 && Boolean(data) && data!.length > 0;
 
@@ -124,14 +144,18 @@ export default function AccountPublicStorageContent() {
         </p>
       )}
 
-      {filteredList.length > 0 && (
+      {filteredList && !isLoading && (
+        <SimpleClientPagination totalItems={filteredList?.length} />
+      )}
+
+      {itemsList.length > 0 && (
         <motion.div
           className={
             "fat-row-column flex w-full flex-col items-start justify-start gap-px"
           }
         >
           <AnimatePresence mode="popLayout">
-            {filteredList?.map((capability) => {
+            {itemsList?.map((capability) => {
               return (
                 <PublicCapability
                   address={address}

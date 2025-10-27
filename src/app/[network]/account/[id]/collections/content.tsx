@@ -2,7 +2,12 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import ImageClient from "@/components/flowscan/ImageClient";
@@ -11,6 +16,8 @@ import useAccountResolver from "@/hooks/useAccountResolver";
 import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
 import { useCollectionItems } from "@/hooks/useCollectionItems";
 import { NumberOfItems } from "@/components/ui/tags";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import { useEffect } from "react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function extractCollectionName(collection: NFTCollection): string {
@@ -23,7 +30,7 @@ export default function AccountCollectionsContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string,
+    id as string
   );
   const address = resolved?.owner;
 
@@ -78,7 +85,7 @@ function SingleCollection(props: SingleCollectionProps) {
       unoptimized
       width={20}
       height={20}
-      src={collection.display.squareImage.file.url}
+      src={collection.display.squareImage.file.url || "/"}
       alt={"name"}
       className={"h-full w-full"}
     />
@@ -139,11 +146,27 @@ interface CollectionItemsProps {
 function CollectionItems(props: CollectionItemsProps) {
   const { address, collection } = props;
   const path = collection.path.split("/")[2];
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const offset = searchParams.get(path + "-offset") || "0";
+  const limit = searchParams.get(path + "-limit") || "25";
 
   const { data, isPending } = useCollectionItems(
     address,
     path,
-    collection.tokenIDs,
+    collection.tokenIDs
+  );
+
+  useEffect(() => {
+    return () => {
+      router.replace(pathname, { scroll: false });
+    };
+  }, []);
+
+  const itemsList = data?.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit)
   );
 
   // TODO: this is a bit more tricky since we are stiching them together and I am not sure if order is always preserved
@@ -153,18 +176,22 @@ function CollectionItems(props: CollectionItemsProps) {
     <FatRowDetails>
       {isPending && <JumpingDots />}
 
+      {!isPending && data && (
+        <SimpleClientPagination prefix={path + "-"} totalItems={data?.length} />
+      )}
+
       <div className="flex flex-row gap-2 flex-wrap">
-        {data?.map((token: any, i: number) => {
+        {itemsList?.map((token: any, i: number) => {
           const nftId = reverseIds[i];
 
           return (
             <div
               className="h-full overflow-hidden rounded-xs bg-gray-300 shadow-subtle hover:bg-gray-400/50"
-              key={`i-${path}`}
+              key={`${i}-${path}`}
             >
-              <div className="bg relative min-h-[200px] w-full overflow-hidden">
+              <div className="bg relative min-h-[200px] mx-auto w-full overflow-hidden">
                 <ImageClient
-                  src={token?.thumbnail.url || ""}
+                  src={token?.thumbnail.url || "/"}
                   alt={token?.id || ""}
                   dimension={"width"}
                 />

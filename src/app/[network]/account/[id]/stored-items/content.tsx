@@ -2,7 +2,12 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { BadgeJapaneseYen, Bolt, Database, Package, Plug } from "lucide-react";
 import JsonView from "react18-json-view";
@@ -20,13 +25,14 @@ import useStoredItems from "@/hooks/useStoredItems";
 import useStoredResource from "@/hooks/useStoredResource";
 
 import "@/components/ui/json-view/style.css";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStoredItemsContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string,
+    id as string
   );
   const address = resolved?.owner;
 
@@ -35,6 +41,16 @@ export default function AccountStoredItemsContent() {
   const [refKind, setRefKind] = useState("All");
 
   const [filter, setFilter] = useState("");
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const offset = searchParams.get("offset") || "0";
+  const limit = searchParams.get("limit") || "25";
+
+  useEffect(() => {
+    router.replace(pathname, { scroll: false });
+  }, [type, refKind]);
 
   useEffect(() => {
     setRefKind("All");
@@ -70,6 +86,11 @@ export default function AccountStoredItemsContent() {
         storageInfo.path?.toLowerCase().includes(filter.toLowerCase())
       );
     }) || [];
+
+  const itemsList = filteredList?.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit)
+  );
 
   const isLoading = isPending;
 
@@ -116,7 +137,7 @@ export default function AccountStoredItemsContent() {
                   }
                   return typeFilter;
                 })
-                .map((item) => item.type.kind),
+                .map((item) => item.type.kind)
             ),
           ]}
           onChange={setRefKind}
@@ -134,14 +155,18 @@ export default function AccountStoredItemsContent() {
         </p>
       )}
 
-      {filteredList.length > 0 && (
+      {filteredList && !isLoading && (
+        <SimpleClientPagination totalItems={filteredList?.length} />
+      )}
+
+      {itemsList.length > 0 && (
         <motion.div
           className={
             "fat-row-column flex w-full flex-col items-start justify-start gap-px"
           }
         >
           <AnimatePresence mode="popLayout">
-            {filteredList?.map((storageInfo) => {
+            {itemsList?.map((storageInfo) => {
               return (
                 <StorageInfo
                   address={address}
