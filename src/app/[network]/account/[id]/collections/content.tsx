@@ -1,22 +1,18 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import Link from "next/link";
 import Image from "next/image";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import ImageClient from "@/components/flowscan/ImageClient";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
-import useAccountResolver from "@/hooks/useAccountResolver";
-import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
-import { useCollectionItems } from "@/hooks/useCollectionItems";
-import { NumberOfItems } from "@/components/ui/tags";
 import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import { NumberOfItems } from "@/components/ui/tags";
+import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
+import useAccountResolver from "@/hooks/useAccountResolver";
+import { useCollectionItems } from "@/hooks/useCollectionItems";
+import useQueryParams from "@/hooks/utils/useQueryParams";
 import { useEffect } from "react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -35,6 +31,13 @@ export default function AccountCollectionsContent() {
   const address = resolved?.owner;
 
   const { data, isPending } = useAccountCollectionList(address);
+  const { setQueryParams, getQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25"] = getQueryParams([
+    "offset",
+    "limit",
+    "type",
+    "refKind",
+  ]);
 
   const showList = !isPending && Boolean(data);
   const filtered =
@@ -50,14 +53,22 @@ export default function AccountCollectionsContent() {
     });
   });
 
+  const items = sorted?.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit)
+  );
+
   if (!address) return <div>Please provide a valid account identifier.</div>;
 
   return (
     <div className={"flex w-full flex-col"}>
       {isPending && <JumpingDots />}
+      {sorted && !isPending && (
+        <SimpleClientPagination totalItems={sorted?.length} />
+      )}
       {showList && (
-        <div className={"fat-row-column w-full flex flex-col gap-px"}>
-          {sorted?.map((collection) => (
+        <div className={"fat-row-column w-full mt-4 flex flex-col gap-px"}>
+          {items?.map((collection) => (
             <SingleCollection
               collection={collection}
               key={collection.path}
@@ -146,11 +157,11 @@ interface CollectionItemsProps {
 function CollectionItems(props: CollectionItemsProps) {
   const { address, collection } = props;
   const path = collection.path.split("/")[2];
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const offset = searchParams.get(path + "-offset") || "0";
-  const limit = searchParams.get(path + "-limit") || "25";
+  const { getQueryParams, setQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25"] = getQueryParams([
+    path + "-offset",
+    path + "-limit",
+  ]);
 
   const { data, isPending } = useCollectionItems(
     address,
@@ -160,7 +171,13 @@ function CollectionItems(props: CollectionItemsProps) {
 
   useEffect(() => {
     return () => {
-      router.replace(pathname, { scroll: false });
+      setQueryParams(
+        {
+          [path + "-offset"]: false,
+          [path + "-limit"]: false,
+        },
+        { push: false, scroll: false }
+      );
     };
   }, []);
 
@@ -170,7 +187,9 @@ function CollectionItems(props: CollectionItemsProps) {
   );
 
   // TODO: this is a bit more tricky since we are stiching them together and I am not sure if order is always preserved
-  const reverseIds = collection.tokenIDs.reverse();
+  const reverseIds = collection.tokenIDs
+    .reverse()
+    .slice(parseInt(offset), parseInt(offset) + parseInt(limit));
 
   return (
     <FatRowDetails>
