@@ -146,9 +146,6 @@ function CollectionItems(props: CollectionItemsProps) {
     collection.tokenIDs
   );
 
-  // TODO: this is a bit more tricky since we are stiching them together and I am not sure if order is always preserved
-  const reverseIds = collection.tokenIDs.reverse();
-
   return (
     <FatRowDetails>
       {isPending && <JumpingDots />}
