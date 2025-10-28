@@ -1,5 +1,6 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import "./styles.css";
+import { cn } from "@/lib/utils";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function JumpingDots() {
@@ -15,11 +16,14 @@ export default function JumpingDots() {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export function LoadingBlock(props: { title?: string }) {
-  const { title } = props;
+export function LoadingBlock(props: { title?: string; className?: string }) {
+  const { title, className } = props;
   return (
     <div
-      className={"flex flex-row items-center justify-start gap-2 opacity-50"}
+      className={cn(
+        "flex flex-row items-center justify-start gap-2 opacity-50",
+        className,
+      )}
     >
       <span className="capitalize">{title || "Loading"}</span>
       <JumpingDots />

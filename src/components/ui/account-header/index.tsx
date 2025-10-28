@@ -26,7 +26,9 @@ export default function AccountHeader() {
 
   return (
     <div
-      className={"flex flex-col w-full space-y-6 justify-between items-start py-4"}
+      className={
+        "flex flex-col w-full space-y-6 justify-between items-start py-4"
+      }
     >
       <div className={"w-32 aspect-square"}>
         <QRCode
@@ -36,7 +38,12 @@ export default function AccountHeader() {
           style={{ height: "auto", maxWidth: "100%", width: "100%" }}
         />
       </div>
-      <div className={cn("flex flex-col items-start justify-start gap-4 w-full", "md:w-auto")}>
+      <div
+        className={cn(
+          "flex flex-col items-start justify-start gap-4 w-full",
+          "md:w-auto",
+        )}
+      >
         <div className={"flex flex-col items-start justify-start w-full"}>
           {isResolving && <LoadingBlock title={"Resolving account owner"} />}
           {address && (
@@ -49,7 +56,7 @@ export default function AccountHeader() {
             </>
           )}
         </div>
-        <BasicAccountDetails address={address || ""}/>
+        {address && <BasicAccountDetails address={address || ""} />}
       </div>
     </div>
   );

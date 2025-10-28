@@ -21,6 +21,7 @@ import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination
 import useQueryParams from "@/hooks/utils/useQueryParams";
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { useTokenRegistry } from "@/hooks/useTokenList";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountPublicStorageContent() {
@@ -41,6 +42,18 @@ export default function AccountPublicStorageContent() {
 
   const [type, setType] = useState(typeParam);
   const [refKind, setRefKind] = useState(refKindParam);
+  const { data: tokenRegistry, isPending: fetchingRegistry } =
+    useTokenRegistry();
+
+  const tokenRegistryMap = tokenRegistry
+    ? (tokenRegistry as any).tokens.reduce(
+        (acc: Record<any, any>, item: any) => {
+          acc[item.path.balance] = item;
+          return acc;
+        },
+        {}
+      )
+    : {};
 
   const filteredList =
     data?.filter((pp: FlowPublicPathInfo) => {
@@ -128,7 +141,7 @@ export default function AccountPublicStorageContent() {
         />
       </div>
 
-      {isLoading && (
+      {(isLoading || fetchingRegistry) && (
         <LoadingBlock title={`Loading ${address} public items... `} />
       )}
       {haveItemsBuHidden && (
@@ -155,6 +168,7 @@ export default function AccountPublicStorageContent() {
                   address={address}
                   capability={capability}
                   key={capability.path}
+                  tokenRegistryMap={tokenRegistryMap}
                 />
               );
             })}
@@ -169,8 +183,10 @@ export default function AccountPublicStorageContent() {
 function PublicCapability(props: {
   capability: FlowPublicPathInfo;
   address?: string | null;
+  tokenRegistryMap?: any;
 }) {
-  const { capability, address } = props;
+  const { capability, address, tokenRegistryMap } = props;
+  const token = tokenRegistryMap ? tokenRegistryMap?.[capability.path] : null;
 
   const cap = capability?.type?.type;
   // const capabilityKind = cap?.kind;
@@ -242,7 +258,29 @@ function PublicCapability(props: {
                 : "text-green-600"
             )}
           >
-            <BadgeJapaneseYen className={"h-4 w-4"} />
+            {token && (
+              <img
+                src={token?.logoURI || "/"}
+                title={token?.name || capability?.path.split("/").pop()}
+                onError={(e) => {
+                  const errorReplacementDiv = document?.createElement("div");
+                  errorReplacementDiv.className = cn(
+                    "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-gray-300",
+                    "h-5 w-5 p-2"
+                  );
+                  errorReplacementDiv.innerText =
+                    token?.name.split("")[0] ||
+                    capability?.path.split("/").pop()?.split("")[0] ||
+                    "T";
+                  e.currentTarget.parentNode?.replaceChild(
+                    errorReplacementDiv,
+                    e.currentTarget
+                  );
+                }}
+                alt={"token"}
+                className={"h-4 w-4"}
+              />
+            )}
             <b className={"text-md"}>
               {formatNumberToAccounting(Number(capability?.balance), 4, 2)}
             </b>

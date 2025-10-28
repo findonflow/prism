@@ -22,6 +22,8 @@ import useStoredResource from "@/hooks/useStoredResource";
 import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 import "@/components/ui/json-view/style.css";
 import useQueryParams from "@/hooks/utils/useQueryParams";
+import { useTokenRegistry } from "@/hooks/useTokenList";
+import { cn } from "@/lib/utils";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStoredItemsContent() {
@@ -31,6 +33,13 @@ export default function AccountStoredItemsContent() {
     id as string
   );
   const address = resolved?.owner;
+
+  const { data: tokenRegistry, isPending: fetchingRegistry } =
+    useTokenRegistry();
+
+  const tokenRegistryMap = tokenRegistry
+    ? (tokenRegistry as any).tokenByPath
+    : {};
 
   const { data, isPending } = useStoredItems(address);
 
@@ -169,6 +178,7 @@ export default function AccountStoredItemsContent() {
                   address={address}
                   storageInfo={storageInfo}
                   key={storageInfo.path}
+                  tokenRegistryMap={tokenRegistryMap}
                 />
               );
             })}
@@ -183,8 +193,10 @@ export default function AccountStoredItemsContent() {
 function StorageInfo(props: {
   storageInfo: FlowStorageInfo;
   address?: string | null;
+  tokenRegistryMap?: Record<any, any>;
 }) {
-  const { storageInfo, address } = props;
+  const { storageInfo, address, tokenRegistryMap } = props;
+  const token = tokenRegistryMap ? tokenRegistryMap?.[storageInfo.path] : null;
 
   return (
     <FatRow
@@ -246,9 +258,37 @@ function StorageInfo(props: {
             <NumberOfItems items={storageInfo?.tokenIDs?.length} />
           )}
 
-          {storageInfo.isVault && (
-            <VaultBalance balance={storageInfo?.balance} />
-          )}
+          <div className="flex items-center justify-between">
+            {storageInfo.isVault && (
+              <>
+                {token && (
+                  <img
+                    src={token?.logoURI || "/"}
+                    title={token?.name || storageInfo?.path.split("/").pop()}
+                    onError={(e) => {
+                      const errorReplacementDiv =
+                        document?.createElement("div");
+                      errorReplacementDiv.className = cn(
+                        "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-gray-300",
+                        "h-5 w-5 p-2"
+                      );
+                      errorReplacementDiv.innerText =
+                        token?.name.split("")[0] ||
+                        storageInfo?.path.split("/").pop()?.split("")[0] ||
+                        "T";
+                      e.currentTarget.parentNode?.replaceChild(
+                        errorReplacementDiv,
+                        e.currentTarget
+                      );
+                    }}
+                    alt={"token"}
+                    className={"h-4 w-4"}
+                  />
+                )}
+                <VaultBalance balance={storageInfo?.balance} />
+              </>
+            )}
+          </div>
         </div>
       </div>
     </FatRow>
