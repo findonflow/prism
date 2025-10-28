@@ -23,7 +23,7 @@ export default function AccountCollectionsContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string,
+    id as string
   );
   const address = resolved?.owner;
 
@@ -143,7 +143,7 @@ function CollectionItems(props: CollectionItemsProps) {
   const { data, isPending } = useCollectionItems(
     address,
     path,
-    collection.tokenIDs,
+    collection.tokenIDs
   );
 
   // TODO: this is a bit more tricky since we are stiching them together and I am not sure if order is always preserved
@@ -155,7 +155,7 @@ function CollectionItems(props: CollectionItemsProps) {
 
       <div className="flex flex-row gap-2 flex-wrap">
         {data?.map((token: any, i: number) => {
-          const nftId = reverseIds[i];
+          const nftId = token.tokenId;
 
           return (
             <div
