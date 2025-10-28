@@ -3,13 +3,8 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { BadgeJapaneseYen, Blend, Bolt, Package, Plug } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import CopyText from "@/components/flowscan/CopyText";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
@@ -22,9 +17,10 @@ import usePublicStorageList from "@/hooks/usePublicStorageList";
 
 import { SearchBar } from "@/components/flowscan/SearchBar";
 import Select from "@/components/flowscan/Select";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import useQueryParams from "@/hooks/utils/useQueryParams";
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountPublicStorageContent() {
@@ -36,24 +32,15 @@ export default function AccountPublicStorageContent() {
   const address = resolved?.owner;
 
   const { data, isLoading } = usePublicStorageList(address);
-  const [type, setType] = useState("All");
-  const [refKind, setRefKind] = useState("All");
 
   const [filter, setFilter] = useState("");
 
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const offset = searchParams.get("offset") || "0";
-  const limit = searchParams.get("limit") || "25";
+  const { setQueryParams, getQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25", typeParam = "All", refKindParam = "All"] =
+    getQueryParams(["offset", "limit", "type", "refKind"]);
 
-  useEffect(() => {
-    setRefKind("All");
-  }, [type]);
-
-  useEffect(() => {
-    router.replace(pathname, { scroll: false });
-  }, [type, refKind]);
+  const [type, setType] = useState(typeParam);
+  const [refKind, setRefKind] = useState(refKindParam);
 
   const filteredList =
     data?.filter((pp: FlowPublicPathInfo) => {
@@ -106,7 +93,11 @@ export default function AccountPublicStorageContent() {
           className={"min-w-[160px] max-md:grow"}
           initialValue={"All"}
           options={["All", "Balance", "Collection"]}
-          onChange={setType}
+          onChange={(val) => {
+            setType(val);
+            setQueryParams({ type: val, refKind: false }, { push: false });
+            setRefKind("All");
+          }}
         />
         <Select
           className={"min-w-[160px] max-md:grow"}
@@ -130,7 +121,10 @@ export default function AccountPublicStorageContent() {
                 .filter(Boolean)
             ),
           ]}
-          onChange={setRefKind}
+          onChange={(val) => {
+            setRefKind(val);
+            setQueryParams({ refKind: val }, { push: false });
+          }}
         />
       </div>
 
