@@ -7,13 +7,12 @@ import { useParams } from "next/navigation";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import ImageClient from "@/components/flowscan/ImageClient";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
-import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 import { NumberOfItems } from "@/components/ui/tags";
 import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useCollectionItems } from "@/hooks/useCollectionItems";
-import useQueryParams from "@/hooks/utils/useQueryParams";
-import { useEffect } from "react";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import {useEffect} from "react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function extractCollectionName(collection: NFTCollection): string {
