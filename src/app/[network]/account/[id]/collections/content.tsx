@@ -160,6 +160,7 @@ interface CollectionItemsProps {
 }
 /*--------------------------------------------------------------------------------------------------------------------*/
 function CollectionItems(props: CollectionItemsProps) {
+  const {network} = useParams();
   const { address, collection } = props;
   const path = collection.path.split("/")[2];
   const { getQueryParams, setQueryParams } = useQueryParams();
@@ -216,9 +217,11 @@ function CollectionItems(props: CollectionItemsProps) {
                 />
               </div>
               <div className="flex flex-col gap-2 p-4">
-                <p className="text-main font-bold text-text-color">
+                <a href={`/${network}/collections/${path}/${nftId}`} className={"underline"}>
+                <p className="text-main font-bold text-text-color underline">
                   {token.name}
                 </p>
+                </a>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-1">
                     <p className="text-tiny text-tabs-bg-active-text">
