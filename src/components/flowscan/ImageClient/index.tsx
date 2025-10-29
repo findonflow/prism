@@ -58,7 +58,7 @@ export default function ImageClient(props: Props & ImageProps) {
 
   return (
     <>
-      <div className="absolute inset-0 flex h-full w-full items-center justify-center ">
+      <div className="absolute mx-auto inset-0 flex h-full w-full items-center justify-center ">
         {loading && (
           <div className=" animate-ping rounded-full border-[5px] border-solid border-blue-400 duration-1000" />
         )}
@@ -76,9 +76,10 @@ export default function ImageClient(props: Props & ImageProps) {
             const imageSource = fallbackOnErrorSrc?.shift();
             if (imageSource) element.src = handleIpfs(imageSource);
             else element.src = "/no-image.png";
+            element.className = "absolute inset-0 h-full w-full";
             setLoading(false);
           }}
-          className="imageClass absolute inset-0 h-full w-full"
+          className="absolute inset-0 h-full w-full"
           style={{ objectFit: "contain" }}
           // objectFit="contain"
           alt={alt}

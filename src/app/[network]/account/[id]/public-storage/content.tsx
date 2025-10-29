@@ -17,6 +17,8 @@ import usePublicStorageList from "@/hooks/usePublicStorageList";
 
 import { SearchBar } from "@/components/flowscan/SearchBar";
 import Select from "@/components/flowscan/Select";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import useQueryParams from "@/hooks/utils/useQueryParams";
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useTokenRegistry } from "@/hooks/useTokenList";
@@ -31,11 +33,15 @@ export default function AccountPublicStorageContent() {
   const address = resolved?.owner;
 
   const { data, isLoading } = usePublicStorageList(address);
-  const [type, setType] = useState("All");
-  const [refKind, setRefKind] = useState("All");
 
   const [filter, setFilter] = useState("");
 
+  const { setQueryParams, getQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25", typeParam = "All", refKindParam = "All"] =
+    getQueryParams(["offset", "limit", "type", "refKind"]);
+
+  const [type, setType] = useState(typeParam);
+  const [refKind, setRefKind] = useState(refKindParam);
   const { data: tokenRegistry, isPending: fetchingRegistry } =
     useTokenRegistry();
 
@@ -48,10 +54,6 @@ export default function AccountPublicStorageContent() {
         {}
       )
     : {};
-
-  useEffect(() => {
-    setRefKind("All");
-  }, [type]);
 
   const filteredList =
     data?.filter((pp: FlowPublicPathInfo) => {
@@ -79,6 +81,10 @@ export default function AccountPublicStorageContent() {
       );
     }) || [];
 
+  const itemsList = filteredList?.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit)
+  );
   const haveItemsBuHidden =
     filteredList.length === 0 && Boolean(data) && data!.length > 0;
 
@@ -100,7 +106,11 @@ export default function AccountPublicStorageContent() {
           className={"min-w-[160px] max-md:grow"}
           initialValue={"All"}
           options={["All", "Balance", "Collection"]}
-          onChange={setType}
+          onChange={(val) => {
+            setType(val);
+            setQueryParams({ type: val, refKind: false }, { push: false });
+            setRefKind("All");
+          }}
         />
         <Select
           className={"min-w-[160px] max-md:grow"}
@@ -124,7 +134,10 @@ export default function AccountPublicStorageContent() {
                 .filter(Boolean)
             ),
           ]}
-          onChange={setRefKind}
+          onChange={(val) => {
+            setRefKind(val);
+            setQueryParams({ refKind: val }, { push: false });
+          }}
         />
       </div>
 
@@ -138,14 +151,18 @@ export default function AccountPublicStorageContent() {
         </p>
       )}
 
-      {filteredList.length > 0 && (
+      {filteredList && !isLoading && (
+        <SimpleClientPagination totalItems={filteredList?.length} />
+      )}
+
+      {itemsList.length > 0 && (
         <motion.div
           className={
             "fat-row-column flex w-full flex-col items-start justify-start gap-px"
           }
         >
           <AnimatePresence mode="popLayout">
-            {filteredList?.map((capability) => {
+            {itemsList?.map((capability) => {
               return (
                 <PublicCapability
                   address={address}

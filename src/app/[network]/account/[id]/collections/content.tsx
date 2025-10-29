@@ -1,16 +1,19 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import ImageClient from "@/components/flowscan/ImageClient";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
-import useAccountResolver from "@/hooks/useAccountResolver";
-import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
-import { useCollectionItems } from "@/hooks/useCollectionItems";
 import { NumberOfItems } from "@/components/ui/tags";
+import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
+import useAccountResolver from "@/hooks/useAccountResolver";
+import { useCollectionItems } from "@/hooks/useCollectionItems";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import { useEffect } from "react";
+import useQueryParams from "@/hooks/utils/useQueryParams";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function extractCollectionName(collection: NFTCollection): string {
@@ -28,6 +31,13 @@ export default function AccountCollectionsContent() {
   const address = resolved?.owner;
 
   const { data, isPending } = useAccountCollectionList(address);
+  const { setQueryParams, getQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25"] = getQueryParams([
+    "offset",
+    "limit",
+    "type",
+    "refKind",
+  ]);
 
   const showList = !isPending && Boolean(data);
   const filtered =
@@ -43,14 +53,22 @@ export default function AccountCollectionsContent() {
     });
   });
 
+  const items = sorted?.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit)
+  );
+
   if (!address) return <div>Please provide a valid account identifier.</div>;
 
   return (
     <div className={"flex w-full flex-col"}>
       {isPending && <JumpingDots />}
+      {sorted && !isPending && (
+        <SimpleClientPagination totalItems={sorted?.length} />
+      )}
       {showList && (
-        <div className={"fat-row-column w-full flex flex-col gap-px"}>
-          {sorted?.map((collection) => (
+        <div className={"fat-row-column w-full mt-4 flex flex-col gap-px"}>
+          {items?.map((collection) => (
             <SingleCollection
               collection={collection}
               key={collection.path}
@@ -78,7 +96,7 @@ function SingleCollection(props: SingleCollectionProps) {
       unoptimized
       width={20}
       height={20}
-      src={collection.display.squareImage.file.url}
+      src={collection.display.squareImage.file.url || "/"}
       alt={"name"}
       className={"h-full w-full"}
     />
@@ -139,6 +157,11 @@ interface CollectionItemsProps {
 function CollectionItems(props: CollectionItemsProps) {
   const { address, collection } = props;
   const path = collection.path.split("/")[2];
+  const { getQueryParams, setQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25"] = getQueryParams([
+    path + "-offset",
+    path + "-limit",
+  ]);
 
   const { data, isPending } = useCollectionItems(
     address,
@@ -146,22 +169,43 @@ function CollectionItems(props: CollectionItemsProps) {
     collection.tokenIDs
   );
 
+  useEffect(() => {
+    return () => {
+      setQueryParams(
+        {
+          [path + "-offset"]: false,
+          [path + "-limit"]: false,
+        },
+        { push: false, scroll: false }
+      );
+    };
+  }, []);
+
+  const itemsList = data?.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit)
+  );
+
   return (
     <FatRowDetails>
       {isPending && <JumpingDots />}
 
+      {!isPending && data && (
+        <SimpleClientPagination prefix={path + "-"} totalItems={data?.length} />
+      )}
+
       <div className="flex flex-row gap-2 flex-wrap">
-        {data?.map((token: any, i: number) => {
+        {itemsList?.map((token: any, i: number) => {
           const nftId = token.tokenId;
 
           return (
             <div
               className="h-full overflow-hidden rounded-xs bg-gray-300 shadow-subtle hover:bg-gray-400/50"
-              key={`i-${path}`}
+              key={`${i}-${path}`}
             >
-              <div className="bg relative min-h-[200px] w-full overflow-hidden">
+              <div className="bg relative min-h-[200px] mx-auto w-full overflow-hidden">
                 <ImageClient
-                  src={token?.thumbnail.url || ""}
+                  src={token?.thumbnail.url || "/"}
                   alt={token?.id || ""}
                   dimension={"width"}
                 />

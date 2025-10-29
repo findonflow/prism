@@ -10,7 +10,11 @@ export default async function NetworkPage(props: NetworkPageProps) {
   const params = await props.params;
 
   return (
-    <div className={"space-y-6 mx-auto w-full max-w-[30rem]"}>
+    <div
+      className={
+        "space-y-6 mx-auto w-full max-w-[30rem] h-full flex flex-col items-center justify-center flex-1"
+      }
+    >
       <TypeTextBlock>
         <TypeH1 className={"font-light"}>
           Explore <span className={"font-bold"}>{params.network}</span> data

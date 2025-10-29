@@ -1,25 +1,27 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { useEffect, useState } from "react";
+import { BadgeJapaneseYen, Bolt, Database, Package, Plug } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
-import { BadgeJapaneseYen, Bolt, Database, Package, Plug } from "lucide-react";
+import { useState } from "react";
 import JsonView from "react18-json-view";
 
 import CopyText from "@/components/flowscan/CopyText";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
+import { SearchBar } from "@/components/flowscan/SearchBar";
+import Select from "@/components/flowscan/Select";
 import SimpleTag from "@/components/flowscan/SimpleTag";
 import { NumberOfItems, VaultBalance } from "@/components/ui/tags";
-import Select from "@/components/flowscan/Select";
-import { SearchBar } from "@/components/flowscan/SearchBar";
 import { TypeLabel } from "@/components/ui/typography";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import useStoredItems from "@/hooks/useStoredItems";
 import useStoredResource from "@/hooks/useStoredResource";
 
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 import "@/components/ui/json-view/style.css";
+import useQueryParams from "@/hooks/utils/useQueryParams";
 import { useTokenRegistry } from "@/hooks/useTokenList";
 import { cn } from "@/lib/utils";
 
@@ -40,14 +42,15 @@ export default function AccountStoredItemsContent() {
     : {};
 
   const { data, isPending } = useStoredItems(address);
-  const [type, setType] = useState("All");
-  const [refKind, setRefKind] = useState("All");
 
   const [filter, setFilter] = useState("");
 
-  useEffect(() => {
-    setRefKind("All");
-  }, [type]);
+  const { setQueryParams, getQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25", typeParam = "All", refKindParam = "All"] =
+    getQueryParams(["offset", "limit", "type", "refKind"]);
+
+  const [type, setType] = useState(typeParam);
+  const [refKind, setRefKind] = useState(refKindParam);
 
   const filteredList =
     data?.filter((storageInfo: FlowStorageInfo) => {
@@ -80,6 +83,11 @@ export default function AccountStoredItemsContent() {
       );
     }) || [];
 
+  const itemsList = filteredList?.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit)
+  );
+
   const isLoading = isPending;
 
   const haveItemsBuHidden =
@@ -104,7 +112,14 @@ export default function AccountStoredItemsContent() {
           className={"min-w-[160px] max-md:grow"}
           initialValue={"All"}
           options={["All", "Balance", "Collection"]}
-          onChange={setType}
+          onChange={(val) => {
+            setType(val);
+            setQueryParams(
+              { type: val, refKind: false, limit: false, offset: false },
+              { push: false }
+            );
+            setRefKind("All");
+          }}
         />
 
         <Select
@@ -128,7 +143,10 @@ export default function AccountStoredItemsContent() {
                 .map((item) => item.type.kind)
             ),
           ]}
-          onChange={setRefKind}
+          onChange={(val) => {
+            setRefKind(val);
+            setQueryParams({ refKind: val }, { push: false });
+          }}
         />
       </div>
 
@@ -143,14 +161,18 @@ export default function AccountStoredItemsContent() {
         </p>
       )}
 
-      {filteredList.length > 0 && (
+      {filteredList && !isLoading && (
+        <SimpleClientPagination totalItems={filteredList?.length} />
+      )}
+
+      {itemsList.length > 0 && (
         <motion.div
           className={
             "fat-row-column flex w-full flex-col items-start justify-start gap-px"
           }
         >
           <AnimatePresence mode="popLayout">
-            {filteredList?.map((storageInfo) => {
+            {itemsList?.map((storageInfo) => {
               return (
                 <StorageInfo
                   address={address}
