@@ -14,8 +14,9 @@ export const cadenceGetNftDisplays = `
     access(all) let transferrable: Bool
     access(all) let collectionDisplay: MetadataViews.NFTCollectionDisplay?
     access(all) let inscription: String
+    access(all) let tokenId: UInt64
   
-    init(name: String, description: String, thumbnail: {MetadataViews.File}, rarity: String?, transferrable: Bool, collectionDisplay: MetadataViews.NFTCollectionDisplay?, inscription: String) {
+    init(name: String, description: String, thumbnail: {MetadataViews.File}, rarity: String?, transferrable: Bool, collectionDisplay: MetadataViews.NFTCollectionDisplay?, inscription: String, tokenId: UInt64) {
       self.name = name
       self.description = description
       self.thumbnail = thumbnail
@@ -23,6 +24,7 @@ export const cadenceGetNftDisplays = `
       self.transferrable = transferrable
       self.collectionDisplay = collectionDisplay
       self.inscription = inscription
+      self.tokenId = tokenId
     }
   }
   
@@ -62,7 +64,8 @@ export const cadenceGetNftDisplays = `
           rarity: nil,
           transferrable: true,
           collectionDisplay: nil,
-          inscription: inscription
+          inscription: inscription,
+          tokenId: tokenID
         )
       }
       return res
@@ -77,7 +80,8 @@ export const cadenceGetNftDisplays = `
           rarity: nil,
           transferrable: true,
           collectionDisplay: nil,
-          inscription: ""
+          inscription: "",
+          tokenId: tokenID
         )
       let viewResolver = collectionRef!.borrowViewResolver(id: tokenID)
       if let resolver = viewResolver {
@@ -103,7 +107,8 @@ export const cadenceGetNftDisplays = `
                   rarity: rarityDesc,
                   transferrable: transferrable,
                   collectionDisplay: collectionDisplay,
-                  inscription: ""
+                  inscription: "",
+                  tokenId: tokenID
               )
           } else {
               res[tokenID] = placeholder

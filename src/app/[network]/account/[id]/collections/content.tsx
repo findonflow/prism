@@ -7,13 +7,12 @@ import { useParams } from "next/navigation";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import ImageClient from "@/components/flowscan/ImageClient";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
-import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 import { NumberOfItems } from "@/components/ui/tags";
 import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useCollectionItems } from "@/hooks/useCollectionItems";
-import useQueryParams from "@/hooks/utils/useQueryParams";
-import { useEffect } from "react";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import {useEffect} from "react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function extractCollectionName(collection: NFTCollection): string {
@@ -186,11 +185,6 @@ function CollectionItems(props: CollectionItemsProps) {
     parseInt(offset) + parseInt(limit)
   );
 
-  // TODO: this is a bit more tricky since we are stiching them together and I am not sure if order is always preserved
-  const reverseIds = collection.tokenIDs
-    .reverse()
-    .slice(parseInt(offset), parseInt(offset) + parseInt(limit));
-
   return (
     <FatRowDetails>
       {isPending && <JumpingDots />}
@@ -201,7 +195,7 @@ function CollectionItems(props: CollectionItemsProps) {
 
       <div className="flex flex-row gap-2 flex-wrap">
         {itemsList?.map((token: any, i: number) => {
-          const nftId = reverseIds[i];
+          const nftId = token.tokenId;
 
           return (
             <div
