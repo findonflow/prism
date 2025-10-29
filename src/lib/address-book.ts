@@ -57,3 +57,13 @@ export const FLOWID_TABLE_STAKING = {
   mainnet: "0x8624b52f9ddcd04a",
   testnet: "0x9eca2b38b18b5dfe",
 };
+
+export const VIEW_RESOLVER = {
+  mainnet: "0x1d7e57aa55817448",
+  testnet: ""
+}
+
+export const FIND_VIEWS = {
+  mainnet: "0x097bafa4e0b48eef",
+  testnet: ""
+}

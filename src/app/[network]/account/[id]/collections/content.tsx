@@ -160,7 +160,7 @@ interface CollectionItemsProps {
 }
 /*--------------------------------------------------------------------------------------------------------------------*/
 function CollectionItems(props: CollectionItemsProps) {
-  const {network} = useParams();
+  const { network, id } = useParams();
   const { address, collection } = props;
   const path = collection.path.split("/")[2];
   const { getQueryParams, setQueryParams } = useQueryParams();
@@ -217,7 +217,7 @@ function CollectionItems(props: CollectionItemsProps) {
                 />
               </div>
               <div className="flex flex-col gap-2 p-4">
-                <a href={`/${network}/collections/${path}/${nftId}`} className={"underline"}>
+                <a href={`/${network}/account/${id}/collections/${path}/${nftId}`} className={"underline"} target={"_blank"}>
                 <p className="text-main font-bold text-text-color underline">
                   {token.name}
                 </p>

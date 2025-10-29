@@ -1,9 +1,14 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
+import { config, currentUser } from "@onflow/fcl";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
 import {
   CAPABILITY_UTILS,
   FIND,
+  FIND_VIEWS,
   FLOW_EPOCH,
   FLOW_MAP,
   FLOW_STAKING_COLLECTION,
@@ -14,21 +19,8 @@ import {
   METADATA_VIEWS,
   NON_FUNGIBLE_TOKEN,
   SERVICE_ADDRESS,
+  VIEW_RESOLVER
 } from "@/lib/address-book";
-import { config, currentUser } from "@onflow/fcl";
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import { useParams, useRouter } from "next/navigation";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
 
 type NetworkKey = "mainnet" | "testnet";
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -41,6 +33,8 @@ function initFCL(network: string) {
     "0xNonFungibleToken": NON_FUNGIBLE_TOKEN[key],
     "0xFungibleToken": FUNGIBLE_TOKEN[key],
     "0xMetadataViews": METADATA_VIEWS[key],
+    "0xViewResolver": VIEW_RESOLVER[key],
+    "0xFindViews": FIND_VIEWS[key],
     "0xFlowMap": FLOW_MAP[key],
     "0xServiceAddress": SERVICE_ADDRESS[key],
     "0xHybridCustody": HYBRID_CUSTODY[key],
