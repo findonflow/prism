@@ -186,11 +186,6 @@ function CollectionItems(props: CollectionItemsProps) {
     parseInt(offset) + parseInt(limit)
   );
 
-  // TODO: this is a bit more tricky since we are stiching them together and I am not sure if order is always preserved
-  const reverseIds = collection.tokenIDs
-    .reverse()
-    .slice(parseInt(offset), parseInt(offset) + parseInt(limit));
-
   return (
     <FatRowDetails>
       {isPending && <JumpingDots />}
@@ -201,7 +196,7 @@ function CollectionItems(props: CollectionItemsProps) {
 
       <div className="flex flex-row gap-2 flex-wrap">
         {itemsList?.map((token: any, i: number) => {
-          const nftId = reverseIds[i];
+          const nftId = token.tokenId;
 
           return (
             <div
