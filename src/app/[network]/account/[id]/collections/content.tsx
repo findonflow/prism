@@ -12,7 +12,8 @@ import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useCollectionItems } from "@/hooks/useCollectionItems";
 import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
-import {useEffect} from "react";
+import { useEffect } from "react";
+import useQueryParams from "@/hooks/utils/useQueryParams";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function extractCollectionName(collection: NFTCollection): string {
