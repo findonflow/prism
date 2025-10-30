@@ -7,10 +7,13 @@ import ViewResolver from 0xMetadataViews
 access(all) struct CollectionDisplay {
   access(all) let name: String
   access(all) let squareImage: MetadataViews.Media
+  access(all) let description: String
 
-  init(name: String, squareImage: MetadataViews.Media) {
+
+  init(name: String, squareImage: MetadataViews.Media, description: String) {
     self.name = name
     self.squareImage = squareImage
+    self.description = description
   }
 }
 
@@ -85,7 +88,8 @@ access(all) fun main(address: Address, pathIdentifiers: [String]): [Item] {
               if let display = MetadataViews.getNFTCollectionDisplay(resolver) {
                 collectionDisplay = CollectionDisplay(
                   name: display.name,
-                  squareImage: display.squareImage
+                  squareImage: display.squareImage,
+                  description: display.description
               )
               }
               if let data = MetadataViews.getNFTCollectionData(resolver) {
@@ -129,4 +133,4 @@ access(all) fun main(address: Address, pathIdentifiers: [String]): [Item] {
   }
 
   return items
-}`
+}`;

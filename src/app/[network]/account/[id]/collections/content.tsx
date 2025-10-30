@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import useQueryParams from "@/hooks/utils/useQueryParams";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-function extractCollectionName(collection: NFTCollection): string {
+export function extractCollectionName(collection: NFTCollection): string {
   const rawName = collection.type.typeID.split(".")[2];
   return collection.display?.name || rawName;
 }
@@ -90,6 +90,8 @@ interface SingleCollectionProps {
 function SingleCollection(props: SingleCollectionProps) {
   const { address, collection } = props;
   const name = extractCollectionName(collection);
+  const collectionPathLink =
+    "collections/" + collection.path.replace("/storage/", "");
 
   const previewImage = collection.display?.squareImage ? (
     <Image
@@ -122,13 +124,14 @@ function SingleCollection(props: SingleCollectionProps) {
         <div
           className={"flex w-full flex-row items-center justify-start gap-4"}
         >
-          <div
+          <a
+            href={collectionPathLink}
             className={
               "h-8 w-8 overflow-hidden rounded-full flex flex-col items-center justify-center"
             }
           >
             {previewImage}
-          </div>
+          </a>
 
           <div className={"flex flex-col"}>
             <div
@@ -136,8 +139,10 @@ function SingleCollection(props: SingleCollectionProps) {
                 "flex flex-col flex-wrap items-start justify-start font-bold truncate w-full"
               }
             >
-              <span>{name}</span>
-              <p className={"text-sm font-normal"}>{collection.path}</p>
+              <a href={collectionPathLink}>{name}</a>
+              <a href={collectionPathLink} className={"text-sm font-normal"}>
+                {collection.path}
+              </a>
             </div>
           </div>
         </div>

@@ -40,12 +40,14 @@ export default function SimpleClientPagination(props: {
     }
 
     const params = new URLSearchParams(searchParams?.toString() || "");
-    params.set(`${prefix}offset`, newOffset.toString());
+    if (newOffset === 0) params.delete(`${prefix}offset`);
+    else params.set(`${prefix}offset`, newOffset.toString());
     window.history.pushState(null, "", pathName + "?" + params.toString());
   }
   function handleLimit(newLimit: string) {
     const params = new URLSearchParams(searchParams?.toString() || "");
-    params.set(`${prefix}limit`, newLimit);
+    if (newLimit == "25") params.delete(`${prefix}limit`);
+    else params.set(`${prefix}limit`, newLimit);
     window.history.pushState(null, "", pathName + "?" + params.toString());
   }
 

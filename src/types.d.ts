@@ -203,6 +203,7 @@ interface DisplaySquareImage {
 interface Display {
   name: string;
   squareImage: DisplaySquareImage;
+  description: string;
 }
 
 interface PathInfo {

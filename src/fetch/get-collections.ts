@@ -1,9 +1,9 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import {query} from "@onflow/fcl";
+import { query } from "@onflow/fcl";
 
-import {cadenceGetStoredItems} from "@/fetch/cadence/cadence-get-stored-items";
-import {cadenceGetNftDisplays} from "@/fetch/cadence/cadence-get-nft-displays";
-import {cadenceGetStoragePaths} from "@/fetch/cadence/cadence-get-storage-paths";
+import { cadenceGetStoredItems } from "@/fetch/cadence/cadence-get-stored-items";
+import { cadenceGetNftDisplays } from "@/fetch/cadence/cadence-get-nft-displays";
+import { cadenceGetStoragePaths } from "@/fetch/cadence/cadence-get-storage-paths";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 async function getAccountCollectionList(address: string) {
@@ -18,7 +18,7 @@ async function getAccountCollectionList(address: string) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-async function reconstructList(address: string, slice: Array<string>) {
+export async function reconstructList(address: string, slice: Array<string>) {
   try {
     return query({
       cadence: cadenceGetStoredItems,
@@ -37,7 +37,7 @@ async function reconstructList(address: string, slice: Array<string>) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 export async function getCollectionList(
   address: string,
-  itemFilter: (item: any) => boolean,
+  itemFilter: (item: any) => boolean
 ): Promise<NFTCollection[] | null> {
   try {
     const fullList = await getAccountCollectionList(address || "");
@@ -65,7 +65,7 @@ export async function getCollectionList(
 export async function getCollectionItems(
   address: string,
   storagePath: string,
-  items: string[],
+  items: string[]
 ) {
   try {
     const chunkSize = 50;
@@ -92,4 +92,23 @@ export async function getCollectionItems(
   } catch (e) {
     return null;
   }
+}
+
+export async function getCollectionPathItems(
+  address: string,
+  storagePath: string
+) {
+  const storageData = await getSingleCollectionDetails(address, storagePath);
+  const tokenIDs = storageData?.tokenIDs || [];
+  const data = await getCollectionItems(address || "", storagePath, tokenIDs);
+  return data;
+}
+
+export async function getSingleCollectionDetails(
+  address: string,
+  storagePath: string
+) {
+  const res = await reconstructList(address || "", [storagePath]);
+  const data = await res?.[0];
+  return data || {};
 }

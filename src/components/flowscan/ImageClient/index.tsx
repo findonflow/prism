@@ -1,7 +1,7 @@
 "use client";
 /* --------------------------------------------------------------------------------------------- */
-import { useRef, useState } from "react";
 import { ImageProps } from "next/image";
+import { useRef, useState } from "react";
 
 export function handleIpfs(src: string) {
   return src.startsWith("ipfs")
@@ -58,7 +58,7 @@ export default function ImageClient(props: Props & ImageProps) {
 
   return (
     <>
-      <div className="absolute mx-auto inset-0 flex h-full w-full items-center justify-center ">
+      <div className="absolute mx-auto my-auto inset-0 flex h-full w-full items-center justify-center ">
         {loading && (
           <div className=" animate-ping rounded-full border-[5px] border-solid border-blue-400 duration-1000" />
         )}
