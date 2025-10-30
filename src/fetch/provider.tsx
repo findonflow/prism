@@ -1,6 +1,5 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
 import {
   CAPABILITY_UTILS,
@@ -14,11 +13,22 @@ import {
   LOCKED_FLOW,
   METADATA_VIEWS,
   NON_FUNGIBLE_TOKEN,
-  SERVICE_ADDRESS
+  SERVICE_ADDRESS,
 } from "@/lib/address-book";
 import { config, currentUser } from "@onflow/fcl";
-import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type NetworkKey = "mainnet" | "testnet";
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -64,7 +74,7 @@ export default function QueryProvider(props: { children: React.ReactNode }) {
             }
           },
         }),
-      })
+      }),
   );
 
   return (
@@ -104,11 +114,25 @@ export function FCLProvider(props: { children: ReactNode }) {
     logoutFlow();
     setUser({});
     setIsLoadingUser(false);
-    navigate("/");
   }
 
   useEffect(() => {
     if (network) {
+      currentUser.subscribe((user: any) => {
+        const walletNetwork = user.services.find(
+          (el: any) => el.network,
+        ).network;
+        if (walletNetwork !== network) {
+          logoutFlow();
+          return;
+        }
+        if (user.addr) {
+          setUser({
+            address: user.addr,
+            loggedIn: user.loggedIn,
+          });
+        }
+      });
       initFCL(network as string);
     }
   }, [network]);
