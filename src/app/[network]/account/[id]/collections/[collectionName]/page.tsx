@@ -1,3 +1,10 @@
-export default function CollectionPage() {
-  return <div>Show collection details here</div>;
+import { ReactNode, Suspense } from "react";
+import CollectionPathContent from "./content";
+
+export default function Page() {
+  return (
+    <Suspense>
+      <CollectionPathContent />
+    </Suspense>
+  );
 }
