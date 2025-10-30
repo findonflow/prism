@@ -3,13 +3,20 @@ import ImageClient from "@/components/flowscan/ImageClient";
 import Image from "next/image";
 import Link from "next/link";
 import { NumberOfItems } from "../tags";
+import { useParams } from "next/navigation";
+import { TypeP } from "@/components/ui/typography";
 
-export function NftCard(props: { token: any; address: string }) {
-  const { token, address } = props;
+export function NftCard(props: { token: any }) {
+  const { token } = props;
+  const { network, id, collectionName } = useParams();
   const nftId = token.tokenId;
+
   return (
-    <div className="h-full overflow-hidden rounded-xs bg-gray-300 shadow-subtle hover:bg-gray-400/50">
-      <div className="bg relative min-h-[200px] py-2.5 mx-auto w-full overflow-hidden">
+    <div
+      className="shadow-subtle h-full overflow-hidden rounded-xs bg-gray-300 hover:bg-gray-400/50"
+      key={`${nftId}-${collectionName}`}
+    >
+      <div className="bg relative mx-auto min-h-[200px] w-full overflow-hidden">
         <ImageClient
           src={token?.thumbnail.url || "/"}
           alt={token?.id || ""}
@@ -17,19 +24,26 @@ export function NftCard(props: { token: any; address: string }) {
         />
       </div>
       <div className="flex flex-col gap-2 p-4">
-        <p className="text-main font-bold text-text-color">{token.name}</p>
+        <a
+          href={`/${network}/account/${id}/collections/${collectionName}/${nftId}`}
+          className={"underline"}
+          target={"_blank"}
+        >
+          <p className="text-main text-text-color font-bold">{token.name}</p>
+        </a>
+
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1">
-            <p className="text-tiny text-tabs-bg-active-text">Token ID:</p>
+            <p className="text-tiny">Token ID:</p>
             <p className="text-fineprint text-text-color">{nftId}</p>
           </div>
           <div className="flex items-center gap-1 overflow-hidden">
-            <p className="text-tiny text-tabs-bg-active-text">Owner:</p>
+            <p className="text-xs">Owner:</p>
             <Link
-              href={"/account/" + address}
-              className="truncate text-fineprint text-transaction-table-cell-author-link"
+              href={`/${network}/account/` + id}
+              className="text-fineprint truncate"
             >
-              {address}
+              {id}
             </Link>
           </div>
         </div>
@@ -55,7 +69,7 @@ export function CollectionDetailsHeader(props: {
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row items-center justify-center bg-gray-300/50 text-gray-400/50 font-bold"
+        "flex h-full w-full flex-row items-center justify-center bg-gray-300/50 font-bold text-gray-400/50"
       }
     >
       ?
@@ -71,7 +85,7 @@ export function CollectionDetailsHeader(props: {
         >
           <div
             className={
-              "h-8 w-8 overflow-hidden rounded-full flex flex-col items-center justify-center"
+              "flex h-8 w-8 flex-col items-center justify-center overflow-hidden rounded-full"
             }
           >
             {previewImage}
@@ -80,7 +94,7 @@ export function CollectionDetailsHeader(props: {
           <div className={"flex flex-col"}>
             <div
               className={
-                "flex flex-col flex-wrap items-start justify-start font-bold truncate w-full"
+                "flex w-full flex-col flex-wrap items-start justify-start truncate font-bold"
               }
             >
               <span>{name}</span>
@@ -88,11 +102,11 @@ export function CollectionDetailsHeader(props: {
             </div>
           </div>
         </div>
-        <p className={"text-sm font-normal mt-3"}>
+        <TypeP className={"text-balance mb-4"}>
           {collectionDetails?.display?.description}
-        </p>
+        </TypeP>
       </div>
-      <span className="text-green-500 whitespace-nowrap font-bold">
+      <span className="font-bold whitespace-nowrap text-green-500">
         <NumberOfItems items={collectionDetails?.tokenIDs?.length} />
       </span>
     </div>
