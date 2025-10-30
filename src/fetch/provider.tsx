@@ -113,13 +113,14 @@ export function FCLProvider(props: { children: ReactNode }) {
   useEffect(() => {
     if (network) {
       currentUser.subscribe((user: any) => {
-        const walletNetwork = user.services.find(
+/*        const walletNetwork = user.services.find(
           (el: any) => el.network,
         ).network;
         if (walletNetwork !== network) {
           logoutFlow();
           return;
-        }
+        }*/
+
         if (user.addr) {
           setUser({
             address: user.addr,
