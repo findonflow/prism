@@ -43,7 +43,7 @@ export default function TokensPageContent() {
       <TypeLabel>Account Tokens:</TypeLabel>
 
       {isLoading && (
-        <LoadingBlock title={`Loading ${address} stored items... `} />
+        <LoadingBlock title={`Loading tokens for ${address}... `} />
       )}
       {formatted.length > 0 && (
         <div className="fat-row-column flex flex-col gap-px">
