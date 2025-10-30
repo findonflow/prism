@@ -2,6 +2,7 @@
 /* --------------------------------------------------------------------------------------------- */
 import { ImageProps } from "next/image";
 import { useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function handleIpfs(src: string) {
   return src.startsWith("ipfs")
@@ -20,7 +21,7 @@ export function applyVideoAspectRatio(target: EventTarget & HTMLVideoElement) {
 export type Dimension = "width" | "height" | "none";
 export function applyImageAspectRatio(
   target: EventTarget & HTMLImageElement,
-  mainDimension: Dimension = "height"
+  mainDimension: Dimension = "height",
 ) {
   const h = target.naturalHeight;
   const w = target.naturalWidth;
@@ -52,15 +53,22 @@ interface Props {
 }
 /* --------------------------------------------------------------------------------------------- */
 export default function ImageClient(props: Props & ImageProps) {
-  const { src, alt, fallbackOnErrorSrc, dimension = "height", ...rest } = props;
+  const {
+    src,
+    alt,
+    fallbackOnErrorSrc,
+    dimension = "height",
+    className,
+    ...rest
+  } = props;
   const ref = useRef<HTMLImageElement>(null);
   const [loading, setLoading] = useState(true);
 
   return (
     <>
-      <div className="absolute mx-auto my-auto inset-0 flex h-full w-full items-center justify-center ">
+      <div className="inset-0 mx-auto w-full h-full my-auto flex items-center justify-center overflow-hidden rounded-lg">
         {loading && (
-          <div className=" animate-ping rounded-full border-[5px] border-solid border-blue-400 duration-1000" />
+          <div className="animate-ping rounded-full border-[5px] border-solid border-blue-400 duration-1000" />
         )}
         <img
           ref={ref}
@@ -79,7 +87,7 @@ export default function ImageClient(props: Props & ImageProps) {
             element.className = "absolute inset-0 h-full w-full";
             setLoading(false);
           }}
-          className="absolute inset-0 h-full w-full"
+          className={cn("absolute inset-0 h-full w-full", className)}
           style={{ objectFit: "contain" }}
           // objectFit="contain"
           alt={alt}

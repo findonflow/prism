@@ -56,3 +56,11 @@ export function formatBytesToStorageString(value: number) {
     extension,
   };
 }
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function splitCase(text: string): string {
+  let result = text.replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
+ result = result.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+  return result;
+}

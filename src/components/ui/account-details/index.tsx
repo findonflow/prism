@@ -18,11 +18,11 @@ export default function BasicAccountDetails(props: { address?: string }) {
 
   const showData = !isLoading && Boolean(data);
   return (
-    <div className={"w-full flex flex-col gap-6"}>
+    <div className={"flex w-full flex-col gap-6"}>
       <FindLeases address={address} />
       <div
         className={cn(
-          "w-full grid grid-cols-1 items-start justify-start gap-2",
+          "grid w-full grid-cols-1 items-start justify-start gap-2",
           "md:grid-cols-2 md:gap-10",
         )}
       >
@@ -31,11 +31,11 @@ export default function BasicAccountDetails(props: { address?: string }) {
           <>
             <div
               className={cn(
-                "grid grid-cols-2 items-start justify-start gap-1 w-full",
+                "grid w-full grid-cols-2 items-start justify-start gap-1",
               )}
             >
               {/*-- Balance --*/}
-              <div className={"flex flex-row items-center gap-2 w-full"}>
+              <div className={"flex w-full flex-row items-center gap-2"}>
                 <Wallet className={"h-5 w-5"} />
                 <TypeLabel>Balance:</TypeLabel>
               </div>
@@ -67,7 +67,7 @@ export default function BasicAccountDetails(props: { address?: string }) {
               {/*-- Storage Used --*/}
               <div className={"flex flex-row items-center gap-2"}>
                 <DatabaseZap className={"h-5 w-5"} />
-                <TypeLabel className={"whitespace-nowrap "}>
+                <TypeLabel className={"whitespace-nowrap"}>
                   Storage Used:
                 </TypeLabel>
               </div>
@@ -78,7 +78,7 @@ export default function BasicAccountDetails(props: { address?: string }) {
               {/*-- Storage Available --*/}
               <div className={"flex flex-row items-center gap-2"}>
                 <Database className={"h-5 w-5"} />
-                <TypeLabel className={"whitespace-nowrap "}>
+                <TypeLabel className={"whitespace-nowrap"}>
                   Storage Available:
                 </TypeLabel>
               </div>
@@ -104,7 +104,7 @@ export function FindLeases(props: { address?: string | null }) {
   if (!isPending && data.length === 0) return null;
 
   return (
-    <div className={"flex flex-row items-center justify-start gap-2 flex-wrap"}>
+    <div className={"flex flex-row flex-wrap items-center justify-start gap-2"}>
       {isPending && (
         <LoadingBlock
           title={"Resolving address leases"}
@@ -126,6 +126,7 @@ export function FindLeases(props: { address?: string | null }) {
           .map((item: FINDLeaseInfo) => {
             return (
               <SimpleTag
+                key={item.name}
                 label={
                   <span>
                     <b>{item.name}</b>.find
