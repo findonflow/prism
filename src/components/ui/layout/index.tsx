@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export function LayoutPage(props: { children: ReactNode }) {
   const { children } = props;
   return (
-    <div className="w-full flex flex-col items-center justify-between min-h-screen p-6">
+    <div className="flex min-h-screen w-full flex-col items-center justify-between p-6">
       {children}
     </div>
   );

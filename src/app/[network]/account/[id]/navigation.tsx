@@ -23,7 +23,7 @@ function NavigationLink(props: {
   return (
     <Link
       href={`${baseUrl}/${to}`}
-      className={cn(buttonClasses, isActive && "bg-gray-300")}
+      className={cn(buttonClasses, isActive && "bg-gray-100/50")}
     >
       {children}
     </Link>
@@ -52,7 +52,7 @@ export default function AccountNavigation() {
       </NavigationLink>
       <span
         className={
-          "w-[1px] flex-1 self-stretch mx-2 h-auto bg-gray-300 hidden md:block"
+          "w-[1px] self-stretch mx-2 h-auto bg-gray-300 hidden md:block"
         }
       />
       <NavigationLink to={"tokens"} baseUrl={baseUrl}>
@@ -63,7 +63,7 @@ export default function AccountNavigation() {
       </NavigationLink>
       <span
         className={
-          "w-[1px] flex-1 self-stretch mx-2 h-auto bg-gray-300 hidden md:block"
+          "w-[1px] self-stretch mx-2 h-auto bg-gray-300 hidden md:block"
         }
       />
       <NavigationLink to={"keys"} baseUrl={baseUrl}>
