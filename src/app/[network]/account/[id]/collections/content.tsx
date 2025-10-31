@@ -5,14 +5,14 @@ import { useParams } from "next/navigation";
 
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import { NftCard } from "@/components/ui/collection";
 import { NumberOfItems } from "@/components/ui/tags";
 import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useCollectionItems } from "@/hooks/useCollectionItems";
-import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
-import { useEffect } from "react";
 import useQueryParams from "@/hooks/utils/useQueryParams";
-import { NftCard } from "@/components/ui/collection";
+import { useEffect } from "react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function extractCollectionName(collection: NFTCollection): string {
@@ -135,11 +135,16 @@ function SingleCollection(props: SingleCollectionProps) {
           <div className={"flex flex-col"}>
             <div
               className={
-                "flex w-full flex-col flex-wrap items-start justify-start truncate font-bold"
+                "inline-grid w-full flex-col flex-wrap items-start justify-start truncate font-bold"
               }
             >
-              <a href={collectionPathLink}>{name}</a>
-              <a href={collectionPathLink} className={"text-sm font-normal"}>
+              <a className="truncate" href={collectionPathLink}>
+                {name}
+              </a>
+              <a
+                href={collectionPathLink}
+                className={"truncate text-sm font-normal"}
+              >
                 {collection.path}
               </a>
             </div>
