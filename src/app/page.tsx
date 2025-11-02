@@ -16,8 +16,8 @@ function NetworkSelector(props: { link: string; title: string; copy: string }) {
     <Link href={link}>
       <div
         className={cn(
-          "flex flex-col items-center justify-center w-full border-1 border-gray-200 h-full p-8",
-          "hover:bg-white/10 hover:border-gray-300",
+          "flex flex-col items-center justify-center w-full border-1 border-prism-border h-full p-8",
+          "hover:bg-prism-level-2 hover:border-prism-interactive",
           "rounded-md",
         )}
       >

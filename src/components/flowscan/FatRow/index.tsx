@@ -44,10 +44,10 @@ export default function FatRow(props: FatRowProps) {
       }}
       className={cn(
         "flex w-full flex-col items-center justify-between",
-        "bg-prism-level-2 hover:bg-gray-500",
+        "bg-prism-level-2 hover:bg-prism-level-3",
         "fat-row @container",
         show &&
-          "fat-row-expanded border-1 border-solid border-gray-400/65 rounded-xs",
+          "fat-row-expanded border-1 border-solid border-prism-border rounded-xs",
         ...className,
       )}
     >
@@ -73,7 +73,7 @@ export function FatRowDetails(props: { children: React.ReactNode }) {
   return (
     <div
       className={
-        "flex w-full flex-col items-start justify-start gap-2 bg-gray-700 p-4 text-md"
+        "flex w-full flex-col items-start justify-start gap-2 bg-prism-level-3 p-4 text-md"
       }
     >
       {children}

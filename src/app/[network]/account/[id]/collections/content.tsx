@@ -104,7 +104,7 @@ function SingleCollection(props: SingleCollectionProps) {
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row items-center justify-center bg-gray-300/50 font-bold text-gray-400/50"
+        "flex h-full w-full flex-row items-center justify-center bg-prism-level-2 font-bold text-prism-text-muted"
       }
     >
       ?

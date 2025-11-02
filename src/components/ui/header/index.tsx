@@ -24,7 +24,7 @@ export default function Header(props: { network: string }) {
       <div className={"flex flex-row gap-2 items-center justify-start"}>
         <PrismLogo link={"/"} />
         <span
-          className={"px-2 py-1 text-sm border-gray-300 border-1 rounded-sm"}
+          className={"px-2 py-1 text-sm border-prism-border border-1 rounded-sm"}
         >
           {network}
         </span>

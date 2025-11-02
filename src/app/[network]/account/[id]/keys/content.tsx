@@ -54,7 +54,7 @@ export default function AccountKeysContent() {
         <>
           <div className={"flex flex-row justify-between gap-4"}>
             <input
-              className={"border-1 border-gray-300 p-2 px-3 w-full round-md"}
+              className={"border-1 border-prism-border bg-prism-level-3 text-prism-text p-2 px-3 w-full round-md focus:border-prism-interactive focus:bg-prism-level-4"}
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               placeholder={"Enter query to filter keys"}

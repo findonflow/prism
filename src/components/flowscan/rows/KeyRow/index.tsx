@@ -27,9 +27,9 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
   return (
     <div
       className={cn(
-        "flex w-full flex-row flex-wrap items-center justify-start gap-4 overflow-hidden bg-gray-100 p-4 hover:bg-gray-200",
+        "flex w-full flex-row flex-wrap items-center justify-start gap-4 overflow-hidden bg-prism-level-3 p-4 hover:bg-prism-level-4",
         "md:flex-nowrap",
-        revoked && "bg-gray-50 hover:bg-gray-50"
+        revoked && "bg-prism-level-2 hover:bg-prism-level-2 opacity-70"
       )}
     >
       <div
@@ -39,7 +39,7 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
           inactive,
         )}
       >
-        <div className="flex h-6 w-6 flex-shrink-0 flex-row items-center justify-center rounded-full border-1 border-current/50 text-xs font-bold text-gray-500">
+        <div className="flex h-6 w-6 flex-shrink-0 flex-row items-center justify-center rounded-full border-1 border-current/50 text-xs font-bold text-prism-text-muted">
           <span className={"translate-y-[1px]"} title={`Key index: ${index}`}>
             {index}
           </span>
@@ -57,11 +57,11 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
 
         <div className={"flex flex-row gap-2"}>
           <SimpleTag
-            className={"text-gray-500 text-sm"}
+            className={"text-prism-text-muted text-sm"}
             label={signatureAlgorithm}
           />
           <SimpleTag
-            className={"text-gray-500 text-sm"}
+            className={"text-prism-text-muted text-sm"}
             label={hashAlgorithm}
           />
         </div>
@@ -91,7 +91,7 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
               title={`Sequence number: ${keyInfo.sequenceNumber}`}
               category={<Hash className={"h-4 w-4"} />}
               label={keyInfo.sequenceNumber}
-              className={"text-gray-500"}
+              className={"text-prism-text-muted"}
             />
           </div>
         )}
@@ -102,7 +102,7 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
             title={`Key Weight: ${keyWeight}`}
             category={<Weight className={"h-4 w-4"} />}
             label={keyWeight}
-            className={"text-gray-500"}
+            className={"text-prism-text-muted"}
           />
         </div>
       </div>

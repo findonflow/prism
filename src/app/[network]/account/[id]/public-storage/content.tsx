@@ -265,7 +265,7 @@ function PublicCapability(props: {
                 onError={(e) => {
                   const errorReplacementDiv = document?.createElement("div");
                   errorReplacementDiv.className = cn(
-                    "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-gray-300",
+                    "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-prism-level-3",
                     "h-5 w-5 p-2"
                   );
                   errorReplacementDiv.innerText =
@@ -363,7 +363,7 @@ function PublicCapabilityDetails(props: {
                 </div>
 
                 {reference && (
-                  <div className={"bg-gray-400/30 p-4"}>
+                  <div className={"bg-prism-level-3 p-4"}>
                     <div
                       className={
                         "flex w-full flex-col items-start justify-start gap-4"

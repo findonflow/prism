@@ -78,7 +78,7 @@ function SingleToken(props: { token: any }) {
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row flex-0 items-center justify-center bg-gray-300/50 text-gray-400/50 font-bold"
+        "flex h-full w-full flex-row flex-0 items-center justify-center bg-prism-level-2 text-prism-text-muted font-bold"
       }
     >
       ?

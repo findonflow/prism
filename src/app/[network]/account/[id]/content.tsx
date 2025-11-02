@@ -80,7 +80,7 @@ function AccountCoa(props: { address?: string | null }) {
           </div>
         </>
       )}
-      <hr className={"w-full border-gray-400/50 "} />
+      <hr className={"w-full border-prism-border "} />
     </div>
   );
 }
@@ -181,7 +181,7 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
       >
         <TypeLabel>Supported Types:</TypeLabel>
         <div
-          className={"flex flex-col gap-1 bg-gray-400/30 p-3 w-full rounded-xs"}
+          className={"flex flex-col gap-1 bg-prism-level-3 p-3 w-full rounded-xs"}
         >
           {account.factorySupportedTypes?.map((supportedType) => {
             return (
@@ -266,7 +266,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                   <div
                     key={item.address}
                     className={cn(
-                      "flex w-full flex-col items-center justify-between bg-gray-100",
+                      "flex w-full flex-col items-center justify-between bg-prism-level-3",
                     )}
                   >
                     <div className="flex w-full flex-row items-center justify-start gap-4 p-4">

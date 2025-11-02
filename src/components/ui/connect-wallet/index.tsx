@@ -16,7 +16,7 @@ export function truncateHash(hash?: string, steps: number = 4): string {
 /* --------------------------------------------------------------------------------------------- */
 
 export function HorizontalLine({ className }: { className?: string }) {
-  return <div className={cn("h-px w-full bg-[#B7B9B8]", className)} />;
+  return <div className={cn("h-px w-full bg-prism-border", className)} />;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -75,7 +75,7 @@ function LoggedInWalletButton(props: { className?: string }) {
       ref={targetRef}
       onClick={() => setShowDropdown((prev) => !prev)}
       className={cn(
-        "relative flex cursor-pointer gap-2 rounded-[10px] border border-solid border-gray-300 bg-white px-4 py-2.5 text-[16px] font-semibold text-[#4D4D4D] shadow-xs select-none",
+        "relative flex cursor-pointer gap-2 rounded-[10px] border border-solid border-prism-border bg-prism-level-2 px-4 py-2.5 text-[16px] font-semibold text-prism-text shadow-xs select-none",
         "z-20",
         className,
       )}
@@ -89,13 +89,13 @@ function LoggedInWalletButton(props: { className?: string }) {
       />
       <div
         className={cn(
-          `absolute top-full right-0 mt-2 hidden w-full rounded-sm border border-solid border-gray-300 bg-white p-[inherit] shadow-lg transition-all duration-200 ease-in-out`,
+          `absolute top-full right-0 mt-2 hidden w-full rounded-sm border border-solid border-prism-border bg-prism-level-3 p-[inherit] shadow-lg transition-all duration-200 ease-in-out`,
           showDropdown && "flex flex-col gap-2",
         )}
       >
         <Link
           href={`/${network}/account/${user.address}`}
-          className="rounded-md p-1 text-[#2AB37E] hover:bg-green-100"
+          className="rounded-md p-1 text-green-400 hover:bg-prism-interactive"
         >
           View Account
         </Link>
@@ -103,7 +103,7 @@ function LoggedInWalletButton(props: { className?: string }) {
 
         <button
           onClick={() => logoutUser()}
-          className="cursor-pointer rounded-md p-1 text-left hover:bg-gray-100"
+          className="cursor-pointer rounded-md p-1 text-left hover:bg-prism-interactive"
         >
           Log Out
         </button>

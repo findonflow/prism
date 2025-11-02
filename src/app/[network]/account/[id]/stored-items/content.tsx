@@ -269,7 +269,7 @@ function StorageInfo(props: {
                       const errorReplacementDiv =
                         document?.createElement("div");
                       errorReplacementDiv.className = cn(
-                        "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-gray-300",
+                        "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-prism-level-3",
                         "h-5 w-5 p-2"
                       );
                       errorReplacementDiv.innerText =
@@ -394,7 +394,7 @@ function StorageInfoResourceDetails(props: {
       {!isPending && data && (
         <div className={"flex flex-col items-start justify-start gap-2 w-full"}>
           <TypeLabel>Resource Details:</TypeLabel>
-          <div className={"bg-gray-400/30 p-4 w-full"}>
+          <div className={"bg-prism-level-3 p-4 w-full"}>
             <JsonView src={data} displaySize={"collapsed"} />
           </div>
         </div>

@@ -55,6 +55,11 @@
   --color-prism-level-2: var(--prism-level-2);
   --color-prism-level-3: var(--prism-level-3);
   --color-prism-level-4: var(--prism-level-4);
+  --color-prism-border: var(--prism-border);
+  --color-prism-text: var(--prism-text);
+  --color-prism-text-muted: var(--prism-text-muted);
+  --color-prism-interactive: var(--prism-interactive);
+  --color-prism-interactive-hover: var(--prism-interactive-hover);
 }
 
 :root {
@@ -101,6 +106,13 @@
   --prism-level-2: oklch(from var(--prism-level-1) calc(l*1.1) c h);
   --prism-level-3: oklch(from var(--prism-level-1) calc(l*1.2) calc(c*1.05) h);
   --prism-level-4: oklch(from var(--prism-level-1) calc(l*1.3) calc(c*1.1) h);
+  
+  /* Prism utilities */
+  --prism-border: oklch(1 0 0 / 10%);
+  --prism-text: oklch(0.95 0 0);
+  --prism-text-muted: oklch(0.65 0 0);
+  --prism-interactive: oklch(from var(--prism-level-1) calc(l*1.4) calc(c*1.15) h);
+  --prism-interactive-hover: oklch(from var(--prism-level-1) calc(l*1.5) calc(c*1.2) h);
 }
 
 .dark {
@@ -148,8 +160,9 @@
 
 .filter-input {
   width: 100%;
-  border: 1px solid var(--color-border);
-  background-color: inherit;
+  border: 1px solid var(--color-prism-border);
+  background-color: var(--color-prism-level-3);
+  color: var(--color-prism-text);
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-top: 0.5rem;
@@ -157,4 +170,9 @@
   font-size: var(--text-copy);
 
   outline: none;
+}
+
+.filter-input:focus {
+  border-color: var(--color-prism-interactive);
+  background-color: var(--color-prism-level-4);
 }
