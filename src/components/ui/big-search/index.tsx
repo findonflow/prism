@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function BigSearch() {
@@ -20,14 +21,12 @@ export default function BigSearch() {
   });
 
   return (
-    <input
+    <Input
       ref={ref}
       type="text"
       value={value}
       className={cn(
-        "w-full",
-        "p-4 pr-12 text-main border-2 border-prism-border bg-prism-level-3 w-full rounded-md font-bold text-lg text-prism-text",
-        "focus:border-prism-interactive focus:bg-prism-level-4",
+        "p-4 pr-12 text-main border-2 font-bold text-lg",
         "truncate",
       )}
       onChange={(e) => setValue(e.target.value)}

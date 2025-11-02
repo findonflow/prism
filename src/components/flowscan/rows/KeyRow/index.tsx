@@ -44,16 +44,13 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
             {index}
           </span>
         </div>
-        <div
+        <SimpleTag
+          label={keyStatus}
           className={cn(
-            "flex items-center justify-center px-1.5 py-0.5 text-sm round-md",
-            revoked
-              ? "border-[1px] border-current bg-none text-colors-gray-medium"
-              : "bg-green-300",
+            "text-sm",
+            revoked ? "text-prism-text-muted" : "text-green-600"
           )}
-        >
-          {keyStatus}
-        </div>
+        />
 
         <div className={"flex flex-row gap-2"}>
           <SimpleTag

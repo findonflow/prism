@@ -4,7 +4,7 @@
 import { BadgeJapaneseYen, Blend, Bolt, Package, Plug } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import CopyText from "@/components/flowscan/CopyText";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
