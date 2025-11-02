@@ -104,15 +104,15 @@
 
   --prism-level-1: #060606;
   --prism-level-2: oklch(from var(--prism-level-1) calc(l*1.1) c h);
-  --prism-level-3: oklch(from var(--prism-level-1) calc(l*1.2) calc(c*1.05) h);
-  --prism-level-4: oklch(from var(--prism-level-1) calc(l*1.3) calc(c*1.1) h);
+  --prism-level-3: oklch(from var(--prism-level-1) calc(l*1.5) calc(c*1.05) h);
+  --prism-level-4: oklch(from var(--prism-level-1) calc(l*2.0) calc(c*1.1) h);
   
   /* Prism utilities */
   --prism-border: oklch(1 0 0 / 10%);
   --prism-text: oklch(0.95 0 0);
   --prism-text-muted: oklch(0.65 0 0);
-  --prism-interactive: oklch(from var(--prism-level-1) calc(l*1.4) calc(c*1.15) h);
-  --prism-interactive-hover: oklch(from var(--prism-level-1) calc(l*1.5) calc(c*1.2) h);
+  --prism-interactive: oklch(from var(--prism-level-3) calc(l*1.4) calc(c*1.15) h);
+  --prism-interactive-hover: oklch(from var(--prism-level-3) calc(l*1.5) calc(c*1.2) h);
 }
 
 .dark {
