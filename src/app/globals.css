@@ -51,6 +51,7 @@
   --text-bsn-title: 20px;
 
   /* Prism Theme */
+  --color-prism-primary: var(--prism-primary);
   --color-prism-level-1: var(--prism-level-1);
   --color-prism-level-2: var(--prism-level-2);
   --color-prism-level-3: var(--prism-level-3);
@@ -113,6 +114,7 @@
   --prism-text-muted: oklch(0.65 0 0);
   --prism-interactive: oklch(from var(--prism-level-3) calc(l*1.4) calc(c*1.15) h);
   --prism-interactive-hover: oklch(from var(--prism-level-3) calc(l*1.5) calc(c*1.2) h);
+  --prism-primary: #66BD99;
 }
 
 .dark {

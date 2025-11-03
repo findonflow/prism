@@ -273,7 +273,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                       {item.isClaimed && (
                         <SimpleTag
                           label={"Claimed"}
-                          className={"text-green-600"}
+                          className={"text-prism-primary"}
                           category={<Check />}
                         />
                       )}

@@ -48,7 +48,7 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
           label={keyStatus}
           className={cn(
             "text-sm",
-            revoked ? "text-prism-text-muted" : "text-green-600"
+            revoked ? "text-prism-text-muted" : "text-prism-primary"
           )}
         />
 

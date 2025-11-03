@@ -230,7 +230,7 @@ function StorageInfo(props: {
             <SimpleTag
               title={"Vault"}
               label={<BadgeJapaneseYen className={"h-4 w-4"} />}
-              className={"text-green-600"}
+              className={"text-prism-primary"}
             />
           )}
 

@@ -132,7 +132,7 @@ export function FindLeases(props: { address?: string | null }) {
                     <b>{item.name}</b>.find
                   </span>
                 }
-                className={"text-green-600"}
+                className={"text-prism-primary"}
               />
             );
           })}

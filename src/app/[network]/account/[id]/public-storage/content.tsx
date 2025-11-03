@@ -227,7 +227,7 @@ function PublicCapability(props: {
             <SimpleTag
               label={<Bolt className={"h-4 w-4"} />}
               title={title}
-              className={"text-green-600"}
+              className={"text-prism-primary"}
             />
           )}
 
@@ -243,7 +243,7 @@ function PublicCapability(props: {
             <SimpleTag
               label={"Balance"}
               category={<BadgeJapaneseYen className={"h-4 w-4"} />}
-              className={"text-green-600"}
+              className={"text-prism-primary"}
             />
           )}
           <p className={"text-sm truncate font-bold"}>{capability.path}</p>
@@ -255,7 +255,7 @@ function PublicCapability(props: {
               "flex flex-row items-center justify-end gap-1",
               Number(capability?.balance) === 0
                 ? "text-grey-200/10"
-                : "text-green-600"
+                : "text-prism-primary"
             )}
           >
             {token && (
