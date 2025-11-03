@@ -7,6 +7,7 @@ import {
 import Footer from "@/components/ui/footer";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { FAQAccordion } from "@/components/ui/faq";
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 function NetworkSelector(props: { link: string; title: string; copy: string }) {
@@ -33,35 +34,43 @@ function NetworkSelector(props: { link: string; title: string; copy: string }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function Home() {
   return (
-    <div className="w-full flex flex-col items-center justify-between h-screen text-center space-y-6 p-8">
-      <main className="h-full flex flex-col items-center justify-center">
-        <TypeTextBlock>
-          <TypeH1 className={"font-light"}>
-            Welcome to <span className={"font-bold"}>Prism</span>
-          </TypeH1>
-          <TypeP>
-            Dissect full spectrum of blockchain data into narrow spectrum you
-            explore
-          </TypeP>
-        </TypeTextBlock>
+    <div className="w-full flex flex-col items-center text-center p-8">
+      {/* First section - Full height with network selector */}
+      <div className="w-full h-screen flex flex-col items-center justify-between p-8">
+        <main className="h-full flex flex-col items-center justify-center">
+          <TypeTextBlock>
+            <TypeH1 className={"font-light"}>
+              Welcome to <span className={"font-bold"}>Prism</span>
+            </TypeH1>
+            <TypeP>
+              Dissect full spectrum of blockchain data into narrow spectrum you
+              explore
+            </TypeP>
+          </TypeTextBlock>
 
-        <div className={"flex flex-col space-y-6"}>
-          <TypeP>Pick the network you want to work with</TypeP>
-          <div className={"full grid grid-cols-2 gap-4 items-center h-20"}>
-            <NetworkSelector
-              link={"/mainnet"}
-              title={"Mainnet"}
-              copy={"Mainnet Data"}
-            />
-            <NetworkSelector
-              link={"/testnet"}
-              title={"Testnet"}
-              copy={"Testnet Data"}
-            />
+          <div className={"flex flex-col space-y-6"}>
+            <TypeP>Pick the network you want to work with</TypeP>
+            <div className={"full grid grid-cols-2 gap-4 items-center h-20"}>
+              <NetworkSelector
+                link={"/mainnet"}
+                title={"Mainnet"}
+                copy={"Mainnet Data"}
+              />
+              <NetworkSelector
+                link={"/testnet"}
+                title={"Testnet"}
+                copy={"Testnet Data"}
+              />
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
 
+      </div>
+
+      {/* FAQ Section */}
+      <FAQAccordion />
+
+      {/* Bottom Footer */}
       <Footer />
     </div>
   );
