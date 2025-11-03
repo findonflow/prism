@@ -52,6 +52,8 @@
 
   /* Prism Theme */
   --color-prism-primary: var(--prism-primary);
+  --color-prism-secondary: var(--prism-secondary);
+
   --color-prism-level-1: var(--prism-level-1);
   --color-prism-level-2: var(--prism-level-2);
   --color-prism-level-3: var(--prism-level-3);
@@ -104,7 +106,7 @@
   --role-execution: #b65bea;
 
   --prism-level-1: #060606;
-  --prism-level-2: oklch(from var(--prism-level-1) calc(l*1.1) c h);
+  --prism-level-2: oklch(from var(--prism-level-1) calc(l*1.25) calc(c * 1.2) calc(h * 1));
   --prism-level-3: oklch(from var(--prism-level-1) calc(l*1.5) calc(c*1.05) h);
   --prism-level-4: oklch(from var(--prism-level-1) calc(l*2.0) calc(c*1.1) h);
   
@@ -114,7 +116,16 @@
   --prism-text-muted: oklch(from var(--prism-text) calc(l * 0.75) c h);
   --prism-interactive: oklch(from var(--prism-level-3) calc(l*1.4) calc(c*1.15) h);
   --prism-interactive-hover: oklch(from var(--prism-level-3) calc(l*1.5) calc(c*1.2) h);
-  --prism-primary: #66BD99;
+
+  --prism-mainnet: #66BD99;
+  --prism-testnet: #f16f6f;
+
+  --prism-primary: var(--prism-mainnet);
+  --prism-secondary: var(--prism-testnet);
+}
+
+html{
+  scroll-behavior: smooth;
 }
 
 .dark {
