@@ -34,22 +34,22 @@ function NetworkSelector(props: { link: string; title: string; copy: string }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function Home() {
   return (
-    <div className="w-full flex flex-col items-center text-center p-8">
+    <div className="w-full flex flex-col items-center text-center p-4 lg:p-8">
       {/* First section - Full height with network selector */}
-      <div className="w-full h-screen flex flex-col items-center justify-between p-8">
+      <div className="w-full h-screen flex flex-col items-center justify-between">
         <main className="h-full flex flex-col items-center justify-center">
-          <TypeTextBlock>
+          <TypeTextBlock className={"mb-8"}>
             <TypeH1 className={"font-light"}>
               Welcome to <span className={"font-bold"}>Prism</span>
             </TypeH1>
-            <TypeP>
+            <TypeP className={"text-lg"}>
               Dissect full spectrum of blockchain data into narrow spectrum you
               explore
             </TypeP>
           </TypeTextBlock>
 
           <div className={"flex flex-col space-y-6"}>
-            <TypeP>Pick the network you want to work with</TypeP>
+            <TypeP className={"text-md"}>Pick the network you want to work with</TypeP>
             <div className={"full grid grid-cols-2 gap-4 items-center h-20"}>
               <NetworkSelector
                 link={"/mainnet"}
