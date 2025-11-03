@@ -14,8 +14,8 @@ export function FAQAccordion() {
   };
 
   return (
-    <div className="w-full space-y-8 max-w-5xl my-10">
-      <TypeH1 className="text-center font-light">
+    <div className="w-full space-y-8 min-h-screen">
+      <TypeH1 className="text-center font-light scroll-mt-32" id={"what-is-prism"}>
         What is <span className="font-bold">Prism</span>?
       </TypeH1>
 
