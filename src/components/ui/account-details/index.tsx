@@ -18,25 +18,16 @@ export default function BasicAccountDetails(props: { address?: string }) {
 
   const showData = !isLoading && Boolean(data);
   return (
-    <div className={"flex w-full flex-col gap-6"}>
+    <div className={"flex w-full flex-col gap-4"}>
       <FindLeases address={address} />
-      <div
-        className={cn(
-          "grid w-full grid-cols-1 items-start justify-start gap-2",
-          "md:grid-cols-2 md:gap-10",
-        )}
-      >
+      <div className={"flex w-full flex-col gap-4"}>
         {isLoading && <LoadingBlock title={"Loading basic details"} />}
         {showData && (
           <>
-            <div
-              className={cn(
-                "grid w-full grid-cols-2 items-start justify-start gap-1",
-              )}
-            >
-              {/*-- Balance --*/}
-              <div className={"flex w-full flex-row items-center gap-2"}>
-                <Wallet className={"h-5 w-5"} />
+            {/*-- Balance --*/}
+            <div className={"flex flex-col gap-1"}>
+              <div className={"flex flex-row items-center gap-2"}>
+                <Wallet className={"h-4 w-4"} />
                 <TypeLabel>Balance:</TypeLabel>
               </div>
               <FlowTokens
@@ -46,13 +37,13 @@ export default function BasicAccountDetails(props: { address?: string }) {
                 iconClassName={"w-4 h-4"}
                 className={"w-auto"}
               />
+            </div>
 
-              {/*-- Available Balance --*/}
+            {/*-- Available Balance --*/}
+            <div className={"flex flex-col gap-1"}>
               <div className={"flex flex-row items-center gap-2"}>
-                <Wallet className={"h-5 w-5"} />
-                <TypeLabel className={"whitespace-nowrap"}>
-                  Available Balance:
-                </TypeLabel>
+                <Wallet className={"h-4 w-4"} />
+                <TypeLabel>Available Balance:</TypeLabel>
               </div>
               <FlowTokens
                 animated
@@ -63,26 +54,24 @@ export default function BasicAccountDetails(props: { address?: string }) {
               />
             </div>
 
-            <div className={"grid w-full grid-cols-2 gap-1"}>
-              {/*-- Storage Used --*/}
+            {/*-- Storage Used --*/}
+            <div className={"flex flex-col gap-1"}>
               <div className={"flex flex-row items-center gap-2"}>
-                <DatabaseZap className={"h-5 w-5"} />
-                <TypeLabel className={"whitespace-nowrap"}>
-                  Storage Used:
-                </TypeLabel>
+                <DatabaseZap className={"h-4 w-4"} />
+                <TypeLabel>Storage Used:</TypeLabel>
               </div>
-              <div className={"flex flex-row items-center justify-end gap-1"}>
+              <div className={"flex flex-row items-center justify-start gap-1"}>
                 <Odometer value={data?.storageUsed} type={"storage"} />
               </div>
+            </div>
 
-              {/*-- Storage Available --*/}
+            {/*-- Storage Available --*/}
+            <div className={"flex flex-col gap-1"}>
               <div className={"flex flex-row items-center gap-2"}>
-                <Database className={"h-5 w-5"} />
-                <TypeLabel className={"whitespace-nowrap"}>
-                  Storage Available:
-                </TypeLabel>
+                <Database className={"h-4 w-4"} />
+                <TypeLabel>Storage Available:</TypeLabel>
               </div>
-              <div className={"flex flex-row items-center justify-end gap-1"}>
+              <div className={"flex flex-row items-center justify-start gap-1"}>
                 <Odometer value={data?.storageCapacity} type={"storage"} />
               </div>
             </div>
