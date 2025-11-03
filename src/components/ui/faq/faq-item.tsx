@@ -1,6 +1,7 @@
 "use client";
 
 import { type FAQItem } from "./strings";
+import { cn } from "@/lib/utils";
 
 interface FAQItemProps {
   item: FAQItem;
@@ -16,28 +17,33 @@ export function FAQItemComponent({
   onToggle,
 }: FAQItemProps) {
   return (
-    <div className="collapse collapse-arrow bg-prism-level-2 border border-prism-border">
-      <input
-        type="checkbox"
-        checked={isOpen}
-        onChange={onToggle}
-      />
-      <div className="collapse-title text-lg font-medium flex items-center justify-start gap-4">
+    <div className="collapse-arrow bg-prism-level-2 border-prism-border collapse border">
+      <input type="checkbox" checked={isOpen} onChange={onToggle} />
+      <div className="collapse-title flex items-center justify-start gap-4 text-lg font-medium">
         <span
-          className={`text-prism-primary font-bold text-lg flex-shrink-0 ${
-            isOpen ? "self-start mt-1" : ""
-          }`}
+          className={cn(
+            "text-prism-primary flex-shrink-0 text-lg font-bold",
+            isOpen && "mt-1 self-start",
+          )}
         >
           {index + 1}
         </span>
-        <span className="text-prism-text">{item.question}</span>
+        <span className="text-prism-text text-left">{item.question}</span>
       </div>
       <div className="collapse-content">
         <div className="flex gap-4">
-          <span className="text-prism-primary font-bold text-xl flex-shrink-0 invisible">
+          <span
+            className={cn(
+              "invisible",
+              "text-prism-primary flex-shrink-0 text-lg font-bold",
+              isOpen && "mt-1 self-start",
+            )}
+          >
             {index + 1}
           </span>
-          <p className="text-prism-text-muted leading-relaxed text-left">{item.answer}</p>
+          <p className="text-prism-text-muted text-left leading-relaxed">
+            {item.answer}
+          </p>
         </div>
       </div>
     </div>
