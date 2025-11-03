@@ -1,11 +1,18 @@
 import { TypeFineprint } from "@/components/ui/typography";
 import { GithubOctaCat } from "@/components/ui/icons";
+import { cn } from "@/lib/utils";
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 export default function Footer() {
   return (
-    <footer className="flex flex-row flex-wrap items-center justify-between w-full">
-      <TypeFineprint>
+    <footer
+      className={cn(
+        "w-full",
+        "flex flex-col-reverse flex-wrap items-start justify-between",
+        "lg:flex-row lg:items-center lg:justify-between",
+      )}
+    >
+      <TypeFineprint className={"text-left"}>
         Created by hearts and minds of people at{" "}
         <a href={"https://www.findlabs.io/"} className={"underline"}>
           Find Labs
@@ -13,13 +20,15 @@ export default function Footer() {
         .
       </TypeFineprint>
 
-      <TypeFineprint className={"flex flex-row gap-1 items-center justify-end"}>
+      <TypeFineprint
+        className={"inline-flex flex-row items-start justify-start gap-1"}
+      >
         <span>Help us improve</span>
         <a
           href={"https://github.com/findonflow/prism"}
-          className={"underline inline-flex gap-1 items-center"}
+          className={"inline-flex items-center gap-1 underline"}
         >
-          <GithubOctaCat />
+          <GithubOctaCat className={"fill-white"} />
           <span>Prism on Github</span>
         </a>
         .
