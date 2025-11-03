@@ -111,7 +111,7 @@
   /* Prism utilities */
   --prism-border: oklch(1 0 0 / 10%);
   --prism-text: oklch(0.95 0 0);
-  --prism-text-muted: oklch(0.65 0 0);
+  --prism-text-muted: oklch(from var(--prism-text) calc(l * 0.75) c h);
   --prism-interactive: oklch(from var(--prism-level-3) calc(l*1.4) calc(c*1.15) h);
   --prism-interactive-hover: oklch(from var(--prism-level-3) calc(l*1.5) calc(c*1.2) h);
   --prism-primary: #66BD99;
