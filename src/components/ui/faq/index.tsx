@@ -13,7 +13,7 @@ export function FAQAccordion() {
   };
 
   return (
-    <div className="w-full space-y-8 max-w-5xl">
+    <div className="w-full space-y-8 max-w-5xl my-10">
       <TypeH1 className="text-center font-light">
         What is <span className="font-bold">Prism</span>?
       </TypeH1>
