@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import type { Metadata } from "next";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -34,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} antialiased bg-prism-level-1 text-prism-text`}>{children}</body>
+      <body className={cn(inter.variable, "antialiased bg-prism-level-1 text-prism-text")}>{children}</body>
     </html>
   );
 }
