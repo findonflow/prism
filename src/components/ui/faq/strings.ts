@@ -1,8 +1,10 @@
+/*--------------------------------------------------------------------------------------------------------------------*/
 export interface FAQItem {
   question: string;
   answer: string;
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 export const FAQ_ITEMS: FAQItem[] = [
   {
     question: "What is Prism and how is it different from Flowscan?",
