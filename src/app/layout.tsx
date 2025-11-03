@@ -1,3 +1,4 @@
+/*--------------------------------------------------------------------------------------------------------------------*/
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
