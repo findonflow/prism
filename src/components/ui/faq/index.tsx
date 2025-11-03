@@ -1,10 +1,11 @@
 "use client";
-
+/*--------------------------------------------------------------------------------------------------------------------*/
 import { useState } from "react";
 import { FAQ_ITEMS } from "./strings";
 import { FAQItemComponent } from "./faq-item";
 import { TypeH1 } from "@/components/ui/typography";
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 export function FAQAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 

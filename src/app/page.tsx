@@ -1,3 +1,4 @@
+/*--------------------------------------------------------------------------------------------------------------------*/
 import {
   TypeH1,
   TypeH2,
@@ -8,8 +9,8 @@ import Footer from "@/components/ui/footer";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { FAQAccordion } from "@/components/ui/faq";
-/*--------------------------------------------------------------------------------------------------------------------*/
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 function NetworkSelector(props: { link: string; title: string; copy: string }) {
   const { link, title, copy } = props;
 
