@@ -26,8 +26,10 @@ export default function BigSearch() {
       type="text"
       value={value}
       className={cn(
-        "p-4 pr-12 text-main border-2 font-bold text-lg",
-        "truncate",
+        "text-main border-2 px-4 py-6 text-lg outline-0",
+        "focus:border-current focus:text-prism-primary",
+        "focus:shadow-[0_0_3rem_0.2rem] shadow-prism-primary/50",
+        "truncate transition-colors duration-300",
       )}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => {
