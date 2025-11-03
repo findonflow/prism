@@ -19,13 +19,18 @@ export function FAQItemComponent({
   onToggle,
 }: FAQItemProps) {
   return (
-    <div className="collapse-arrow bg-prism-level-2 border-prism-border collapse border">
+    <div
+      className={cn(
+        "collapse-arrow bg-prism-level-2 border-prism-border collapse border",
+        "hover:bg-prism-level-3",
+      )}
+    >
       <input type="checkbox" checked={isOpen} onChange={onToggle} />
       <div className="collapse-title flex items-center justify-start gap-4 text-lg font-medium">
         <span
           className={cn(
             "text-prism-primary flex-shrink-0 text-lg font-bold",
-            isOpen && "mt-1 self-start",
+            isOpen && "lg:self-start",
           )}
         >
           {index + 1}
@@ -38,7 +43,7 @@ export function FAQItemComponent({
             className={cn(
               "invisible",
               "text-prism-primary flex-shrink-0 text-lg font-bold",
-              isOpen && "mt-1 self-start",
+              isOpen && "self-start",
             )}
           >
             {index + 1}
