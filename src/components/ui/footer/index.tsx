@@ -7,9 +7,11 @@ export default function Footer() {
   return (
     <footer
       className={cn(
-        "w-full",
+        "w-full p-4 bg-prism-level-1",
         "flex flex-col-reverse flex-wrap items-start justify-between",
-        "lg:flex-row lg:items-center lg:justify-between",
+        "border-prism-border border-t",
+        "md:flex-row md:items-center md:justify-between md:p-4",
+        "md:sticky bottom-0"
       )}
     >
       <TypeFineprint className={"text-left"}>
