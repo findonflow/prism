@@ -21,8 +21,10 @@ export function FAQItemComponent({
   return (
     <div
       className={cn(
-        "collapse-arrow bg-prism-level-2 border-prism-border collapse border",
+        "collapse-arrow collapse",
+        "bg-prism-level-2 border border-prism-border rounded-xs text-prism-primary",
         "hover:bg-prism-level-3",
+        isOpen && "border-prism-primary"
       )}
     >
       <input type="checkbox" checked={isOpen} onChange={onToggle} />
@@ -37,17 +39,9 @@ export function FAQItemComponent({
         </span>
         <span className="text-prism-text text-left">{item.question}</span>
       </div>
-      <div className="collapse-content">
-        <div className="flex gap-4">
-          <span
-            className={cn(
-              "invisible",
-              "text-prism-primary flex-shrink-0 text-lg font-bold",
-              isOpen && "self-start",
-            )}
-          >
-            {index + 1}
-          </span>
+      <div className="collapse-content space-y-4">
+        <hr className={cn("w-full bg-prism-primary/50 opacity-0 transition duration-300", isOpen && "opacity-100")} />
+        <div className="flex gap-4 p-4 bg-prism-level-4">
           <p className="text-prism-text-muted text-left leading-relaxed">
             {item.answer}
           </p>
