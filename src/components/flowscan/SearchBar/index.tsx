@@ -12,16 +12,15 @@ export function SearchBar(props: {
   const { value, onChange, placeholder } = props;
   const inputRef = useRef<HTMLInputElement | null>(null);
   return (
-    <div className="relative flex w-full flex-row items-center overflow-hidden">
+    <div className="relative flex w-full flex-row items-center overflow-hidden h-full">
       <Search className="absolute left-3 h-4 w-4 text-prism-text-muted z-10" />
       <Input
         ref={inputRef}
         type="text"
-        className="py-3 !pl-9 text-main"
+        className="pl-9 text-main h-full"
         value={value}
         onChange={(e: any) => onChange(e.target.value)}
         placeholder={placeholder}
-        autoFocus={true}
         autoComplete="off"
         autoCapitalize="off"
         autoCorrect="off"

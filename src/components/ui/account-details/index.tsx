@@ -36,7 +36,11 @@ export default function BasicAccountDetails(props: {
               balance={data?.availableBalance}
             />
 
-            <StorageBlock size={data?.storageUsed} title={"Storage Used"} />
+            <StorageBlock
+              active
+              size={data?.storageUsed}
+              title={"Storage Used"}
+            />
             <StorageBlock
               size={data?.storageCapacity}
               title={"Storage Available"}
@@ -48,17 +52,22 @@ export default function BasicAccountDetails(props: {
   );
 }
 
-function StorageBlock(props: { title: string; size?: number }) {
-  const { title, size } = props;
+function StorageBlock(props: {
+  title: string;
+  size?: number;
+  active?: boolean;
+}) {
+  const { title, size, active } = props;
   return (
     <div
       className={cn(
         "flex w-full flex-row items-center gap-1",
-        "md:flex-col md:items-start justify-between",
+        "justify-between md:flex-col md:items-start",
       )}
     >
       <div className={"flex flex-row items-center gap-2"}>
-        <DatabaseZap className={"h-4 w-4"} />
+        {!active && <Database className={"h-4 w-4"} />}
+        {active && <DatabaseZap className={"h-4 w-4"} />}
         <TypeLabel>{title}:</TypeLabel>
       </div>
       <div className={"flex flex-row items-center justify-start gap-1"}>
@@ -74,7 +83,7 @@ export function BalanceBlock(props: { title: string; balance?: string }) {
     <div
       className={cn(
         "flex w-full flex-row items-center gap-1",
-        "md:flex-col md:items-start justify-between",
+        "justify-between md:flex-col md:items-start",
       )}
     >
       <div className={cn("flex flex-row items-center gap-2")}>

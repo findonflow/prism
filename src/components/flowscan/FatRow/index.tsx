@@ -73,7 +73,7 @@ export function FatRowDetails(props: { children: React.ReactNode }) {
   return (
     <div
       className={
-        "flex w-full flex-col items-start justify-start gap-2 bg-prism-level-3 p-4 text-md"
+        "flex w-full flex-col items-start justify-start gap-2 bg-prism-level-1 p-4 text-md"
       }
     >
       {children}

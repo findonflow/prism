@@ -2,6 +2,7 @@ import { Pyramid } from "lucide-react";
 import ConnectWallet from "@/components/ui/connect-wallet";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import HeaderSearch from "@/components/ui/header-search";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -25,7 +26,7 @@ export default function Header(props: { network: string }) {
       className={cn(
         "bg-prism-level-1 flex w-full flex-row items-center justify-between gap-2",
         "border-prism-border border-b",
-        "px-4 py-2"
+        "px-4 py-2",
       )}
     >
       <div className={"flex flex-row items-center justify-start gap-2"}>
@@ -33,14 +34,19 @@ export default function Header(props: { network: string }) {
 
         <span
           className={
-            "border-prism-primary text-prism-primary rounded-xs border-1 px-1 p-0.5 text-xs"
+            "border-prism-primary text-prism-primary rounded-xs border-1 p-0.5 px-1 text-xs"
           }
         >
           {network}
         </span>
       </div>
 
-      <ConnectWallet />
+      <div
+        className={"flex h-full w-1/2 flex-row items-stretch justify-end gap-4"}
+      >
+        <HeaderSearch />
+        <ConnectWallet />
+      </div>
     </div>
   );
 }
