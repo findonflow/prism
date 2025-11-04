@@ -27,10 +27,11 @@ export default function FlowIcon(props: { className?: string }) {
         viewBox="0 0 42 42"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className={"fill-prism-primary"}
       >
         <path
           d="M20.8333 41.8334C32.3393 41.8334 41.6667 32.506 41.6667 21.0001C41.6667 9.49415 32.3393 0.166748 20.8333 0.166748C9.3274 0.166748 0 9.49415 0 21.0001C0 32.506 9.3274 41.8334 20.8333 41.8334Z"
-          fill="#00EF8B"
+          fill="current"
         ></path>
         <path
           d="M29.9732 17.7417H24.0898V23.625H29.9732V17.7417Z"
@@ -46,7 +47,7 @@ export default function FlowIcon(props: { className?: string }) {
         ></path>
         <path
           d="M18.2109 23.6209H24.0901V17.7417H18.2109V23.6209Z"
-          fill="#00EF8B"
+          fill="current"
         ></path>
       </svg>
     </div>
