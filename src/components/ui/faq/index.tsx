@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FAQ_ITEMS } from "./strings";
 import { FAQItemComponent } from "./faq-item";
 import { TypeH1 } from "@/components/ui/typography";
+import Link from "next/link";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function FAQAccordion() {
@@ -15,6 +16,10 @@ export function FAQAccordion() {
 
   return (
     <div className="w-full space-y-8 min-h-screen">
+      <Link href={"#welcome-to-prism"} className={"text-prism-primary underline mb-6"} scroll={true}>
+        Select Network
+      </Link>
+
       <TypeH1 className="text-center font-light scroll-mt-32" id={"what-is-prism"}>
         What is <span className="font-bold">Prism</span>?
       </TypeH1>
