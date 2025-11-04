@@ -28,7 +28,7 @@ export default function AccountPublicStorageContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string
+    id as string,
   );
   const address = resolved?.owner;
 
@@ -51,7 +51,7 @@ export default function AccountPublicStorageContent() {
           acc[item.path.balance] = item;
           return acc;
         },
-        {}
+        {},
       )
     : {};
 
@@ -83,7 +83,7 @@ export default function AccountPublicStorageContent() {
 
   const itemsList = filteredList?.slice(
     parseInt(offset),
-    parseInt(offset) + parseInt(limit)
+    parseInt(offset) + parseInt(limit),
   );
   const haveItemsBuHidden =
     filteredList.length === 0 && Boolean(data) && data!.length > 0;
@@ -93,7 +93,7 @@ export default function AccountPublicStorageContent() {
       <TypeLabel>Account Public Storage:</TypeLabel>
       <div
         className={
-          "flex w-full flex-row max-md:flex-wrap items-center justify-start gap-4"
+          "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"
         }
       >
         <SearchBar
@@ -131,7 +131,7 @@ export default function AccountPublicStorageContent() {
                   return typeFilter;
                 })
                 .map((item) => item.type?.type.type.kind)
-                .filter(Boolean)
+                .filter(Boolean),
             ),
           ]}
           onChange={(val) => {
@@ -207,16 +207,21 @@ function PublicCapability(props: {
       }
       className={[]}
     >
-      <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
+      <div
+        className={cn(
+          "flex w-full flex-col items-start justify-between gap-2 p-4",
+          "md:flex-row md:items-center",
+        )}
+      >
         <div
           className={
-            "flex flex-row items-center justify-start gap-2 flex-wrap truncate"
+            "flex flex-row flex-wrap items-center justify-start gap-2 truncate"
           }
         >
           <SimpleTag
             label={"public"}
             category={<Plug className={"h-4 w-4"} />}
-            className={"text-gray-800"}
+            className={"hidden text-xs text-gray-200 md:flex"}
           />
 
           {referenceKind === "Intersection" && (
@@ -227,7 +232,7 @@ function PublicCapability(props: {
             <SimpleTag
               label={<Bolt className={"h-4 w-4"} />}
               title={title}
-              className={"text-prism-primary"}
+              className={"text-prism-primary text-xs"}
             />
           )}
 
@@ -235,7 +240,7 @@ function PublicCapability(props: {
             <SimpleTag
               label={"Collection"}
               category={<Package className={"h-4 w-4"} />}
-              className={"text-blue-500"}
+              className={"tex-xs text-blue-500"}
             />
           )}
 
@@ -243,10 +248,10 @@ function PublicCapability(props: {
             <SimpleTag
               label={"Balance"}
               category={<BadgeJapaneseYen className={"h-4 w-4"} />}
-              className={"text-prism-primary"}
+              className={"text-prism-primary text-xs"}
             />
           )}
-          <p className={"text-sm truncate font-bold"}>{capability.path}</p>
+          <p className={"truncate text-sm font-bold"}>{capability.path}</p>
         </div>
 
         {capability.isBalanceCap && (
@@ -255,7 +260,7 @@ function PublicCapability(props: {
               "flex flex-row items-center justify-end gap-1",
               Number(capability?.balance) === 0
                 ? "text-grey-200/10"
-                : "text-prism-primary"
+                : "text-prism-primary",
             )}
           >
             {token && (
@@ -266,7 +271,7 @@ function PublicCapability(props: {
                   const errorReplacementDiv = document?.createElement("div");
                   errorReplacementDiv.className = cn(
                     "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-prism-level-3",
-                    "h-5 w-5 p-2"
+                    "h-5 w-5 p-2",
                   );
                   errorReplacementDiv.innerText =
                     token?.name.split("")[0] ||
@@ -274,7 +279,7 @@ function PublicCapability(props: {
                     "T";
                   e.currentTarget.parentNode?.replaceChild(
                     errorReplacementDiv,
-                    e.currentTarget
+                    e.currentTarget,
                   );
                 }}
                 alt={"token"}
@@ -293,7 +298,7 @@ function PublicCapability(props: {
               "flex flex-row items-center justify-end gap-1",
               capability?.tokenIDs?.length === 0
                 ? "text-grey-200/10"
-                : "text-blue-500"
+                : "text-blue-500",
             )}
           >
             <Package className={"h-4 w-4"} />
@@ -363,7 +368,7 @@ function PublicCapabilityDetails(props: {
                 </div>
 
                 {reference && (
-                  <div className={"bg-prism-level-3 p-4"}>
+                  <div className={"bg-prism-level-2 p-4"}>
                     <div
                       className={
                         "flex w-full flex-col items-start justify-start gap-4"
@@ -371,7 +376,7 @@ function PublicCapabilityDetails(props: {
                     >
                       <div
                         className={
-                          "flex w-full flex-row items-center gap-2 text-copy"
+                          "text-copy flex w-full flex-row items-center gap-2"
                         }
                       >
                         <TypeLabel>Reference type ID:</TypeLabel>

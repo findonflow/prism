@@ -215,14 +215,14 @@ function StorageInfo(props: {
           <SimpleTag
             label={"storage"}
             category={<Database className={"h-4 w-4"} />}
-            className={"text-gray-800"}
+            className={"text-gray-400 text-xs"}
           />
 
           {storageInfo.isResource && (
             <SimpleTag
               label={<Bolt className={"h-4 w-4"} />}
               title={"Resource"}
-              className={"text-gray-500"}
+              className={"text-gray-400"}
             />
           )}
 
@@ -394,7 +394,7 @@ function StorageInfoResourceDetails(props: {
       {!isPending && data && (
         <div className={"flex flex-col items-start justify-start gap-2 w-full"}>
           <TypeLabel>Resource Details:</TypeLabel>
-          <div className={"bg-prism-level-3 p-4 w-full"}>
+          <div className={"bg-prism-level-2 p-4 w-full"}>
             <JsonView src={data} displaySize={"collapsed"} />
           </div>
         </div>
