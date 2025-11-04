@@ -45,9 +45,10 @@ function AccountCoa(props: { address?: string | null }) {
 
   const coa = data ? data[0] : null;
   const coaBalance = data ? data[1] : null;
+  const coaPrefixed = `0x${coa}`;
 
   return (
-    <div className={"flex flex-col gap-2 items-start justify-start"}>
+    <div className={"flex flex-col items-start justify-start gap-2"}>
       <TypeH3>Cadence Owned Account (COA):</TypeH3>
       {isPending && <LoadingBlock title={`Loading coa for ${address} ... `} />}
       {!coa && (
@@ -56,10 +57,10 @@ function AccountCoa(props: { address?: string | null }) {
       {coa && (
         <>
           <div
-            className={"flex flex-row items-center justify-start gap-3 w-full"}
+            className={"flex w-full flex-row items-center justify-start gap-3"}
           >
-            <TypeH3 className={"truncate"}>{coa}</TypeH3>
-            <CopyText text={coa || ""} className={"text-lg"} />
+            <TypeH3 className={"truncate"}>{coaPrefixed}</TypeH3>
+            <CopyText text={coaPrefixed} className={"text-lg"} />
           </div>
 
           <div className={"flex flex-row gap-2"}>
@@ -80,7 +81,7 @@ function AccountCoa(props: { address?: string | null }) {
           </div>
         </>
       )}
-      <hr className={"w-full border-prism-border "} />
+      <hr className={"border-prism-border w-full"} />
     </div>
   );
 }
@@ -92,7 +93,7 @@ function AccountHybrid(props: { address?: string | null }) {
   const { data, isPending } = useHybridCustody(address);
 
   return (
-    <div className={"flex flex-col gap-2 items-start justify-start"}>
+    <div className={"flex flex-col items-start justify-start gap-2"}>
       <TypeH3>Hybrid Custody</TypeH3>
       {isPending && (
         <LoadingBlock
@@ -103,7 +104,7 @@ function AccountHybrid(props: { address?: string | null }) {
       {data?.childAccounts?.map((childAccount: FlowChildAccount) => {
         const imgSrc = childAccount?.display?.thumbnail?.url;
         return (
-          <div key={childAccount.address} className={"flex flex-col w-full"}>
+          <div key={childAccount.address} className={"flex w-full flex-col"}>
             <TypeLabel>Child Accounts:</TypeLabel>
             <FatRow
               id={"child-account"}
@@ -113,7 +114,7 @@ function AccountHybrid(props: { address?: string | null }) {
             >
               <div
                 className={
-                  "flex flex-row gap-2 items-center justify-start w-full p-4"
+                  "flex w-full flex-row items-center justify-start gap-2 p-4"
                 }
               >
                 {imgSrc && (
@@ -123,17 +124,17 @@ function AccountHybrid(props: { address?: string | null }) {
                     alt={childAccount?.display?.name || ""}
                     width={20}
                     height={20}
-                    className={"w-12 h-auto"}
+                    className={"h-auto w-12"}
                   />
                 )}
-                <div className={"flex flex-col justify-start items-start"}>
+                <div className={"flex flex-col items-start justify-start"}>
                   <a href={`/${network}/account/${childAccount.address}`}>
                     <TypeH3 className={"underline"}>
                       {childAccount.address}
                     </TypeH3>
                   </a>
                   {childAccount?.display && (
-                    <p className={"text-sm inline-flex gap-1 flex-wrap"}>
+                    <p className={"inline-flex flex-wrap gap-1 text-sm"}>
                       <span className={"font-bold"}>
                         {childAccount?.display?.name}
                       </span>
@@ -159,11 +160,11 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
     <FatRowDetails>
       <div
         className={
-          "flex flex-row items-center justify-start gap-2 truncate flex-wrap"
+          "flex flex-row flex-wrap items-center justify-start gap-2 truncate"
         }
       >
         <TypeLabel>Account address:</TypeLabel>
-        <div className={"flex flex-row gap-2 flex-wrap items-center"}>
+        <div className={"flex flex-row flex-wrap items-center gap-2"}>
           <span className={"text-sm font-bold"}>{account.address}</span>
           <CopyText text={account.address} />
         </div>
@@ -176,12 +177,14 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
       {/* Supported types */}
       <div
         className={
-          "flex flex-col items-start justify-start gap-2 truncate flex-wrap w-full"
+          "flex w-full flex-col flex-wrap items-start justify-start gap-2 truncate"
         }
       >
         <TypeLabel>Supported Types:</TypeLabel>
         <div
-          className={"flex flex-col gap-1 bg-prism-level-3 p-3 w-full rounded-xs"}
+          className={
+            "bg-prism-level-3 flex w-full flex-col gap-1 rounded-xs p-3"
+          }
         >
           {account.factorySupportedTypes?.map((supportedType) => {
             return (
@@ -195,7 +198,7 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
       {account.filterDetails && (
         <div
           className={
-            "flex flex-row items-center justify-start gap-2 truncate flex-wrap w-full"
+            "flex w-full flex-row flex-wrap items-center justify-start gap-2 truncate"
           }
         >
           <TypeLabel>Filter Type:</TypeLabel>
@@ -210,7 +213,7 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
       {account.managerFilterDetails && (
         <div
           className={
-            "flex flex-row items-center justify-start gap-2 truncate flex-wrap w-full"
+            "flex w-full flex-row flex-wrap items-center justify-start gap-2 truncate"
           }
         >
           <TypeLabel>Manager Filter Type:</TypeLabel>
@@ -234,7 +237,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
   console.log({ data });
 
   return (
-    <div className={"flex flex-col gap-2 items-start justify-start"}>
+    <div className={"flex flex-col items-start justify-start gap-2"}>
       <TypeH3>Owned Account</TypeH3>
       {isPending && (
         <LoadingBlock
@@ -245,7 +248,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
       {!isPending && data && (
         <>
           {data.owner && (
-            <div className={"flex flex-row gap-2 items-center justify-start"}>
+            <div className={"flex flex-row items-center justify-start gap-2"}>
               <TypeLabel>Owned by:</TypeLabel>
               <a
                 href={`/${network}/account/${data.owner}`}
@@ -258,7 +261,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
 
           {data.parents.length > 0 && (
             <div
-              className={"w-full flex flex-col gap-2 items-start justify-start"}
+              className={"flex w-full flex-col items-start justify-start gap-2"}
             >
               <TypeH3>Parents</TypeH3>
               {data.parents.map((item: FlowParentAccount) => {
@@ -266,7 +269,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                   <div
                     key={item.address}
                     className={cn(
-                      "flex w-full flex-col items-center justify-between bg-prism-level-3",
+                      "bg-prism-level-3 flex w-full flex-col items-center justify-between",
                     )}
                   >
                     <div className="flex w-full flex-row items-center justify-start gap-4 p-4">
@@ -279,7 +282,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                       )}
                       <a
                         href={`/${network}/account/${item.address}`}
-                        className={"underline font-bold"}
+                        className={"font-bold underline"}
                       >
                         {item.address}
                       </a>

@@ -2,7 +2,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft, Fish } from "lucide-react";
 import QRCode from "react-qr-code";
 import { TypeH2, TypeLabel } from "@/components/ui/typography";
 import CopyText from "@/components/flowscan/CopyText";
@@ -10,6 +10,9 @@ import BasicAccountDetails from "@/components/ui/account-details";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { cn } from "@/lib/utils";
+import { isFindName } from "@/lib/validate";
+import SimpleTag from "@/components/flowscan/SimpleTag";
+import { useBasicDetails } from "@/hooks/useBasicDetails";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountSidebar() {
@@ -21,6 +24,8 @@ export default function AccountSidebar() {
   );
   const address = resolved?.owner;
 
+  const { data: details, isPending: loadingDetails } = useBasicDetails(address);
+
   if (!address && !isResolving) {
     return (
       <div className="flex h-full items-center justify-center p-4">
@@ -30,50 +35,115 @@ export default function AccountSidebar() {
   }
 
   const qrData = `https://prism.flowscan.io/${network}/account/${id}`;
+  const chevronIcon = isExpanded ? (
+    <ChevronLeft className="h-4 w-4" />
+  ) : (
+    <ChevronRight className="h-4 w-4" />
+  );
+
+  const verticalLabel = isFindName(id as string) ? `${id}.find` : id;
+  const isCollapsed = !isExpanded;
+  const ariaLabel = `${isExpanded ? "Collapse" : "Expand"} sidebar`;
+  const showFish =
+    !loadingDetails && details && Number(details?.balance) > 10000;
 
   return (
-    <div className="relative flex h-full w-full flex-col">
+    <div className="relative flex h-full w-full flex-col items-center justify-between">
       {/* Toggle Button - Desktop only */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
-          "absolute -right-3 top-4 z-10",
-          "hidden md:flex h-6 w-6 items-center justify-center",
-          "rounded-full border border-prism-border bg-prism-level-3",
-          "transition-all hover:bg-prism-interactive",
+          "absolute top-4 -right-3 z-10",
+          "hidden h-6 w-6 items-center justify-center md:flex",
+          "border-prism-border bg-prism-level-3 rounded-full border",
+          "hover:bg-prism-interactive transition-all",
         )}
-        aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
+        aria-label={ariaLabel}
       >
-        {isExpanded ? (
-          <ChevronLeft className="h-4 w-4" />
-        ) : (
-          <ChevronRight className="h-4 w-4" />
-        )}
+        {chevronIcon}
       </button>
 
       {/* Collapsed State - Desktop only */}
-      {!isExpanded && (
-        <div className="hidden md:flex h-full items-center justify-center px-2 py-6">
-          <div
-            className="flex items-center justify-center"
-            style={{ writingMode: "vertical-rl" }}
-          >
-            <span className="text-sm font-semibold text-prism-text">
-              Account {id}
-            </span>
+      {isCollapsed && (
+        <div
+          className="hidden flex-1 rotate-180 items-center justify-between px-6 py-6 md:flex"
+          style={{ writingMode: "vertical-rl" }}
+        >
+          <div className={"inline-flex gap-2"}>
+            {showFish && (
+              <SimpleTag
+                label={"Big Fish!"}
+                category={<Fish />}
+                className={"text-purple-400"}
+              />
+            )}
           </div>
+
+          <span className="text-prism-text inline-flex gap-2 text-lg">
+            <span>Account</span>
+            <span className={"text-prism-primary font-bold"}>
+              {verticalLabel}
+            </span>
+            {isFindName(id as string) && (
+              <span className={"text-prism-text-muted"}>({address})</span>
+            )}
+          </span>
         </div>
       )}
 
       {/* Expanded State - Always visible on mobile, toggleable on desktop */}
-      <div className={cn(
-        "flex h-full flex-col gap-6 overflow-y-auto",
-        "p-0 md:p-6",
-        !isExpanded && "hidden md:hidden"
-      )}>
+      <div
+        className={cn(
+          "flex h-full w-full flex-col gap-6 overflow-y-auto p-6",
+          "lg:w-[24rem] lg:p-8",
+          !isExpanded && "hidden md:hidden",
+        )}
+      >
+        {/* Account Information */}
+        <div className="flex flex-col gap-4">
+          <>
+            {isFindName(id as string) && (
+              <div
+                className={cn(
+                  "flex w-full flex-row items-center justify-between gap-2",
+                  "md:flex-col md:items-start",
+                )}
+              >
+                <TypeLabel>Account:</TypeLabel>
+                <div className="flex flex-row items-center gap-2">
+                  <TypeH2 className="text-base break-all md:text-lg">
+                    {id}
+                  </TypeH2>
+                  <CopyText
+                    text={id as string}
+                    className="flex-shrink-0 text-lg"
+                  />
+                </div>
+              </div>
+            )}
+
+            {address && (
+              <div
+                className={cn(
+                  "flex w-full flex-row items-center justify-between gap-2",
+                  "md:flex-col md:items-start",
+                )}
+              >
+                <TypeLabel>Address:</TypeLabel>
+                <div className="flex flex-row items-start gap-2">
+                  <TypeH2 className="text-base break-all md:text-lg">
+                    {address}
+                  </TypeH2>
+                  <CopyText text={address} className="flex-shrink-0 text-lg" />
+                </div>
+              </div>
+            )}
+          </>
+        </div>
+
         {/* QR Code */}
         <div className="flex w-full justify-center md:justify-start">
-          <div className="w-32 aspect-square">
+          <div className="aspect-square w-3/7 md:w-32">
             <QRCode
               size={64}
               value={qrData}
@@ -86,20 +156,8 @@ export default function AccountSidebar() {
         {/* Account Information */}
         <div className="flex flex-col gap-4">
           {isResolving && <LoadingBlock title="Resolving account owner" />}
-          
-          {address && (
-            <>
-              <div className="flex flex-col gap-2">
-                <TypeLabel>Account:</TypeLabel>
-                <div className="flex flex-row items-start gap-2">
-                  <TypeH2 className="break-all text-base md:text-lg flex-1">{address}</TypeH2>
-                  <CopyText text={address} className="text-lg flex-shrink-0" />
-                </div>
-              </div>
 
-              <BasicAccountDetails address={address} />
-            </>
-          )}
+          <BasicAccountDetails address={address} />
         </div>
       </div>
     </div>

@@ -27,7 +27,11 @@ export default function AccountDetailsLayout(props: AccountProps) {
       )}
     >
       {/* Sidebar - hidden on mobile, fixed on desktop */}
-      <aside className={"hidden md:flex [grid-area:sidebar] border-r border-prism-border bg-prism-level-2 min-h-0"}>
+      <aside
+        className={
+          "border-prism-border bg-prism-level-2 hidden min-h-0 border-r [grid-area:sidebar] md:flex"
+        }
+      >
         <Suspense>
           <AccountSidebar />
         </Suspense>
@@ -43,20 +47,17 @@ export default function AccountDetailsLayout(props: AccountProps) {
         )}
       >
         {/* Mobile sidebar content */}
-        <div className="md:hidden border-b border-prism-border bg-prism-level-2 px-6 py-6">
+        <div className="border-prism-border bg-prism-level-2 border-b md:hidden">
           <Suspense>
             <AccountSidebar />
           </Suspense>
         </div>
-        
+
         {/* Main content */}
-        <div className="px-6">
-          {/* Header - always visible */}
-          <header className={"w-full pt-2"}>
-            <Suspense>
-              <AccountNavigation />
-            </Suspense>
-          </header>
+        <div className="p-6">
+          <Suspense>
+            <AccountNavigation />
+          </Suspense>
           {children}
         </div>
       </main>
