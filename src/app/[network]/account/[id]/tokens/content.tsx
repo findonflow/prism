@@ -1,6 +1,7 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useParams } from "next/navigation";
+import { useState } from "react";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { TypeLabel } from "@/components/ui/typography";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
@@ -11,6 +12,10 @@ import { VaultBalance } from "@/components/ui/tags";
 import { cn } from "@/lib/utils";
 import CopyText from "@/components/flowscan/CopyText";
 import SimpleTag from "@/components/flowscan/SimpleTag";
+import { SearchBar } from "@/components/flowscan/SearchBar";
+import Select from "@/components/flowscan/Select";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import useQueryParams from "@/hooks/utils/useQueryParams";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function TokensPageContent() {
@@ -25,6 +30,16 @@ export default function TokensPageContent() {
     useTokenRegistry();
   const { data: list, isPending } = useTokenList(address);
 
+  const { setQueryParams, getQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25", registryFilter = "All"] = getQueryParams([
+    "offset",
+    "limit",
+    "registry",
+  ]);
+
+  const [filter, setFilter] = useState("");
+  const [registryStatus, setRegistryStatus] = useState(registryFilter);
+
   const isLoading = isResolving || isPending || fetchingRegistry;
 
   const formatted =
@@ -38,17 +53,74 @@ export default function TokensPageContent() {
       };
     }) || [];
 
+  const filtered = formatted.filter((token) => {
+    const name = token?.registryData?.name || "";
+    const symbol = token?.registryData?.symbol || "";
+    const displayName = name || symbol || token.path.split("/")[2];
+
+    const matchesFilter =
+      displayName.toLowerCase().includes(filter.toLowerCase()) ||
+      token.path.toLowerCase().includes(filter.toLowerCase());
+
+    let matchesRegistry = true;
+    if (registryStatus === "Registered") {
+      matchesRegistry = Boolean(token.registryData);
+    } else if (registryStatus === "Unknown") {
+      matchesRegistry = !Boolean(token.registryData);
+    }
+
+    return matchesFilter && matchesRegistry;
+  });
+
+  const items = filtered.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit),
+  );
+
+  const haveItemsButHidden =
+    filtered.length === 0 && Boolean(formatted) && formatted.length > 0;
+
   return (
     <div className={"flex w-full flex-col gap-4"}>
       <TypeLabel>Account Tokens:</TypeLabel>
 
+      <div
+        className={
+          "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"
+        }
+      >
+        <SearchBar
+          value={filter}
+          onChange={setFilter}
+          placeholder={"Filter by name or path"}
+        />
+        <Select
+          value={registryStatus}
+          className={"min-w-[160px] max-md:grow"}
+          initialValue={"All"}
+          options={["All", "Registered", "Unknown"]}
+          onChange={(val) => {
+            setRegistryStatus(val);
+            setQueryParams({ registry: val }, { push: false });
+          }}
+        />
+      </div>
+
       {isLoading && (
         <LoadingBlock title={`Loading tokens for ${address}... `} />
       )}
-      {formatted.length > 0 && (
+      {haveItemsButHidden && (
+        <p className={"text-md opacity-50"}>
+          There are {formatted.length} tokens, but all of them are hidden. Try to
+          relax filter criteria
+        </p>
+      )}
+      {filtered.length > 0 && !isLoading && (
+        <SimpleClientPagination totalItems={filtered.length} />
+      )}
+      {items.length > 0 && (
         <div className="fat-row-column flex flex-col gap-px">
-          {formatted.map((token) => {
-            const { registryData } = token;
+          {items.map((token) => {
             return <SingleToken token={token} key={token.path} />;
           })}
         </div>
