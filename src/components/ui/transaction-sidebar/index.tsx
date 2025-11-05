@@ -3,18 +3,15 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { ChevronRight, ChevronLeft, CheckCircle, Key } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import QRCode from "react-qr-code";
 import { TypeH1, TypeH2, TypeLabel } from "@/components/ui/typography";
 import CopyText from "@/components/flowscan/CopyText";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { cn } from "@/lib/utils";
-import SimpleTag from "@/components/flowscan/SimpleTag";
-import TagAccount from "@/components/flowscan/TagAccount";
 import { useTransactionDetails } from "@/hooks/useTransactionDetails";
 import { useSurge } from "@/hooks/useSurge";
 import {
-  TagExecEffort,
   TagFlowAccount,
   TagFlowStatus,
   TagGas,
