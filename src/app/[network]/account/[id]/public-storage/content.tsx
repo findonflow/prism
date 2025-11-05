@@ -244,18 +244,18 @@ function PublicCapability(props: {
           <SimpleTag
             label={"public"}
             category={<Plug className={"h-4 w-4"} />}
-            className={"hidden text-xs text-gray-200 md:flex"}
+            className={"hidden text-xs text-gray-400 md:flex"}
           />
 
           {referenceKind === "Intersection" && (
-            <SimpleTag label={<Blend className={"h-4 w-4"} />} title={title} />
+            <SimpleTag label={<Blend className={"h-4 w-4"} />} title={title} className={"text-pink-400"} />
           )}
 
           {referenceKind === "Resource" && (
             <SimpleTag
               label={<Bolt className={"h-4 w-4"} />}
               title={title}
-              className={"text-prism-primary text-xs"}
+              className={"text-violet-400 text-xs"}
             />
           )}
 

@@ -35,10 +35,7 @@ export default function AccountCollectionsContent() {
 
   const { data, isPending } = useAccountCollectionList(address);
   const { setQueryParams, getQueryParams } = useQueryParams();
-  const [offset = "0", limit = "25"] = getQueryParams([
-    "offset",
-    "limit",
-  ]);
+  const [offset = "0", limit = "25"] = getQueryParams(["offset", "limit"]);
 
   const [filter, setFilter] = useState("");
 
@@ -85,6 +82,7 @@ export default function AccountCollectionsContent() {
           value={filter}
           onChange={setFilter}
           placeholder={"Filter by name or path"}
+          className={"min-h-[40px]"}
         />
       </div>
 
@@ -109,10 +107,7 @@ export default function AccountCollectionsContent() {
               animate={{ opacity: 1, scale: 1 }}
               key={collection.path}
             >
-              <SingleCollection
-                collection={collection}
-                address={address}
-              />
+              <SingleCollection collection={collection} address={address} />
             </motion.div>
           ))}
           {items.length === 0 && !isPending && (
@@ -158,7 +153,7 @@ function SingleCollection(props: SingleCollectionProps) {
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row items-center justify-center bg-prism-level-2 font-bold text-prism-text-muted"
+        "bg-prism-level-2 text-prism-text-muted flex h-full w-full flex-row items-center justify-center font-bold"
       }
     >
       ?

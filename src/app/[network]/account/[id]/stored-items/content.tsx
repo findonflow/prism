@@ -242,7 +242,7 @@ function StorageInfo(props: {
             <SimpleTag
               label={<Bolt className={"h-4 w-4"} />}
               title={"Resource"}
-              className={"text-gray-400"}
+              className={"text-violet-400"}
             />
           )}
 
@@ -258,7 +258,7 @@ function StorageInfo(props: {
             <SimpleTag
               title={"Capability"}
               label={<Plug className={"h-4 w-4"} />}
-              className={"text-gray-800"}
+              className={"text-purple-400"}
             />
           )}
 
