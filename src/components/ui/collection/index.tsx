@@ -13,7 +13,7 @@ export function NftCard(props: { token: any }) {
 
   return (
     <div
-      className="shadow-subtle h-full overflow-hidden rounded-xs bg-gray-300 hover:bg-gray-400/50"
+      className="shadow-subtle h-full overflow-hidden rounded-xs bg-prism-level-3 hover:bg-prism-level-4"
       key={`${nftId}-${collectionName}`}
     >
       <div className="bg relative mx-auto min-h-[200px] w-full overflow-hidden">
@@ -69,7 +69,7 @@ export function CollectionDetailsHeader(props: {
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row items-center justify-center bg-gray-300/50 font-bold text-gray-400/50"
+        "flex h-full w-full flex-row items-center justify-center bg-prism-level-2 font-bold text-prism-text-muted"
       }
     >
       ?

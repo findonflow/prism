@@ -24,6 +24,7 @@ import "@/components/ui/json-view/style.css";
 import useQueryParams from "@/hooks/utils/useQueryParams";
 import { useTokenRegistry } from "@/hooks/useTokenList";
 import { cn } from "@/lib/utils";
+import { variants } from "@/lib/animate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStoredItemsContent() {
@@ -165,26 +166,45 @@ export default function AccountStoredItemsContent() {
         <SimpleClientPagination totalItems={filteredList?.length} />
       )}
 
-      {itemsList.length > 0 && (
-        <motion.div
-          className={
-            "fat-row-column flex w-full flex-col items-start justify-start gap-px"
-          }
-        >
-          <AnimatePresence mode="popLayout">
-            {itemsList?.map((storageInfo) => {
-              return (
+      <motion.div
+        className={
+          "fat-row-column flex w-full flex-col items-start justify-start gap-px"
+        }
+      >
+        <AnimatePresence mode="popLayout">
+          {itemsList?.map((storageInfo) => {
+            return (
+              <motion.div
+                layout
+                variants={variants}
+                className={"w-full"}
+                exit={{ opacity: 0, height: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                key={storageInfo.path}
+              >
                 <StorageInfo
                   address={address}
                   storageInfo={storageInfo}
-                  key={storageInfo.path}
                   tokenRegistryMap={tokenRegistryMap}
                 />
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-      )}
+              </motion.div>
+            );
+          })}
+          {itemsList.length === 0 && !isLoading && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-items-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>
+                No items to show.
+              </TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
@@ -215,14 +235,14 @@ function StorageInfo(props: {
           <SimpleTag
             label={"storage"}
             category={<Database className={"h-4 w-4"} />}
-            className={"text-gray-800"}
+            className={"text-gray-400 text-xs"}
           />
 
           {storageInfo.isResource && (
             <SimpleTag
               label={<Bolt className={"h-4 w-4"} />}
               title={"Resource"}
-              className={"text-gray-500"}
+              className={"text-violet-400"}
             />
           )}
 
@@ -230,7 +250,7 @@ function StorageInfo(props: {
             <SimpleTag
               title={"Vault"}
               label={<BadgeJapaneseYen className={"h-4 w-4"} />}
-              className={"text-green-600"}
+              className={"text-prism-primary"}
             />
           )}
 
@@ -238,7 +258,7 @@ function StorageInfo(props: {
             <SimpleTag
               title={"Capability"}
               label={<Plug className={"h-4 w-4"} />}
-              className={"text-gray-800"}
+              className={"text-purple-400"}
             />
           )}
 
@@ -269,7 +289,7 @@ function StorageInfo(props: {
                       const errorReplacementDiv =
                         document?.createElement("div");
                       errorReplacementDiv.className = cn(
-                        "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-gray-300",
+                        "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-prism-level-3",
                         "h-5 w-5 p-2"
                       );
                       errorReplacementDiv.innerText =
@@ -394,7 +414,7 @@ function StorageInfoResourceDetails(props: {
       {!isPending && data && (
         <div className={"flex flex-col items-start justify-start gap-2 w-full"}>
           <TypeLabel>Resource Details:</TypeLabel>
-          <div className={"bg-gray-400/30 p-4 w-full"}>
+          <div className={"bg-prism-level-2 p-4 w-full"}>
             <JsonView src={data} displaySize={"collapsed"} />
           </div>
         </div>

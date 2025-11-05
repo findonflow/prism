@@ -2,6 +2,8 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
@@ -12,7 +14,9 @@ import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useCollectionItems } from "@/hooks/useCollectionItems";
 import useQueryParams from "@/hooks/utils/useQueryParams";
-import { useEffect } from "react";
+import { SearchBar } from "@/components/flowscan/SearchBar";
+import { TypeLabel } from "@/components/ui/typography";
+import { variants } from "@/lib/animate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function extractCollectionName(collection: NFTCollection): string {
@@ -31,16 +35,20 @@ export default function AccountCollectionsContent() {
 
   const { data, isPending } = useAccountCollectionList(address);
   const { setQueryParams, getQueryParams } = useQueryParams();
-  const [offset = "0", limit = "25"] = getQueryParams([
-    "offset",
-    "limit",
-    "type",
-    "refKind",
-  ]);
+  const [offset = "0", limit = "25"] = getQueryParams(["offset", "limit"]);
+
+  const [filter, setFilter] = useState("");
 
   const showList = !isPending && Boolean(data);
   const filtered =
-    data?.filter((collection) => collection.tokenIDs.length > 0) || [];
+    data?.filter((collection) => {
+      const hasItems = collection.tokenIDs.length > 0;
+      const name = extractCollectionName(collection);
+      const matchesFilter =
+        name.toLowerCase().includes(filter.toLowerCase()) ||
+        collection.path.toLowerCase().includes(filter.toLowerCase());
+      return hasItems && matchesFilter;
+    }) || [];
 
   const sorted = filtered.sort((a: NFTCollection, b: NFTCollection) => {
     const aName = extractCollectionName(a);
@@ -57,25 +65,66 @@ export default function AccountCollectionsContent() {
     parseInt(offset) + parseInt(limit),
   );
 
+  const haveItemsButHidden =
+    filtered.length === 0 && Boolean(data) && data!.length > 0;
+
   if (!address) return <div>Please provide a valid account identifier.</div>;
 
   return (
-    <div className={"flex w-full flex-col"}>
+    <div className={"flex w-full flex-col gap-4"}>
+      <TypeLabel>Account Collections:</TypeLabel>
+      <div
+        className={
+          "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"
+        }
+      >
+        <SearchBar
+          value={filter}
+          onChange={setFilter}
+          placeholder={"Filter by name or path"}
+          className={"min-h-[40px]"}
+        />
+      </div>
+
       {isPending && <JumpingDots />}
+      {haveItemsButHidden && (
+        <p className={"text-md opacity-50"}>
+          There are {data?.length} collections, but all of them are hidden. Try
+          to relax filter criteria
+        </p>
+      )}
       {sorted && !isPending && (
         <SimpleClientPagination totalItems={sorted?.length} />
       )}
-      {showList && (
-        <div className={"fat-row-column mt-4 flex w-full flex-col gap-px"}>
+      <motion.div className={"fat-row-column flex w-full flex-col gap-px"}>
+        <AnimatePresence mode="popLayout">
           {items?.map((collection) => (
-            <SingleCollection
-              collection={collection}
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              exit={{ opacity: 0, height: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
               key={collection.path}
-              address={address}
-            />
+            >
+              <SingleCollection collection={collection} address={address} />
+            </motion.div>
           ))}
-        </div>
-      )}
+          {items.length === 0 && !isPending && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-collections-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>
+                No collections to show.
+              </TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
@@ -104,7 +153,7 @@ function SingleCollection(props: SingleCollectionProps) {
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row items-center justify-center bg-gray-300/50 font-bold text-gray-400/50"
+        "bg-prism-level-2 text-prism-text-muted flex h-full w-full flex-row items-center justify-center font-bold"
       }
     >
       ?

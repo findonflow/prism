@@ -10,6 +10,7 @@ interface SimpleTagProps {
   hoverLabel?: string;
   category?: string | React.ReactNode;
   className?: string;
+  hideArrow?: boolean;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -17,6 +18,7 @@ export default function SimpleTag(props: SimpleTagProps) {
   const { category, title } = props;
   const { label, hoverLabel } = props;
   const { className } = props;
+  const { hideArrow } = props;
 
   const showDivider = Boolean(!!category);
 
@@ -25,8 +27,8 @@ export default function SimpleTag(props: SimpleTagProps) {
       title={title}
       className={cn(
         "flex shrink-0 flex-row items-center justify-center gap-1",
-        "border-current/60 border border-solid",
-        "text-sm p-1 rounded-xs",
+        "border border-solid border-current/60",
+        "rounded-xs p-1 text-sm",
         "group",
         "simple-tag",
         className,
@@ -48,9 +50,7 @@ export default function SimpleTag(props: SimpleTagProps) {
       )}
 
       {/* Label */}
-      <div
-        className={cn("flex items-center justify-start gap-1 px-0.5")}
-      >
+      <div className={cn("flex items-center justify-start gap-1 px-0.5")}>
         <span
           className={cn(
             "truncate",
@@ -78,13 +78,15 @@ export default function SimpleTag(props: SimpleTagProps) {
       </div>
 
       {/* Conditional Link symbol */}
-      <SquareArrowUpRight
-        className={cn(
-          "st__link-icon",
-          "relative bottom-[0.5px] hidden h-3 w-3 shrink-0 opacity-50",
-          "in-[:where(a)]:block",
-        )}
-      />
+      {!hideArrow && (
+        <SquareArrowUpRight
+          className={cn(
+            "st__link-icon",
+            "relative bottom-[0.5px] hidden h-3 w-3 shrink-0 opacity-50",
+            "in-[:where(a)]:block",
+          )}
+        />
+      )}
     </span>
   );
 }

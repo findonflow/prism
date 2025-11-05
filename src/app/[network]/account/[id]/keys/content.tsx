@@ -1,14 +1,17 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { useAccountDetails } from "@/hooks/useAccountDetails";
+import { AnimatePresence, motion } from "motion/react";
+import { useParams } from "next/navigation";
 import { useState } from "react";
+
 import KeyRow from "@/components/flowscan/rows/KeyRow";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
-import { AnimatePresence, motion } from "motion/react";
-import { variants } from "@/lib/animate";
 import { TypeLabel } from "@/components/ui/typography";
+import { Checkbox } from "@/components/ui/checkbox";
 import useAccountResolver from "@/hooks/useAccountResolver";
-import { useParams } from "next/navigation";
+import { useAccountDetails } from "@/hooks/useAccountDetails";
+import { variants } from "@/lib/animate";
+import { SearchBar } from "@/components/flowscan/SearchBar";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountKeysContent() {
@@ -52,29 +55,22 @@ export default function AccountKeysContent() {
       {isLoading && <LoadingBlock title={"Loading account keys "} />}
       {dataReady && (
         <>
-          <div className={"flex flex-row justify-between gap-4"}>
-            <input
-              className={"border-1 border-gray-300 p-2 px-3 w-full round-md"}
+          <div className={"flex flex-row items-center justify-between gap-4"}>
+            <SearchBar
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
+              onChange={setFilter}
               placeholder={"Enter query to filter keys"}
+              className={"min-h-[40px]"}
             />
-            <label
-              className={
-                "flex select-none flex-row items-center gap-1 whitespace-nowrap text-colors-white"
-              }
-            >
-              <input
-                type={"checkbox"}
-                checked={showRevoked}
-                onChange={(e) => setShowRevoked(e.target.checked)}
-              />
-              Show revoked
-            </label>
+            <Checkbox
+              label="Show revoked"
+              checked={showRevoked}
+              onChange={(e) => setShowRevoked(e.target.checked)}
+            />
           </div>
 
           <motion.div
-            className={"flex flex-col gap-px items-start justify-start"}
+            className={"flex flex-col items-start justify-start gap-px"}
           >
             <AnimatePresence mode="popLayout">
               {filteredList.map((key) => (

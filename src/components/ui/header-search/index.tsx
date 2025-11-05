@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function BigSearch() {
+export default function HeaderSearch() {
   const params = useParams();
   const { network } = params;
 
@@ -14,11 +14,20 @@ export default function BigSearch() {
   const router = useRouter();
   const [value, setValue] = useState("");
 
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.focus();
+  function listenForUpdates(e: KeyboardEvent) {
+    if (e.key === "/") {
+      setValue("");
+      e.preventDefault();
+      ref.current?.focus();
     }
-  });
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", listenForUpdates);
+    return () => {
+      window.removeEventListener("keydown", listenForUpdates);
+    };
+  }, []);
 
   return (
     <Input
@@ -26,19 +35,22 @@ export default function BigSearch() {
       type="text"
       value={value}
       className={cn(
-        "text-main border-2 px-4 py-6 text-lg outline-0",
-        "focus:border-current focus:text-prism-primary",
-        "focus:shadow-[0_0_3rem_0.2rem] shadow-prism-primary/50",
+        "h-full w-full border-1 px-4 text-sm outline-0",
+        "focus:text-prism-primary focus:border-current",
+        "shadow-prism-primary/50 focus:shadow-[0_0_3rem_0.2rem]",
         "truncate transition-colors duration-300",
       )}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           router.push(`/${network}/account/${value}`);
+          setValue("");
+          ref.current?.blur();
         }
       }}
-      placeholder={"Type your search query here"}
-      autoFocus={true}
+      placeholder={
+        "Type / to search for account, transaction or find domain name"
+      }
       autoComplete="on"
       autoCapitalize="off"
       autoCorrect="off"

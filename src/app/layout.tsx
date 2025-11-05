@@ -1,5 +1,7 @@
-import { Geist, Geist_Mono } from "next/font/google";
+/*--------------------------------------------------------------------------------------------------------------------*/
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import type { Metadata } from "next";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -11,6 +13,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "800"],
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -26,12 +35,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <html lang="en" className="dark">
+      <body className={cn(inter.variable, "antialiased bg-prism-level-1 text-prism-text")}>{children}</body>
     </html>
   );
 }

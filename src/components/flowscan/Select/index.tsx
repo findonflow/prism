@@ -47,7 +47,7 @@ export default function Select(props: SelectProps) {
     >
       <div className="absolute border-border border-1 border-solid w-full h-full top-0 left-0 rounded-md pointer-events-none" />
       {options.map((option) => (
-        <option className="hover:bg-gray-200" key={option} value={option}>
+        <option className="hover:bg-prism-interactive" key={option} value={option}>
           {option}
         </option>
       ))}

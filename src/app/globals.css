@@ -7,8 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-inter);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,6 +49,20 @@
   --text-attention: 16px;
   --text-title: 20px;
   --text-bsn-title: 20px;
+
+  /* Prism Theme */
+  --color-prism-primary: var(--prism-primary);
+  --color-prism-secondary: var(--prism-secondary);
+
+  --color-prism-level-1: var(--prism-level-1);
+  --color-prism-level-2: var(--prism-level-2);
+  --color-prism-level-3: var(--prism-level-3);
+  --color-prism-level-4: var(--prism-level-4);
+  --color-prism-border: var(--prism-border);
+  --color-prism-text: var(--prism-text);
+  --color-prism-text-muted: var(--prism-text-muted);
+  --color-prism-interactive: var(--prism-interactive);
+  --color-prism-interactive-hover: var(--prism-interactive-hover);
 }
 
 :root {
@@ -90,6 +104,40 @@
   --role-access: #949d1c;
   --role-verification: #cf8224;
   --role-execution: #b65bea;
+
+  --prism-level-1: #060606;
+  --prism-level-2: oklch(
+    from var(--prism-level-1) calc(l * 1.35) calc(c * 1.2) calc(h * 1)
+  );
+  --prism-level-3: oklch(
+    from var(--prism-level-2) calc(l * 1.35) calc(c * 1.05) h
+  );
+  --prism-level-4: oklch(from var(--prism-level-1) calc(l * 2) calc(c * 1.1) h);
+
+  /* Prism utilities */
+  --prism-border: oklch(1 0 0 / 10%);
+  --prism-text: oklch(0.95 0 0);
+  --prism-text-muted: oklch(from var(--prism-text) calc(l * 0.75) c h);
+  /*  --prism-interactive: oklch(from var(--prism-level-3) calc(l*1.4) calc(c*1.15) h);
+  --prism-interactive-hover: oklch(from var(--prism-level-3) calc(l*1.5) calc(c*1.2) h);*/
+
+  --prism-interactive: oklch(
+    from var(--prism-level-4) calc(l * 1.4) calc(c * 1.15) h
+  );
+  --prism-interactive-hover: oklch(
+    from var(--prism-interactive) calc(l * 1.1) c h
+  );
+
+  --prism-mainnet: #66bd99;
+  --prism-testnet: #f16f6f;
+
+  --prism-primary: var(--prism-mainnet);
+  --prism-secondary: var(--prism-testnet);
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 .dark {
@@ -137,8 +185,9 @@
 
 .filter-input {
   width: 100%;
-  border: 1px solid var(--color-border);
-  background-color: inherit;
+  border: 1px solid var(--color-prism-border);
+  background-color: var(--color-prism-level-3);
+  color: var(--color-prism-text);
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-top: 0.5rem;
@@ -146,4 +195,9 @@
   font-size: var(--text-copy);
 
   outline: none;
+}
+
+.filter-input:focus {
+  border-color: var(--color-prism-interactive);
+  background-color: var(--color-prism-level-4);
 }

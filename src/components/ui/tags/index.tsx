@@ -31,7 +31,7 @@ export function VaultBalance(props: { balance?: string; symbol?: string }) {
     <div
       className={cn(
         "flex flex-row items-center justify-end gap-1",
-        formatted === 0 ? "text-gray-400" : "text-green-600",
+        formatted === 0 ? "text-gray-400" : "text-prism-primary",
       )}
     >
       <span className={"opacity-75"}>{symbol}</span>

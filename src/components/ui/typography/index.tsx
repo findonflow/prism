@@ -4,18 +4,20 @@ import type { ReactNode } from "react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface TextProps {
+  id?: string;
   children: ReactNode;
   className?: string;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function TypeH1(props: TextProps) {
-  const { children, className } = props;
+  const { id, children, className } = props;
 
   return (
     <h1
+      id={id}
       className={cn(
-        "text-4xl text-center font-extrabold",
+        "text-center text-4xl font-extrabold",
         "tracking-tight text-balance", // tight interline space and balanced wrap
         "scroll-m-20", // add space when navigating to this header
         className,
@@ -33,7 +35,7 @@ export function TypeH2(props: TextProps) {
   return (
     <h1
       className={cn(
-        "text-2xl text-center font-bold",
+        "text-center text-2xl font-bold",
         "tracking-tight text-balance", // tight interline space and balanced wrap
         "scroll-m-12", // add space when navigating to this header
         className,

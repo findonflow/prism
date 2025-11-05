@@ -4,7 +4,7 @@
 import { BadgeJapaneseYen, Blend, Bolt, Package, Plug } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import CopyText from "@/components/flowscan/CopyText";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
@@ -22,13 +22,15 @@ import useQueryParams from "@/hooks/utils/useQueryParams";
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useTokenRegistry } from "@/hooks/useTokenList";
+import FlowIcon from "@/components/ui/icons";
+import { variants } from "@/lib/animate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountPublicStorageContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string
+    id as string,
   );
   const address = resolved?.owner;
 
@@ -51,7 +53,7 @@ export default function AccountPublicStorageContent() {
           acc[item.path.balance] = item;
           return acc;
         },
-        {}
+        {},
       )
     : {};
 
@@ -83,7 +85,7 @@ export default function AccountPublicStorageContent() {
 
   const itemsList = filteredList?.slice(
     parseInt(offset),
-    parseInt(offset) + parseInt(limit)
+    parseInt(offset) + parseInt(limit),
   );
   const haveItemsBuHidden =
     filteredList.length === 0 && Boolean(data) && data!.length > 0;
@@ -93,7 +95,7 @@ export default function AccountPublicStorageContent() {
       <TypeLabel>Account Public Storage:</TypeLabel>
       <div
         className={
-          "flex w-full flex-row max-md:flex-wrap items-center justify-start gap-4"
+          "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"
         }
       >
         <SearchBar
@@ -131,7 +133,7 @@ export default function AccountPublicStorageContent() {
                   return typeFilter;
                 })
                 .map((item) => item.type?.type.type.kind)
-                .filter(Boolean)
+                .filter(Boolean),
             ),
           ]}
           onChange={(val) => {
@@ -155,26 +157,45 @@ export default function AccountPublicStorageContent() {
         <SimpleClientPagination totalItems={filteredList?.length} />
       )}
 
-      {itemsList.length > 0 && (
-        <motion.div
-          className={
-            "fat-row-column flex w-full flex-col items-start justify-start gap-px"
-          }
-        >
-          <AnimatePresence mode="popLayout">
-            {itemsList?.map((capability) => {
-              return (
+      <motion.div
+        className={
+          "fat-row-column flex w-full flex-col items-start justify-start gap-px"
+        }
+      >
+        <AnimatePresence mode="popLayout">
+          {itemsList?.map((capability) => {
+            return (
+              <motion.div
+                layout
+                variants={variants}
+                className={"w-full"}
+                exit={{ opacity: 0, height: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                key={capability.path}
+              >
                 <PublicCapability
                   address={address}
                   capability={capability}
-                  key={capability.path}
                   tokenRegistryMap={tokenRegistryMap}
                 />
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-      )}
+              </motion.div>
+            );
+          })}
+          {itemsList.length === 0 && !isLoading && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-items-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>
+                No items to show.
+              </TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
@@ -194,6 +215,8 @@ function PublicCapability(props: {
   const referenceKind = reference?.kind;
   const title = `Reference Kind: ${referenceKind}`;
 
+  console.log({ token });
+
   return (
     <FatRow
       key={capability.path}
@@ -207,27 +230,32 @@ function PublicCapability(props: {
       }
       className={[]}
     >
-      <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
+      <div
+        className={cn(
+          "flex w-full flex-col items-start justify-between gap-2 p-4",
+          "md:flex-row md:items-center",
+        )}
+      >
         <div
           className={
-            "flex flex-row items-center justify-start gap-2 flex-wrap truncate"
+            "flex flex-row flex-wrap items-center justify-start gap-2 truncate"
           }
         >
           <SimpleTag
             label={"public"}
             category={<Plug className={"h-4 w-4"} />}
-            className={"text-gray-800"}
+            className={"hidden text-xs text-gray-400 md:flex"}
           />
 
           {referenceKind === "Intersection" && (
-            <SimpleTag label={<Blend className={"h-4 w-4"} />} title={title} />
+            <SimpleTag label={<Blend className={"h-4 w-4"} />} title={title} className={"text-pink-400"} />
           )}
 
           {referenceKind === "Resource" && (
             <SimpleTag
               label={<Bolt className={"h-4 w-4"} />}
               title={title}
-              className={"text-green-600"}
+              className={"text-violet-400 text-xs"}
             />
           )}
 
@@ -235,7 +263,7 @@ function PublicCapability(props: {
             <SimpleTag
               label={"Collection"}
               category={<Package className={"h-4 w-4"} />}
-              className={"text-blue-500"}
+              className={"tex-xs text-blue-500"}
             />
           )}
 
@@ -243,10 +271,10 @@ function PublicCapability(props: {
             <SimpleTag
               label={"Balance"}
               category={<BadgeJapaneseYen className={"h-4 w-4"} />}
-              className={"text-green-600"}
+              className={"text-prism-primary text-xs"}
             />
           )}
-          <p className={"text-sm truncate font-bold"}>{capability.path}</p>
+          <p className={"truncate text-sm font-bold"}>{capability.path}</p>
         </div>
 
         {capability.isBalanceCap && (
@@ -255,32 +283,35 @@ function PublicCapability(props: {
               "flex flex-row items-center justify-end gap-1",
               Number(capability?.balance) === 0
                 ? "text-grey-200/10"
-                : "text-green-600"
+                : "text-prism-primary",
             )}
           >
-            {token && (
-              <img
-                src={token?.logoURI || "/"}
-                title={token?.name || capability?.path.split("/").pop()}
-                onError={(e) => {
-                  const errorReplacementDiv = document?.createElement("div");
-                  errorReplacementDiv.className = cn(
-                    "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-gray-300",
-                    "h-5 w-5 p-2"
-                  );
-                  errorReplacementDiv.innerText =
-                    token?.name.split("")[0] ||
-                    capability?.path.split("/").pop()?.split("")[0] ||
-                    "T";
-                  e.currentTarget.parentNode?.replaceChild(
-                    errorReplacementDiv,
-                    e.currentTarget
-                  );
-                }}
-                alt={"token"}
-                className={"h-4 w-4"}
-              />
-            )}
+            {token &&
+              (token.name === "Flow" ? (
+                <FlowIcon className={"h-4 w-4"} />
+              ) : (
+                <img
+                  src={token?.logoURI || "/"}
+                  title={token?.name || capability?.path.split("/").pop()}
+                  onError={(e) => {
+                    const errorReplacementDiv = document?.createElement("div");
+                    errorReplacementDiv.className = cn(
+                      "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-prism-level-3",
+                      "h-5 w-5 p-2",
+                    );
+                    errorReplacementDiv.innerText =
+                      token?.name.split("")[0] ||
+                      capability?.path.split("/").pop()?.split("")[0] ||
+                      "T";
+                    e.currentTarget.parentNode?.replaceChild(
+                      errorReplacementDiv,
+                      e.currentTarget,
+                    );
+                  }}
+                  alt={"token"}
+                  className={"h-4 w-4"}
+                />
+              ))}
             <b className={"text-md"}>
               {formatNumberToAccounting(Number(capability?.balance), 4, 2)}
             </b>
@@ -293,7 +324,7 @@ function PublicCapability(props: {
               "flex flex-row items-center justify-end gap-1",
               capability?.tokenIDs?.length === 0
                 ? "text-grey-200/10"
-                : "text-blue-500"
+                : "text-blue-500",
             )}
           >
             <Package className={"h-4 w-4"} />
@@ -363,7 +394,7 @@ function PublicCapabilityDetails(props: {
                 </div>
 
                 {reference && (
-                  <div className={"bg-gray-400/30 p-4"}>
+                  <div className={"bg-prism-level-2 p-4"}>
                     <div
                       className={
                         "flex w-full flex-col items-start justify-start gap-4"
@@ -371,7 +402,7 @@ function PublicCapabilityDetails(props: {
                     >
                       <div
                         className={
-                          "flex w-full flex-row items-center gap-2 text-copy"
+                          "text-copy flex w-full flex-row items-center gap-2"
                         }
                       >
                         <TypeLabel>Reference type ID:</TypeLabel>

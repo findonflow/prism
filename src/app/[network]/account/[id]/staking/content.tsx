@@ -235,7 +235,7 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
   const { nodeInfo } = props;
 
   return (
-    <div className={"w-full gap-4 rounded-sm bg-gray-400/30 p-4"}>
+    <div className={"w-full gap-4 rounded-sm bg-prism-level-3 p-4"}>
       <h3 className={"text-md"}>Node Info</h3>
       <div className={"flex flex-row gap-1 text-fineprint"}>
         <span>ID:</span>

@@ -1,8 +1,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { Suspense } from "react";
+import { CSSProperties, Suspense } from "react";
 import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
-import { LayoutPage } from "@/components/ui/layout";
 import QueryProvider, { FCLProvider } from "@/fetch/provider";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -16,9 +15,16 @@ export default async function NetworkLayout(props: NetworkLayoutProps) {
   const params = await props.params;
 
   const { network } = params;
+  const style = {
+    "--prism-primary":
+      network === "mainnet" ? "var(--prism-mainnet)" : "var(--prism-testnet)",
+  } as CSSProperties;
 
   return (
-    <LayoutPage>
+    <div
+      className="grid h-screen w-full grid-rows-[auto_1fr_auto]"
+      style={style}
+    >
       <FCLProvider>
         <Suspense>
           <Header network={network} />
@@ -26,7 +32,7 @@ export default async function NetworkLayout(props: NetworkLayoutProps) {
 
         <main
           className={
-            "flex h-full w-full flex-1 flex-col items-start justify-start py-6"
+            "flex h-full w-full flex-1 flex-col items-center justify-start"
           }
         >
           <Suspense>
@@ -36,6 +42,6 @@ export default async function NetworkLayout(props: NetworkLayoutProps) {
 
         <Footer />
       </FCLProvider>
-    </LayoutPage>
+    </div>
   );
 }
