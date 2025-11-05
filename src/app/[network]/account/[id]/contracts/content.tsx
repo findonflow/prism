@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useParams } from "next/navigation";
 import { Code, Globe } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 import CodeBlock from "@/components/flowscan/CodeBlock";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
@@ -11,6 +12,8 @@ import SimpleTag from "@/components/flowscan/SimpleTag";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useAccountDetails } from "@/hooks/useAccountDetails";
 import { cn } from "@/lib/utils";
+import { TypeLabel } from "@/components/ui/typography";
+import { variants } from "@/lib/animate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountContractsContent() {
@@ -28,34 +31,55 @@ export default function AccountContractsContent() {
   const haveContracts = haveData && contractList.length > 0;
 
   return (
-    <div
-      className={
-        "fat-row-column flex w-full flex-col items-start justify-start gap-px"
-      }
-    >
+    <div className={"flex w-full flex-col gap-4"}>
+      <TypeLabel>Account Contracts:</TypeLabel>
       {isPending || (isResolving && <JumpingDots />)}
 
       {!isResolving && !address && (
         <p className={"opacity-50"}>Unable to resolve account address.</p>
       )}
 
-      {haveContracts &&
-        contractList.map((key) => {
-          const code = data?.contracts[key];
-          return (
-            <SingleContract
-              address={address || ""}
-              code={code || ""}
-              key={key}
-              name={key}
-            />
-          );
-        })}
-      {!haveContracts && !isPending && (
-        <p className={"opacity-50"}>
-          This account does not have any contracts deployed to it&#39;s storage
-        </p>
-      )}
+      <motion.div
+        className={
+          "fat-row-column flex w-full flex-col items-start justify-start gap-px"
+        }
+      >
+        <AnimatePresence mode="popLayout">
+          {haveContracts &&
+            contractList.map((key) => {
+              const code = data?.contracts[key];
+              return (
+                <motion.div
+                  layout
+                  variants={variants}
+                  className={"w-full"}
+                  exit={{ opacity: 0, height: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  key={key}
+                >
+                  <SingleContract
+                    address={address || ""}
+                    code={code || ""}
+                    name={key}
+                  />
+                </motion.div>
+              );
+            })}
+          {!haveContracts && !isPending && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-contracts-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>
+                This account does not have any contracts deployed to it's storage
+              </TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

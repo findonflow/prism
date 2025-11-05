@@ -2,6 +2,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { TypeLabel } from "@/components/ui/typography";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
@@ -16,6 +17,7 @@ import { SearchBar } from "@/components/flowscan/SearchBar";
 import Select from "@/components/flowscan/Select";
 import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 import useQueryParams from "@/hooks/utils/useQueryParams";
+import { variants } from "@/lib/animate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function TokensPageContent() {
@@ -118,13 +120,37 @@ export default function TokensPageContent() {
       {filtered.length > 0 && !isLoading && (
         <SimpleClientPagination totalItems={filtered.length} />
       )}
-      {items.length > 0 && (
-        <div className="fat-row-column flex flex-col gap-px">
+      <motion.div className="fat-row-column flex flex-col gap-px">
+        <AnimatePresence mode="popLayout">
           {items.map((token) => {
-            return <SingleToken token={token} key={token.path} />;
+            return (
+              <motion.div
+                layout
+                variants={variants}
+                className={"w-full"}
+                exit={{ opacity: 0, height: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                key={token.path}
+              >
+                <SingleToken token={token} />
+              </motion.div>
+            );
           })}
-        </div>
-      )}
+          {items.length === 0 && !isLoading && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-tokens-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>
+                No tokens to show.
+              </TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

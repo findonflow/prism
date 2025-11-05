@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import JumpingDots from "@/components/flowscan/JumpingDots/index";
@@ -15,6 +16,7 @@ import useQueryParams from "@/hooks/utils/useQueryParams";
 import { NftCard } from "@/components/ui/collection";
 import { SearchBar } from "@/components/flowscan/SearchBar";
 import { TypeLabel } from "@/components/ui/typography";
+import { variants } from "@/lib/animate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function extractCollectionName(collection: NFTCollection): string {
@@ -96,17 +98,38 @@ export default function AccountCollectionsContent() {
       {sorted && !isPending && (
         <SimpleClientPagination totalItems={sorted?.length} />
       )}
-      {showList && items.length > 0 && (
-        <div className={"fat-row-column flex w-full flex-col gap-px"}>
+      <motion.div className={"fat-row-column flex w-full flex-col gap-px"}>
+        <AnimatePresence mode="popLayout">
           {items?.map((collection) => (
-            <SingleCollection
-              collection={collection}
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              exit={{ opacity: 0, height: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
               key={collection.path}
-              address={address}
-            />
+            >
+              <SingleCollection
+                collection={collection}
+                address={address}
+              />
+            </motion.div>
           ))}
-        </div>
-      )}
+          {items.length === 0 && !isPending && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-collections-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>
+                No collections to show.
+              </TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

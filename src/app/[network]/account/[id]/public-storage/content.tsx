@@ -23,6 +23,7 @@ import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useTokenRegistry } from "@/hooks/useTokenList";
 import FlowIcon from "@/components/ui/icons";
+import { variants } from "@/lib/animate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountPublicStorageContent() {
@@ -156,26 +157,45 @@ export default function AccountPublicStorageContent() {
         <SimpleClientPagination totalItems={filteredList?.length} />
       )}
 
-      {itemsList.length > 0 && (
-        <motion.div
-          className={
-            "fat-row-column flex w-full flex-col items-start justify-start gap-px"
-          }
-        >
-          <AnimatePresence mode="popLayout">
-            {itemsList?.map((capability) => {
-              return (
+      <motion.div
+        className={
+          "fat-row-column flex w-full flex-col items-start justify-start gap-px"
+        }
+      >
+        <AnimatePresence mode="popLayout">
+          {itemsList?.map((capability) => {
+            return (
+              <motion.div
+                layout
+                variants={variants}
+                className={"w-full"}
+                exit={{ opacity: 0, height: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                key={capability.path}
+              >
                 <PublicCapability
                   address={address}
                   capability={capability}
-                  key={capability.path}
                   tokenRegistryMap={tokenRegistryMap}
                 />
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-      )}
+              </motion.div>
+            );
+          })}
+          {itemsList.length === 0 && !isLoading && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-items-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>
+                No items to show.
+              </TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
