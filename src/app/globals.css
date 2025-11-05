@@ -201,3 +201,19 @@ html {
   border-color: var(--color-prism-interactive);
   background-color: var(--color-prism-level-4);
 }
+
+.vertical-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  writing-mode: vertical-lr;
+  rotate: 180deg;
+  will-change: transform;
+}
+
+.vertical-text .vertical-text-icon svg,
+.vertical-text .vertical-text-icon img,
+.vertical-text .vertical-text-icon-container {
+  rotate: -180deg;
+}

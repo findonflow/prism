@@ -84,8 +84,7 @@ export default function TransactionSidebar() {
 
       {isCollapsed && (
         <div
-          className="hidden flex-1 rotate-180 items-center justify-between truncate px-6 py-6 md:flex gap-10"
-          style={{ writingMode: "vertical-rl" }}
+          className="hidden flex-1 rotate-180 items-center justify-between truncate px-6 py-6 md:flex gap-10 vertical-text"
         >
           <div className={"flex flex-row"}>{statusTag}</div>
 
