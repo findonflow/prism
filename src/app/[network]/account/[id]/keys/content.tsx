@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useAccountDetails } from "@/hooks/useAccountDetails";
 import { variants } from "@/lib/animate";
+import { SearchBar } from "@/components/flowscan/SearchBar";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountKeysContent() {
@@ -56,11 +57,11 @@ export default function AccountKeysContent() {
       {dataReady && (
         <>
           <div className={"flex flex-row items-center justify-between gap-4"}>
-            <Input
-              type="text"
+            <SearchBar
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
+              onChange={setFilter}
               placeholder={"Enter query to filter keys"}
+              className={"min-h-[40px]"}
             />
             <Checkbox
               label="Show revoked"

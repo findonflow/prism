@@ -22,6 +22,7 @@ import useQueryParams from "@/hooks/utils/useQueryParams";
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useTokenRegistry } from "@/hooks/useTokenList";
+import FlowIcon from "@/components/ui/icons";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountPublicStorageContent() {
@@ -194,6 +195,8 @@ function PublicCapability(props: {
   const referenceKind = reference?.kind;
   const title = `Reference Kind: ${referenceKind}`;
 
+  console.log({ token });
+
   return (
     <FatRow
       key={capability.path}
@@ -263,29 +266,32 @@ function PublicCapability(props: {
                 : "text-prism-primary",
             )}
           >
-            {token && (
-              <img
-                src={token?.logoURI || "/"}
-                title={token?.name || capability?.path.split("/").pop()}
-                onError={(e) => {
-                  const errorReplacementDiv = document?.createElement("div");
-                  errorReplacementDiv.className = cn(
-                    "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-prism-level-3",
-                    "h-5 w-5 p-2",
-                  );
-                  errorReplacementDiv.innerText =
-                    token?.name.split("")[0] ||
-                    capability?.path.split("/").pop()?.split("")[0] ||
-                    "T";
-                  e.currentTarget.parentNode?.replaceChild(
-                    errorReplacementDiv,
-                    e.currentTarget,
-                  );
-                }}
-                alt={"token"}
-                className={"h-4 w-4"}
-              />
-            )}
+            {token &&
+              (token.name === "Flow" ? (
+                <FlowIcon className={"h-4 w-4"} />
+              ) : (
+                <img
+                  src={token?.logoURI || "/"}
+                  title={token?.name || capability?.path.split("/").pop()}
+                  onError={(e) => {
+                    const errorReplacementDiv = document?.createElement("div");
+                    errorReplacementDiv.className = cn(
+                      "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-prism-level-3",
+                      "h-5 w-5 p-2",
+                    );
+                    errorReplacementDiv.innerText =
+                      token?.name.split("")[0] ||
+                      capability?.path.split("/").pop()?.split("")[0] ||
+                      "T";
+                    e.currentTarget.parentNode?.replaceChild(
+                      errorReplacementDiv,
+                      e.currentTarget,
+                    );
+                  }}
+                  alt={"token"}
+                  className={"h-4 w-4"}
+                />
+              ))}
             <b className={"text-md"}>
               {formatNumberToAccounting(Number(capability?.balance), 4, 2)}
             </b>

@@ -5,12 +5,12 @@ import { useParams } from "next/navigation";
 import { Code, Globe } from "lucide-react";
 
 import CodeBlock from "@/components/flowscan/CodeBlock";
-import FatRow from "@/components/flowscan/FatRow";
+import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import JumpingDots from "@/components/flowscan/JumpingDots";
-import { useAccountDetails } from "@/hooks/useAccountDetails";
-import useAccountResolver from "@/hooks/useAccountResolver";
-import { cn } from "@/lib/utils";
 import SimpleTag from "@/components/flowscan/SimpleTag";
+import useAccountResolver from "@/hooks/useAccountResolver";
+import { useAccountDetails } from "@/hooks/useAccountDetails";
+import { cn } from "@/lib/utils";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountContractsContent() {
@@ -69,7 +69,7 @@ function SingleContract(props: {
   const { address, code, name } = props;
   const { network } = useParams();
 
-  const numberOfLines = code?.split("\r\n").length || 0;
+  const numberOfLines = code?.split(/\r?\n/).length || 0;
 
   const flowscanRoot =
     network === "mainnet"
@@ -94,7 +94,7 @@ function SingleContract(props: {
           <a key={name} href={flowscanURL}>
             <SimpleTag
               title={`View ${name} contract on Flowscan`}
-              className={"text-gray-600"}
+              className={"text-orange-400"}
               label={name}
               category={<Globe className={"h-3 w-3"} />}
             />
@@ -104,7 +104,9 @@ function SingleContract(props: {
               title={`Lines of code: ${numberOfLines}`}
               label={numberOfLines}
               category={<Code className={"h-4 w-4"} />}
-              className={"text-gray-600"}
+              className={
+                "text-orange-400 opacity-50 hover:text-orange-400 hover:opacity-100"
+              }
             />
           </span>
         </div>
@@ -117,14 +119,10 @@ function SingleContract(props: {
 function SingleContractDetails(props: any) {
   const { code } = props;
   return (
-    <div
-      className={
-        "flex w-full flex-col items-start justify-start gap-2 bg-neutral-500 p-4"
-      }
-    >
+    <FatRowDetails>
       <div className={"flex w-full flex-col gap-4"}>
         <CodeBlock code={code || ""} />
       </div>
-    </div>
+    </FatRowDetails>
   );
 }
