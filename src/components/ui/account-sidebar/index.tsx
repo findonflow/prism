@@ -130,7 +130,7 @@ export default function AccountSidebar() {
                 )}
               >
                 <TypeLabel>Address:</TypeLabel>
-                <div className="flex flex-row items-start gap-2">
+                <div className="flex flex-row items-center gap-2">
                   <TypeH2 className="text-base break-all md:text-lg">
                     {address}
                   </TypeH2>

@@ -75,12 +75,13 @@ function LoggedInWalletButton(props: { className?: string }) {
       ref={targetRef}
       onClick={() => setShowDropdown((prev) => !prev)}
       className={cn(
-        "border-prism-border bg-prism-level-2 text-prism-text relative flex cursor-pointer gap-2 rounded-[10px] border border-solid px-4 py-2.5 text-[16px] font-semibold shadow-xs select-none",
+        "border-prism-border bg-prism-level-2 text-prism-text relative flex cursor-pointer gap-0 border border-solid px-4 py-2.5 font-semibold shadow-xs select-none",
         "z-20",
         className,
       )}
     >
-      {user.address}
+      <div className={"hidden md:block"}>{user.address}</div>
+      <div className={"block md:hidden"}>{truncateHash(user.address)}</div>
       <ChevronDown
         className={cn(
           "ml-2 inline h-6 w-6 transition-all",
