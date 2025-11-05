@@ -73,14 +73,14 @@ export default function AccountKeysContent() {
             className={"flex flex-col items-start justify-start gap-px"}
           >
             <AnimatePresence mode="popLayout">
-              {filteredList.map((key) => (
+              {filteredList.map((key, i) => (
                 <motion.div
                   layout
                   variants={variants}
                   className={"w-full"}
                   exit={{ opacity: 0, height: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  key={`key-${key.key}`}
+                  key={`key-${key.key}-${i}`}
                 >
                   <KeyRow keyInfo={key} />
                 </motion.div>
