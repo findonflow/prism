@@ -24,6 +24,7 @@ import "@/components/ui/json-view/style.css";
 import useQueryParams from "@/hooks/utils/useQueryParams";
 import { useTokenRegistry } from "@/hooks/useTokenList";
 import { cn } from "@/lib/utils";
+import { variants } from "@/lib/animate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStoredItemsContent() {
@@ -165,26 +166,45 @@ export default function AccountStoredItemsContent() {
         <SimpleClientPagination totalItems={filteredList?.length} />
       )}
 
-      {itemsList.length > 0 && (
-        <motion.div
-          className={
-            "fat-row-column flex w-full flex-col items-start justify-start gap-px"
-          }
-        >
-          <AnimatePresence mode="popLayout">
-            {itemsList?.map((storageInfo) => {
-              return (
+      <motion.div
+        className={
+          "fat-row-column flex w-full flex-col items-start justify-start gap-px"
+        }
+      >
+        <AnimatePresence mode="popLayout">
+          {itemsList?.map((storageInfo) => {
+            return (
+              <motion.div
+                layout
+                variants={variants}
+                className={"w-full"}
+                exit={{ opacity: 0, height: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                key={storageInfo.path}
+              >
                 <StorageInfo
                   address={address}
                   storageInfo={storageInfo}
-                  key={storageInfo.path}
                   tokenRegistryMap={tokenRegistryMap}
                 />
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-      )}
+              </motion.div>
+            );
+          })}
+          {itemsList.length === 0 && !isLoading && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-items-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>
+                No items to show.
+              </TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
