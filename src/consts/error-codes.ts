@@ -65,10 +65,18 @@ const ERROR_CODES = {
   },
 };
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 const GENERIC_ERROR = {
   title: "Error",
   description: "Whoops! 😨 Something unexpected happened...",
 };
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function extractCode(errorMessage: string){
+  const errorExtract = /\[Error Code: (\d+)]/.exec(errorMessage);
+
+  return errorExtract ? errorExtract[1] : undefined;
+}
 
 export function getErrorInfo(code: string | undefined) {
   if (!code) {

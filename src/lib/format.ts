@@ -64,3 +64,45 @@ export function splitCase(text: string): string {
 
   return result;
 }
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function formatTimestamp(
+  value: number | string | Date,
+  dateTimeOptions?: Intl.DateTimeFormatOptions,
+): string {
+  if (!value) {
+    return "";
+  }
+
+  // Define a consistent locale
+  const locale = "en-US";
+
+  // Default options - don't mix with dateStyle/timeStyle
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour12: false,
+  };
+
+  try {
+    // Convert value to Date object regardless of input type
+    const dateValue = value instanceof Date ? value : new Date(value);
+
+    // Check if date is valid
+    if (isNaN(dateValue.getTime())) {
+      throw new Error("Invalid date");
+    }
+
+    // If dateStyle or timeStyle is provided, don't use individual options
+    const finalOptions =
+      dateTimeOptions?.dateStyle || dateTimeOptions?.timeStyle
+        ? { ...dateTimeOptions, hour12: false }
+        : { ...defaultOptions, ...dateTimeOptions };
+
+    return new Intl.DateTimeFormat(locale, finalOptions).format(dateValue);
+  } catch (e) {
+    console.error("Wrong timestamp format:", value, e);
+    return "🚩 Wrong time format";
+  }
+}

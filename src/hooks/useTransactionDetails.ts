@@ -11,8 +11,13 @@ async function fetchTransactionBody(hash: string) {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 async function fetchTransactionStatus(hash: string) {
-  const res = await fcl.send([fcl.getTransactionStatus(hash)]);
-  return fcl.decode(res);
+  const res = await fcl.send([fcl.getTransactionStatus(hash)]).then(fcl.decode);
+
+  const blockData = await fcl.block({
+    id: res.blockId,
+  });
+
+  return { ...res, timestamp: blockData.timestamp };
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -29,7 +34,8 @@ export function useTransactionDetails(hash: string) {
     queryKey: ["transaction-status", hash],
     queryFn: () => fetchTransactionStatus(hash),
     enabled: Boolean(hash),
-    refetchInterval: txResult?.status === fcl.TransactionExecutionStatus.SEALED ? false : 2000,
+    refetchInterval:
+      txResult?.status === fcl.TransactionExecutionStatus.SEALED ? false : 2000,
   });
 
   useEffect(() => {

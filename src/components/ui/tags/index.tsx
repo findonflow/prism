@@ -11,13 +11,18 @@ import {
   PackageCheck,
   ShieldUser,
   Signature,
+  UserRound,
   VenetianMask,
+  Zap,
 } from "lucide-react";
 import { formatNumberToAccounting } from "@/lib/format";
 import SimpleTag from "@/components/flowscan/SimpleTag";
 import { cn } from "@/lib/utils";
 import { getErrorInfo } from "@/consts/error-codes";
 import { NODE_TITLES } from "@/consts/node";
+import { truncateHash } from "@/components/ui/connect-wallet";
+import { useParams } from "next/navigation";
+import { withPrefix } from "@/lib/validate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function NumberOfItems(props: { items?: number }) {
@@ -72,7 +77,7 @@ export function TagGas(props: { gas?: number; title?: string }) {
     <SimpleTag
       title={finalTitle}
       label={`Gas: ${formattedGas}`}
-      className={"text-bsn-label hover:text-orange-300"}
+      className={" hover:text-orange-300"}
       category={<Flame />}
     />
   );
@@ -85,7 +90,7 @@ export function TagMultisig(props: {
 }) {
   const { signers, short } = props;
 
-  if (!signers) {
+  if (!signers || signers.length === 0) {
     return null;
   }
 
@@ -93,16 +98,12 @@ export function TagMultisig(props: {
   const title = `This transaction was signed by ${numSigners} signers`;
 
   const label = short ? numSigners : `Multisig: ${numSigners}`;
-  const hoverLabel = short
-    ? numSigners.toString()
-    : `Multisig: ${signers.join(", ")}`;
 
   return (
     <SimpleTag
       title={title}
       label={label}
-      hoverLabel={hoverLabel}
-      className={"text-flsn-unusual"}
+      className={"text-violet-400"}
       category={<Signature />}
     />
   );
@@ -166,7 +167,7 @@ export function TagExecEffort(props: { effort?: number; title?: string }) {
     <SimpleTag
       title={title}
       label={`${formatted}`}
-      className={"text-bsn-label"}
+      className={""}
       category={<Cpu />}
     />
   );
@@ -185,7 +186,7 @@ export function TagNonce(props: { nonce?: number; title?: string }) {
     <SimpleTag
       title={tagTitle}
       label={nonce}
-      className={"text-bsn-label"}
+      className={""}
       category={<Hash />}
     />
   );
@@ -204,7 +205,7 @@ export function TagKey(props: { keyIndex?: number; title?: string }) {
     <SimpleTag
       title={tagTitle}
       label={keyIndex}
-      className={"text-bsn-label"}
+      className={""}
       category={<KeyRound />}
     />
   );
@@ -225,7 +226,7 @@ export function TagFlowStatus(props: {
     <SimpleTag
       label={status || "SEALED"}
       category={<PackageCheck />}
-      className={"text-bsn-success"}
+      className={"text-green-500"}
     />
   ) : (
     <div className={"cursor-pointer"}>
@@ -233,7 +234,7 @@ export function TagFlowStatus(props: {
         label={title}
         title={description}
         category={<OctagonAlert />}
-        className={"text-bsn-failure"}
+        className={"text-red-500"}
       />
     </div>
   );
@@ -253,7 +254,7 @@ export function TagNodeType(props: { role?: string }) {
     <SimpleTag
       label={role}
       title={`Role: ${title}`}
-      className={"text-bsn-label capitalize"}
+      className={" capitalize"}
       category={<VenetianMask />}
     />
   );
@@ -269,3 +270,58 @@ export function TagNotFound() {
     />
   );
 }
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function TagSurge(props: { surge?: number }) {
+  const { surge } = props;
+
+  if (!surge) {
+    return null;
+  }
+
+  return (
+    <SimpleTag
+      title={`Surge factor: ${surge}`}
+      label={surge}
+      category={<Zap className={"h-3 w-3"} />}
+      className={""}
+    />
+  );
+}
+
+/* --------------------------------------------------------------------------------------------- */
+export function TagFlowAccount(props: { address?: string | null; findName?: string | null }) {
+  const { address, findName } = props;
+  const { network } = useParams();
+
+  if (!address) {
+    return null;
+  }
+  const fixedAddress = withPrefix(address)
+
+  const short = truncateHash(fixedAddress, 4);
+
+  if (findName) {
+    return (
+      <SimpleTag
+        label={findName}
+        hoverLabel={address}
+        title={`${findName}:${address}`}
+        className={cn("text-prism-interactive ")}
+        category={<UserRound />}
+      />
+    );
+  }
+
+  return (
+    <a href={`/${network}/account/${fixedAddress}`} target={"_blank"}>
+      <SimpleTag
+        label={short}
+        title={fixedAddress}
+        className={cn("text-prism-primary ")}
+        category={<UserRound />}
+      />
+    </a>
+  );
+}
+
