@@ -2,7 +2,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
@@ -13,9 +13,7 @@ import { NumberOfItems } from "@/components/ui/tags";
 import { useAccountCollectionList } from "@/hooks/useAccountCollectionList";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useCollectionItems } from "@/hooks/useCollectionItems";
-import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
 import useQueryParams from "@/hooks/utils/useQueryParams";
-import { NftCard } from "@/components/ui/collection";
 import { SearchBar } from "@/components/flowscan/SearchBar";
 import { TypeLabel } from "@/components/ui/typography";
 import { variants } from "@/lib/animate";
