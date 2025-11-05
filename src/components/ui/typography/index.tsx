@@ -7,6 +7,7 @@ interface TextProps {
   id?: string;
   children: ReactNode;
   className?: string;
+  title?: string;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -30,10 +31,11 @@ export function TypeH1(props: TextProps) {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function TypeH2(props: TextProps) {
-  const { children, className } = props;
+  const { children, className, title } = props;
 
   return (
-    <h1
+    <h2
+      title={title}
       className={cn(
         "text-center text-2xl font-bold",
         "tracking-tight text-balance", // tight interline space and balanced wrap
@@ -42,7 +44,7 @@ export function TypeH2(props: TextProps) {
       )}
     >
       {children}
-    </h1>
+    </h2>
   );
 }
 
@@ -51,7 +53,7 @@ export function TypeH3(props: TextProps) {
   const { children, className } = props;
 
   return (
-    <h1
+    <h3
       className={cn(
         "text-md text-center font-bold",
         "tracking-tight text-balance", // tight interline space and balanced wrap
@@ -60,7 +62,7 @@ export function TypeH3(props: TextProps) {
       )}
     >
       {children}
-    </h1>
+    </h3>
   );
 }
 
