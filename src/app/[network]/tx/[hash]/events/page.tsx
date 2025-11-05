@@ -13,6 +13,8 @@ import { useTransactionDetails } from "@/hooks/useTransactionDetails";
 import { variants } from "@/lib/animate";
 import ItemIndex from "@/components/ui/item-index";
 import { cn } from "@/lib/utils";
+import JsonView from "react18-json-view";
+import "@/components/ui/json-view/style.css";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function extractContractName(eventType: string): string {
@@ -73,7 +75,7 @@ function EventDetails(props: { event: any }) {
           <span className="text-sm font-bold">{contractName}</span>
         </div>
 
-        <div className="items-startmd:flex-row flex flex-col justify-start gap-2 md:items-center">
+        <div className="items-start flex flex-col justify-start gap-2">
           <TypeLabel>Event Type:</TypeLabel>
           <div className="flex w-full flex-row items-center gap-2">
             <span className="text-sm font-bold truncate">{event.type}</span>
@@ -84,18 +86,7 @@ function EventDetails(props: { event: any }) {
         <div className="flex flex-col gap-2">
           <TypeLabel>Event Data:</TypeLabel>
           <div className="bg-prism-level-2 flex flex-col gap-2 p-4 overflow-x-auto">
-            {Object.entries(event.data).map(([key, value]: [string, any]) => (
-              <div
-                key={key}
-                className="flex flex-row items-center justify-start gap-2"
-              >
-                <TypeLabel>{key}:</TypeLabel>
-                <div className="flex flex-row items-center gap-2">
-                  <span className="text-sm font-bold">{value}</span>
-                  <CopyText text={JSON.stringify(value)} />
-                </div>
-              </div>
-            ))}
+            <JsonView src={event.data} displaySize={"collapsed"}/>
           </div>
         </div>
       </div>
