@@ -7,7 +7,6 @@ import { useState } from "react";
 import KeyRow from "@/components/flowscan/rows/KeyRow";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { TypeLabel } from "@/components/ui/typography";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useAccountDetails } from "@/hooks/useAccountDetails";
