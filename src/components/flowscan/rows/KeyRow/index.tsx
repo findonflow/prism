@@ -5,6 +5,7 @@ import SimpleTag from "@/components/flowscan/SimpleTag";
 import { cn } from "@/lib/utils";
 import { formatNumberToAccounting } from "@/lib/format";
 import { TypeLabel } from "@/components/ui/typography";
+import ItemIndex from "@/components/ui/item-index";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface FullKeyInfo extends FlowKeyFormatted {
@@ -39,11 +40,7 @@ export default function KeyRow(props: { keyInfo: FullKeyInfo }) {
           inactive,
         )}
       >
-        <div className="flex h-6 w-6 flex-shrink-0 flex-row items-center justify-center rounded-full border-1 border-current/50 text-xs font-bold text-prism-text-muted">
-          <span className={"translate-y-[1px]"} title={`Key index: ${index}`}>
-            {index}
-          </span>
-        </div>
+        <ItemIndex index={index}/>
         <SimpleTag
           label={keyStatus}
           className={cn(

@@ -1,16 +1,18 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { useParams } from "next/navigation";
 import { useState } from "react";
-import { useTransactionDetails } from "@/hooks/useTransactionDetails";
+import { useParams } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { TypeLabel } from "@/components/ui/typography";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import CopyText from "@/components/flowscan/CopyText";
-import { AnimatePresence, motion } from "motion/react";
-import { variants } from "@/lib/animate";
 import { SearchBar } from "@/components/flowscan/SearchBar";
 import Select from "@/components/flowscan/Select";
+import { useTransactionDetails } from "@/hooks/useTransactionDetails";
+import { variants } from "@/lib/animate";
+import ItemIndex from "@/components/ui/item-index";
+import { cn } from "@/lib/utils";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 function extractContractName(eventType: string): string {
@@ -21,6 +23,7 @@ function extractContractName(eventType: string): string {
   return eventType;
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 function extractEventName(eventType: string): string {
   return eventType.split(".").pop() || eventType;
 }
@@ -38,13 +41,20 @@ function SingleEvent(props: { event: any; index: number }) {
       className={[]}
     >
       <div className="flex w-full flex-col items-start justify-start gap-2 p-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm font-bold">{eventName}</span>
-          <span className="text-prism-text-muted text-xs">{contractName}</span>
+        <div
+          className={cn(
+            "text-copy text-colors-gray-medium flex w-full flex-row flex-wrap items-center justify-start gap-4 overflow-hidden",
+            "md:gap-4 @md/page:flex-row",
+          )}
+        >
+          <ItemIndex index={index} />
+          <div className="flex flex-col gap-1">
+            <span className="truncate text-sm font-bold">{event.type}</span>
+            <span className="text-prism-text-muted text-xs">
+              Contract: {contractName}
+            </span>
+          </div>
         </div>
-        <span className="text-prism-text-muted text-xs">
-          Index: {event.eventIndex}
-        </span>
       </div>
     </FatRow>
   );
@@ -74,16 +84,14 @@ function EventDetails(props: { event: any }) {
         <div className="flex flex-col gap-2">
           <TypeLabel>Event Data:</TypeLabel>
           <div className="bg-prism-level-2 flex flex-col gap-2 p-4">
-            {Object.entries(event.data).map(([key, value]) => (
+            {Object.entries(event.data).map(([key, value]: [string, any]) => (
               <div
                 key={key}
                 className="flex flex-row items-center justify-start gap-2"
               >
                 <TypeLabel>{key}:</TypeLabel>
                 <div className="flex flex-row items-center gap-2">
-                  <span className="text-sm font-bold">
-                    {JSON.stringify(value)}
-                  </span>
+                  <span className="text-sm font-bold">{value}</span>
                   <CopyText text={JSON.stringify(value)} />
                 </div>
               </div>
@@ -132,11 +140,15 @@ export default function TransactionEvents() {
 
   return (
     <div className="flex w-full flex-col gap-4">
+      <TypeLabel>
+        Events ({filteredEvents.length} of {events.length}):
+      </TypeLabel>
+
       {isLoading && <LoadingBlock title="Loading transaction events..." />}
 
       {events.length > 0 && (
         <>
-          <div className="flex w-full flex-row flex-wrap items-center justify-start gap-4">
+          <div className="flex w-full flex-row flex-wrap items-center justify-start gap-4 md:flex-nowrap">
             <SearchBar
               value={filter}
               onChange={setFilter}
@@ -150,10 +162,6 @@ export default function TransactionEvents() {
               onChange={setContractFilter}
             />
           </div>
-
-          <TypeLabel>
-            Events ({filteredEvents.length} of {events.length}):
-          </TypeLabel>
 
           {hasEventsButHidden && (
             <TypeLabel className="opacity-50">
