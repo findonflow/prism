@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { isHash } from "@/lib/validate";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function HeaderSearch() {
@@ -43,7 +44,11 @@ export default function HeaderSearch() {
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
-          router.push(`/${network}/account/${value}`);
+          if (isHash(value)) {
+            router.push(`/${network}/tx/${value}`);
+          } else {
+            router.push(`/${network}/account/${value}`);
+          }
           setValue("");
           ref.current?.blur();
         }

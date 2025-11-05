@@ -1,15 +1,26 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { loginFlow, logoutFlow } from "@/interfaces/flow/login";
 import { config, currentUser } from "@onflow/fcl";
-import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import {
   CAPABILITY_UTILS,
   FIND,
   FIND_VIEWS,
   FLOW_EPOCH,
+  FLOW_FEES,
   FLOW_MAP,
   FLOW_STAKING_COLLECTION,
   FLOWID_TABLE_STAKING,
@@ -19,7 +30,7 @@ import {
   METADATA_VIEWS,
   NON_FUNGIBLE_TOKEN,
   SERVICE_ADDRESS,
-  VIEW_RESOLVER
+  VIEW_RESOLVER,
 } from "@/lib/address-book";
 
 type NetworkKey = "mainnet" | "testnet";
@@ -44,6 +55,7 @@ function initFCL(network: string) {
     "0xFlowIDTableStaking": FLOWID_TABLE_STAKING[key],
     "0xFlowEpoch": FLOW_EPOCH[key],
     "0xFlowStakingCollection": FLOW_STAKING_COLLECTION[key],
+    "0xFlowFees": FLOW_FEES[key],
   });
 }
 
@@ -113,7 +125,7 @@ export function FCLProvider(props: { children: ReactNode }) {
   useEffect(() => {
     if (network) {
       currentUser.subscribe((user: any) => {
-/*        const walletNetwork = user.services.find(
+        /*        const walletNetwork = user.services.find(
           (el: any) => el.network,
         ).network;
         if (walletNetwork !== network) {

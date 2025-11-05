@@ -20,11 +20,11 @@ import useStoredItems from "@/hooks/useStoredItems";
 import useStoredResource from "@/hooks/useStoredResource";
 
 import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
-import "@/components/ui/json-view/style.css";
 import useQueryParams from "@/hooks/utils/useQueryParams";
 import { useTokenRegistry } from "@/hooks/useTokenList";
 import { cn } from "@/lib/utils";
 import { variants } from "@/lib/animate";
+import "@/components/ui/json-view/style.css";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStoredItemsContent() {

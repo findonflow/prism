@@ -1,43 +1,39 @@
 import { ReactNode, Suspense } from "react";
-import AccountSidebar from "@/components/ui/account-sidebar";
-import AccountNavigation from "@/app/[network]/account/[id]/navigation";
+import TransactionSidebar from "@/components/ui/transaction-sidebar";
+import TransactionNavigation from "@/app/[network]/tx/[hash]/navigation";
 import { cn } from "@/lib/utils";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-interface AccountProps {
+interface TransactionProps {
   children: ReactNode;
-  params: Promise<{ id: string; network: string }>;
+  params: Promise<{ hash: string; network: string }>;
 }
+
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function AccountDetailsLayout(props: AccountProps) {
+export default function TransactionDetailsLayout(props: TransactionProps) {
   const { children } = props;
 
   return (
     <div
       className={cn(
         "grid w-full",
-        // Mobile: single column, sidebar and content stack
         "grid-cols-1 grid-rows-[auto_1fr]",
         "[grid-template-areas:'header''content']",
-        // Desktop: sidebar + content columns
         "md:grid-cols-[auto_1fr] md:grid-rows-[auto_1fr]",
         "md:[grid-template-areas:'header_header''sidebar_content']",
-        // Make it fill available space
         "min-h-0 flex-1",
       )}
     >
-      {/* Sidebar - hidden on mobile, fixed on desktop */}
       <aside
         className={
           "border-prism-border bg-prism-level-2 hidden min-h-0 border-r [grid-area:sidebar] md:flex"
         }
       >
         <Suspense>
-          <AccountSidebar />
+          <TransactionSidebar />
         </Suspense>
       </aside>
 
-      {/* Content - scrollable, includes sidebar content on mobile */}
       <main
         className={cn(
           "[grid-area:content]",
@@ -46,17 +42,15 @@ export default function AccountDetailsLayout(props: AccountProps) {
           "min-h-0",
         )}
       >
-        {/* Mobile sidebar content */}
         <div className="border-prism-border bg-prism-level-2 border-b md:hidden">
           <Suspense>
-            <AccountSidebar />
+            <TransactionSidebar />
           </Suspense>
         </div>
 
-        {/* Main content */}
-        <div className="p-6 h-full overflow-y-auto">
+        <div className="p-6">
           <Suspense>
-            <AccountNavigation />
+            <TransactionNavigation />
           </Suspense>
           {children}
         </div>

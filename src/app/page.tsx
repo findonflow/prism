@@ -19,7 +19,7 @@ export default function Home() {
 
       {/* First section - Full height with network selector */}
       <div className={"max-w-5xl px-4 lg:px-6"}>
-        <div className="flex h-screen w-full flex-col items-center justify-between">
+        <div className="flex h-dvh w-full flex-col items-center justify-between">
           <main className="flex h-full flex-col items-center justify-center">
             <TypeTextBlock className={"mb-8"}>
               <TypeH1
