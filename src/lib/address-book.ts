@@ -67,3 +67,8 @@ export const FIND_VIEWS = {
   mainnet: "0x097bafa4e0b48eef",
   testnet: ""
 }
+
+export const FLOW_FEES = {
+  mainnet: "0xf919ee77447b7497",
+  testnet: "0x912d5440f7e3769e",
+}
