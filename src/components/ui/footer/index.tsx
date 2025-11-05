@@ -11,7 +11,6 @@ export default function Footer() {
         "flex flex-col-reverse flex-wrap items-start justify-between",
         "border-prism-border border-t",
         "md:flex-row md:items-center md:justify-between md:p-4",
-        "md:sticky bottom-0"
       )}
     >
       <TypeFineprint className={"text-left"}>

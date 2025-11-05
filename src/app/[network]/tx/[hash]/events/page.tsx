@@ -43,12 +43,12 @@ function SingleEvent(props: { event: any; index: number }) {
       <div className="flex w-full flex-col items-start justify-start gap-2 p-4 md:flex-row md:items-center md:justify-between">
         <div
           className={cn(
-            "text-copy text-colors-gray-medium flex w-full flex-row flex-wrap items-center justify-start gap-4 overflow-hidden",
+            "text-copy text-colors-gray-medium flex w-full flex-row items-center justify-start gap-4 overflow-hidden",
             "md:gap-4 @md/page:flex-row",
           )}
         >
           <ItemIndex index={index} />
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 w-full truncate">
             <span className="truncate text-sm font-bold">{event.type}</span>
             <span className="text-prism-text-muted text-xs">
               Contract: {contractName}
@@ -73,17 +73,17 @@ function EventDetails(props: { event: any }) {
           <span className="text-sm font-bold">{contractName}</span>
         </div>
 
-        <div className="flex flex-row items-center justify-start gap-2">
+        <div className="items-startmd:flex-row flex flex-col justify-start gap-2 md:items-center">
           <TypeLabel>Event Type:</TypeLabel>
-          <div className="flex flex-row items-center gap-2">
-            <span className="text-sm font-bold">{event.type}</span>
+          <div className="flex w-full flex-row items-center gap-2">
+            <span className="text-sm font-bold truncate">{event.type}</span>
             <CopyText text={event.type} />
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
           <TypeLabel>Event Data:</TypeLabel>
-          <div className="bg-prism-level-2 flex flex-col gap-2 p-4">
+          <div className="bg-prism-level-2 flex flex-col gap-2 p-4 overflow-x-auto">
             {Object.entries(event.data).map(([key, value]: [string, any]) => (
               <div
                 key={key}

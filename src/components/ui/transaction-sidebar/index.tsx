@@ -54,7 +54,7 @@ export default function TransactionSidebar() {
   const showStatusIcon = isSealed || isExecuted;
 
   const statusTag = (
-    <div className={"flex flex-row flex-wrap gap-2"}>
+    <div className={"flex flex-row gap-2"}>
       <TagFlowStatus status={statusLabel} />
       {data?.errorMessage && (
         <TagFlowStatus
@@ -66,8 +66,6 @@ export default function TransactionSidebar() {
       <TagMultisig signers={data?.authorizers} />
     </div>
   );
-
-  console.log({ data });
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-between">
@@ -86,12 +84,16 @@ export default function TransactionSidebar() {
 
       {isCollapsed && (
         <div
-          className="hidden flex-1 rotate-180 items-center justify-between px-6 py-6 md:flex"
+          className="hidden flex-1 rotate-180 items-center justify-between truncate px-6 py-6 md:flex gap-10"
           style={{ writingMode: "vertical-rl" }}
         >
-          <span className="text-prism-text inline-flex gap-2 text-lg">
+          <div className={"flex flex-row"}>{statusTag}</div>
+
+          <span className="text-prism-text inline-flex gap-2 truncate text-lg">
             <span>Transaction</span>
-            <span className="text-prism-primary font-bold">{hash}</span>
+            <span className="text-prism-primary truncate font-bold">
+              {hash}
+            </span>
           </span>
         </div>
       )}
@@ -106,12 +108,11 @@ export default function TransactionSidebar() {
         <div className="flex h-full flex-col items-start gap-4">
           <div
             className={cn(
-              "flex w-full flex-row items-center justify-between gap-2",
-              "md:flex-col md:items-start",
+              "flex w-full flex-col items-start justify-between gap-2",
             )}
           >
-            <TypeH1 className={"mb-4 text-2xl font-extralight opacity-50"}>
-              Transaction Details
+            <TypeH1 className={"mb-2 text-2xl font-extralight opacity-50"}>
+              Transaction
             </TypeH1>
             <TypeLabel>Transaction Id:</TypeLabel>
             <div className="flex w-full flex-row items-start gap-2">
@@ -125,7 +126,7 @@ export default function TransactionSidebar() {
             </div>
           </div>
 
-          <div className="aspect-square w-3/5 md:w-40">
+          <div className="mx-auto aspect-square w-3/5 md:w-40">
             <QRCode
               size={64}
               value={qrData}

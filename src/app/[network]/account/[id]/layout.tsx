@@ -54,7 +54,7 @@ export default function AccountDetailsLayout(props: AccountProps) {
         </div>
 
         {/* Main content */}
-        <div className="p-6">
+        <div className="p-6 h-full overflow-y-auto">
           <Suspense>
             <AccountNavigation />
           </Suspense>
