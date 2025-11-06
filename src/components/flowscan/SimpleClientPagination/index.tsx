@@ -50,8 +50,7 @@ export default function SimpleClientPagination(props: {
     else params.set(`${prefix}limit`, newLimit);
     window.history.pushState(null, "", pathName + "?" + params.toString());
   }
-
-  if (totalItems < 5 || totalItems < limit) {
+  if (totalItems < 5) {
     return null;
   }
 

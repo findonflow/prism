@@ -3,6 +3,11 @@ export const FIND = {
   testnet: "0x35717efbbce11c74",
 };
 
+export const FIND_VIEWS = {
+  mainnet: "0x097bafa4e0b48eef",
+  testnet: "0x35717efbbce11c74",
+};
+
 export const FUNGIBLE_TOKEN = {
   mainnet: "0xf233dcee88fe0abe",
   testnet: "0x9a0766d93b6608b7",
@@ -60,15 +65,10 @@ export const FLOWID_TABLE_STAKING = {
 
 export const VIEW_RESOLVER = {
   mainnet: "0x1d7e57aa55817448",
-  testnet: ""
-}
-
-export const FIND_VIEWS = {
-  mainnet: "0x097bafa4e0b48eef",
-  testnet: ""
-}
+  testnet: "",
+};
 
 export const FLOW_FEES = {
   mainnet: "0xf919ee77447b7497",
   testnet: "0x912d5440f7e3769e",
-}
+};
