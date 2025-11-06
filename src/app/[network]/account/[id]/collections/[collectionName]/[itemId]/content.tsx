@@ -40,7 +40,7 @@ export default function SingleCollectionItemPage() {
           >
             <div className="relative w-full overflow-hidden py-2.5 lg:w-[24rem]">
               <ImageClient
-                src={data?.display.thumbnail.url || "/"}
+                src={data?.thumbnail || "/"}
                 alt={data?.tokenId || ""}
                 dimension={"width"}
               />
@@ -50,11 +50,11 @@ export default function SingleCollectionItemPage() {
                 href={`/${network}/account/${id}/collections/${collectionName}`}
                 className={"underline"}
               >
-                {data?.collectionDisplay.name}
+                {data?.collectionName}
               </a>
               <div className={"flex flex-wrap justify-start gap-2"}>
                 <SimpleTag
-                  label={data?.tokenId}
+                  label={data?.id}
                   category={"ID"}
                   className={"text-xs"}
                 />
@@ -68,18 +68,18 @@ export default function SingleCollectionItemPage() {
                 )}
               </div>
 
-              <TypeH2 className={"text-3xl"}>{data?.display.name}</TypeH2>
+              <TypeH2 className={"text-3xl"}>{data?.name}</TypeH2>
               {data?.rarity && <p>Rarity: {data?.rarity?.score}</p>}
-              {data?.display?.description && (
+              {data?.description && (
                 <TypeP className={"max-w-[42em] text-balance"}>
-                  {data?.display?.description}
+                  {data?.description}
                 </TypeP>
               )}
             </div>
           </div>
 
           {/* Traits and Royalties*/}
-          {data?.traits && <NFTTraits traits={data?.traits?.traits} />}
+          {data?.traits && <NFTTraits traits={data?.traits} />}
           {data?.royalties && (
             <NFTRoyalties royalties={data?.royalties.cutInfos} />
           )}
@@ -109,7 +109,7 @@ function NFTTraits(props: { traits: Array<any> }) {
           return (
             <div
               className={
-                "flex w-full flex-col space-y-1 rounded-sm bg-gray-100 p-4 hover:bg-gray-200"
+                "flex w-full flex-col space-y-1 rounded-sm bg-prism-level-2 p-4 hover:bg-prism-level-3"
               }
               key={trait.name}
             >
@@ -198,7 +198,7 @@ function NFTRoyalties(props: { royalties: Array<any> }) {
           return (
             <div
               className={
-                "flex w-full flex-row items-center justify-start gap-2 bg-gray-100 p-4"
+                "flex w-full flex-row items-center justify-start gap-2 bg-prism-level-2 p-4"
               }
             >
               <span className={"font-bold"}>{Number(share.cut) * 100}%</span>

@@ -65,7 +65,7 @@ export const FLOWID_TABLE_STAKING = {
 
 export const VIEW_RESOLVER = {
   mainnet: "0x1d7e57aa55817448",
-  testnet: "",
+  testnet: "0x631e88ae7f1d7c20",
 };
 
 export const FLOW_FEES = {

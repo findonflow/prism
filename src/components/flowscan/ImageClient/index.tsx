@@ -5,6 +5,12 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function handleIpfs(src: string) {
+
+  if(src.startsWith("https://nftstorage.link")){
+    const pin = src.split("ipfs/")[1]
+    return `https://ipfs.io/ipfs/${pin}`
+  }
+
   return src.startsWith("ipfs")
     ? `https://ipfs.io/ipfs/${src.split("//")[1] ? src.split("//")[1] : src}`
     : src;

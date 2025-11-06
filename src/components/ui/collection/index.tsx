@@ -9,7 +9,9 @@ import { TypeP } from "@/components/ui/typography";
 export function NftCard(props: { token: any }) {
   const { token } = props;
   const { network, id, collectionName } = useParams();
-  const nftId = token.tokenId;
+  const nftId = token.id;
+
+  const {storagePath} = token;
 
   return (
     <div
@@ -18,14 +20,14 @@ export function NftCard(props: { token: any }) {
     >
       <div className="bg relative mx-auto min-h-[200px] w-full overflow-hidden">
         <ImageClient
-          src={token?.thumbnail.url || "/"}
+          src={token?.thumbnail || "/"}
           alt={token?.id || ""}
           dimension={"width"}
         />
       </div>
       <div className="flex flex-col gap-2 p-4">
         <a
-          href={`/${network}/account/${id}/collections/${collectionName}/${nftId}`}
+          href={`/${network}/account/${id}/collections/${storagePath}/${nftId}`}
           className={"underline"}
           target={"_blank"}
         >
