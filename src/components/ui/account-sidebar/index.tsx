@@ -2,7 +2,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { ChevronRight, ChevronLeft, Fish } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import QRCode from "react-qr-code";
 import { TypeH2, TypeLabel } from "@/components/ui/typography";
 import CopyText from "@/components/flowscan/CopyText";
@@ -11,8 +11,8 @@ import useAccountResolver from "@/hooks/useAccountResolver";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { cn } from "@/lib/utils";
 import { isFindName } from "@/lib/validate";
-import SimpleTag from "@/components/flowscan/SimpleTag";
 import { useBasicDetails } from "@/hooks/useBasicDetails";
+import { TagBigFish } from "@/components/ui/tags";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountSidebar() {
@@ -70,13 +70,7 @@ export default function AccountSidebar() {
           style={{ writingMode: "vertical-rl" }}
         >
           <div className={"inline-flex gap-2"}>
-            {showFish && (
-              <SimpleTag
-                label={"Big Fish!"}
-                category={<Fish />}
-                className={"text-purple-400"}
-              />
-            )}
+            {showFish && <TagBigFish balance={details?.balance} />}
           </div>
 
           <span className="text-prism-text inline-flex gap-2 text-lg">

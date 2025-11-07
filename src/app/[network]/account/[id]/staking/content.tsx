@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { CalendarClock } from "lucide-react";
 import { useParams } from "next/navigation";
 import type { DelegatorInfo, NodeInfo } from "./types";
+import { TagEpochCounter, TagNodeType } from "@/components/ui/tags";
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 export function getRole(roleNumber: number | string) {
@@ -33,7 +34,7 @@ export default function AccountStakingContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string
+    id as string,
   );
   const address = resolved?.owner;
 
@@ -50,11 +51,9 @@ export default function AccountStakingContent() {
         }
       >
         <h2 className={"text-xl font-bold"}>Delegator Info</h2>
-        <SimpleTag
-          title={`Current epoch number is ${stakingInfo?.epochInfo.currentEpochCounter}`}
-          category={<CalendarClock className={"h-4 w-4"} />}
-          label={`Epoch: ${isPending ? "Loading" : stakingInfo?.epochInfo.currentEpochCounter}`}
-          className="text-green-800"
+        <TagEpochCounter
+          isPending={isPending}
+          counter={stakingInfo?.epochInfo?.currentEpochCounter}
         />
       </div>
       <div className={"fat-row-column w-full"}>
@@ -93,16 +92,16 @@ export default function AccountStakingContent() {
               >
                 <div
                   className={cn(
-                    "flex flex-col items-start gap-2 p-4 ",
-                    "@md:flex-row"
+                    "flex flex-col items-start gap-2 p-4",
+                    "@md:flex-row",
                   )}
                 >
                   <div className={"flex w-full flex-col justify-between gap-2"}>
                     <div
                       title={delegatorInfo.nodeID}
-                      className={"flex flex-row items-center gap-2 "}
+                      className={"flex flex-row items-center gap-2"}
                     >
-                      <NodeRole role={nodeRole} />
+                      <TagNodeType role={nodeRole} />
                       <span className={"max-w-[80%] truncate"}>
                         {delegatorInfo.nodeID}
                       </span>
@@ -110,7 +109,7 @@ export default function AccountStakingContent() {
                     <div
                       title={nodeInfo.networkingAddress}
                       className={
-                        "flex flex-col items-start justify-start gap-1 text-fineprint @md:flex-row @md:items-center"
+                        "text-fineprint flex flex-col items-start justify-start gap-1 @md:flex-row @md:items-center"
                       }
                     >
                       <span>Networking Address:</span>
@@ -123,12 +122,12 @@ export default function AccountStakingContent() {
 
                   <div
                     className={
-                      "flex w-full flex-col items-start justify-between  @md:items-end"
+                      "flex w-full flex-col items-start justify-between @md:items-end"
                     }
                   >
                     <div
                       className={
-                        "flex flex-row items-center justify-between gap-2 text-copy"
+                        "text-copy flex flex-row items-center justify-between gap-2"
                       }
                     >
                       <span>Stake:</span>
@@ -141,7 +140,7 @@ export default function AccountStakingContent() {
 
                     <div
                       className={
-                        "flex flex-row items-center justify-between gap-2 text-copy"
+                        "text-copy flex flex-row items-center justify-between gap-2"
                       }
                     >
                       <span>Rewarded:</span>
@@ -171,7 +170,7 @@ function DelegatorDetails(props: { delegatorInfo: DelegatorInfo }) {
       <div className={"flex w-full flex-col items-start justify-start"}>
         <Label text={"Staked"} />
         <FlowTokens
-          className={"justify-start "}
+          className={"justify-start"}
           value={delegatorInfo.tokensStaked}
           iconClassName={"w-4 h-4"}
           digits={4}
@@ -181,7 +180,7 @@ function DelegatorDetails(props: { delegatorInfo: DelegatorInfo }) {
       <div className={"flex flex-col items-start justify-start"}>
         <Label text={"Rewarded"} />
         <FlowTokens
-          className={"justify-start text-lg text-main "}
+          className={"text-main justify-start text-lg"}
           value={delegatorInfo.tokensRewarded}
           iconClassName={"w-4 h-4"}
           digits={4}
@@ -191,7 +190,7 @@ function DelegatorDetails(props: { delegatorInfo: DelegatorInfo }) {
       <div className={"flex flex-col items-start justify-start"}>
         <Label text={"Committed"} />
         <FlowTokens
-          className={"justify-start text-lg text-main "}
+          className={"text-main justify-start text-lg"}
           value={delegatorInfo.tokensCommitted}
           iconClassName={"w-4 h-4"}
           digits={4}
@@ -201,7 +200,7 @@ function DelegatorDetails(props: { delegatorInfo: DelegatorInfo }) {
       <div className={"flex flex-col items-start justify-start"}>
         <Label text={"Requested to Unstake"} />
         <FlowTokens
-          className={"justify-start text-lg text-main "}
+          className={"text-main justify-start text-lg"}
           value={delegatorInfo.tokensRequestedToUnstake}
           iconClassName={"w-4 h-4"}
           digits={4}
@@ -211,7 +210,7 @@ function DelegatorDetails(props: { delegatorInfo: DelegatorInfo }) {
       <div className={"flex flex-col items-start justify-start"}>
         <Label text={"Unstaking"} />
         <FlowTokens
-          className={"justify-start text-lg text-main "}
+          className={"text-main justify-start text-lg"}
           value={delegatorInfo.tokensUnstaking}
           iconClassName={"w-4 h-4"}
           digits={4}
@@ -221,7 +220,7 @@ function DelegatorDetails(props: { delegatorInfo: DelegatorInfo }) {
       <div className={"flex flex-col items-start justify-start"}>
         <Label text={"Unstaked"} />
         <FlowTokens
-          className={"justify-start text-lg text-main "}
+          className={"text-main justify-start text-lg"}
           value={delegatorInfo.tokensUnstaked}
           iconClassName={"w-4 h-4"}
           digits={4}
@@ -235,16 +234,16 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
   const { nodeInfo } = props;
 
   return (
-    <div className={"w-full gap-4 rounded-sm bg-prism-level-3 p-4"}>
+    <div className={"bg-prism-level-3 w-full gap-4 rounded-sm p-4"}>
       <h3 className={"text-md"}>Node Info</h3>
-      <div className={"flex flex-row gap-1 text-fineprint"}>
+      <div className={"text-fineprint flex flex-row gap-1"}>
         <span>ID:</span>
-        <b className={"truncate "}>{nodeInfo.id}</b>
+        <b className={"truncate"}>{nodeInfo.id}</b>
         <CopyText text={nodeInfo.id} />
       </div>
 
       <div
-        className={"mb-4 flex flex-col text-fineprint @md:flex-row @md:gap-1"}
+        className={"text-fineprint mb-4 flex flex-col @md:flex-row @md:gap-1"}
       >
         <span>Networking Address:</span>
         <b className={""}>{nodeInfo.networkingAddress}</b>
@@ -255,21 +254,21 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
       <div className={cn("grid w-full grid-cols-1 gap-4 @md:grid-cols-3")}>
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Delegator Count"} />
-          <span className={"text-main font-bold "}>
+          <span className={"text-main font-bold"}>
             {formatNumberToAccounting(Number(nodeInfo.delegatorIDCounter))}
           </span>
         </div>
 
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Role"} />
-          <span className={"text-main font-bold capitalize "}>
+          <span className={"text-main font-bold capitalize"}>
             {getRole(nodeInfo.role)}
           </span>
         </div>
 
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Initial Weight"} />
-          <span className={"text-main font-bold "}>
+          <span className={"text-main font-bold"}>
             {nodeInfo.initialWeight}
           </span>
         </div>
@@ -277,7 +276,7 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Staked"} />
           <FlowTokens
-            className={"justify-start text-lg text-main "}
+            className={"text-main justify-start text-lg"}
             value={nodeInfo.tokensStaked}
             iconClassName={"w-4 h-4"}
             digits={4}
@@ -287,7 +286,7 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Rewarded"} />
           <FlowTokens
-            className={"justify-start text-lg text-main "}
+            className={"text-main justify-start text-lg"}
             value={nodeInfo.tokensRewarded}
             iconClassName={"w-4 h-4"}
             digits={4}
@@ -297,7 +296,7 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Committed"} />
           <FlowTokens
-            className={"justify-start text-lg text-main "}
+            className={"text-main justify-start text-lg"}
             value={nodeInfo.tokensCommitted}
             iconClassName={"w-4 h-4"}
             digits={4}
@@ -307,7 +306,7 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Requested to Unstake"} />
           <FlowTokens
-            className={"justify-start text-lg text-main "}
+            className={"text-main justify-start text-lg"}
             value={nodeInfo.tokensRequestedToUnstake}
             iconClassName={"w-4 h-4"}
             digits={4}
@@ -317,7 +316,7 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Unstaking"} />
           <FlowTokens
-            className={"justify-start text-lg text-main "}
+            className={"text-main justify-start text-lg"}
             value={nodeInfo.tokensUnstaking}
             iconClassName={"w-4 h-4"}
             digits={4}
@@ -327,7 +326,7 @@ function NodeInfo(props: { nodeInfo: NodeInfo }) {
         <div className={"flex flex-col items-start justify-start"}>
           <Label text={"Unstaked"} />
           <FlowTokens
-            className={"justify-start text-lg text-main "}
+            className={"text-main justify-start text-lg"}
             value={nodeInfo.tokensUnstaked}
             iconClassName={"w-4 h-4"}
             digits={4}

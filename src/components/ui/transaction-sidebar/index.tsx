@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import { useTransactionDetails } from "@/hooks/useTransactionDetails";
 import { useSurge } from "@/hooks/useSurge";
 import {
-  TagFlowAccount,
   TagFlowStatus,
   TagGas,
   TagKey,
@@ -22,6 +21,7 @@ import {
 } from "@/components/ui/tags";
 import { extractCode } from "@/consts/error-codes";
 import { Timestamp } from "@/components/flowscan/Timestamp";
+import { TagFlowAccount } from "@/components/ui/tags/client";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function TransactionSidebar() {
@@ -83,9 +83,7 @@ export default function TransactionSidebar() {
       </button>
 
       {isCollapsed && (
-        <div
-          className="hidden flex-1 rotate-180 items-center justify-between truncate px-6 py-6 md:flex gap-10 vertical-text"
-        >
+        <div className="vertical-text hidden flex-1 rotate-180 items-center justify-between gap-10 truncate px-6 py-6 md:flex">
           <div className={"flex flex-row"}>{statusTag}</div>
 
           <span className="text-prism-text inline-flex gap-2 truncate text-lg">

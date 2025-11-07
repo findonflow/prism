@@ -2,6 +2,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { SquareArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CSSProperties } from "react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface SimpleTagProps {
@@ -11,19 +12,21 @@ interface SimpleTagProps {
   category?: string | React.ReactNode;
   className?: string;
   hideArrow?: boolean;
+  style?: CSSProperties;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function SimpleTag(props: SimpleTagProps) {
   const { category, title } = props;
   const { label, hoverLabel } = props;
-  const { className } = props;
+  const { className, style } = props;
   const { hideArrow } = props;
 
   const showDivider = Boolean(!!category);
 
   return (
     <span
+      style={style}
       title={title}
       className={cn(
         "flex shrink-0 flex-row items-center justify-center gap-1",

@@ -1,7 +1,9 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import {
+  CalendarClock,
   Cpu,
   FileX2,
+  Fish,
   Flame,
   HandCoins,
   Hash,
@@ -11,7 +13,6 @@ import {
   PackageCheck,
   ShieldUser,
   Signature,
-  UserRound,
   VenetianMask,
   Zap,
 } from "lucide-react";
@@ -20,9 +21,7 @@ import SimpleTag from "@/components/flowscan/SimpleTag";
 import { cn } from "@/lib/utils";
 import { getErrorInfo } from "@/consts/error-codes";
 import { NODE_TITLES } from "@/consts/node";
-import { truncateHash } from "@/components/ui/connect-wallet";
-import { useParams } from "next/navigation";
-import { withPrefix } from "@/lib/validate";
+import JumpingDots, { LoadingBlock } from "@/components/flowscan/JumpingDots";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function NumberOfItems(props: { items?: number }) {
@@ -77,7 +76,7 @@ export function TagGas(props: { gas?: number; title?: string }) {
     <SimpleTag
       title={finalTitle}
       label={`Gas: ${formattedGas}`}
-      className={" hover:text-orange-300"}
+      className={"hover:text-orange-300"}
       category={<Flame />}
     />
   );
@@ -254,7 +253,10 @@ export function TagNodeType(props: { role?: string }) {
     <SimpleTag
       label={role}
       title={`Role: ${title}`}
-      className={" capitalize"}
+      className={"capitalize"}
+      style={{
+        color: `var(--role-${role.toLowerCase()})`,
+      }}
       category={<VenetianMask />}
     />
   );
@@ -289,39 +291,44 @@ export function TagSurge(props: { surge?: number }) {
   );
 }
 
-/* --------------------------------------------------------------------------------------------- */
-export function TagFlowAccount(props: { address?: string | null; findName?: string | null }) {
-  const { address, findName } = props;
-  const { network } = useParams();
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function TagBigFish(props: { balance?: string }) {
+  const { balance } = props;
 
-  if (!address) {
+  if (!balance || Number(balance) < 10000) {
     return null;
-  }
-  const fixedAddress = withPrefix(address)
-
-  const short = truncateHash(fixedAddress, 4);
-
-  if (findName) {
-    return (
-      <SimpleTag
-        label={findName}
-        hoverLabel={address}
-        title={`${findName}:${address}`}
-        className={cn("text-prism-interactive ")}
-        category={<UserRound />}
-      />
-    );
   }
 
   return (
-    <a href={`/${network}/account/${fixedAddress}`} target={"_blank"}>
-      <SimpleTag
-        label={short}
-        title={fixedAddress}
-        className={cn("text-prism-primary ")}
-        category={<UserRound />}
-      />
-    </a>
+    <SimpleTag
+      label={"Big Fish!"}
+      category={<Fish />}
+      className={"text-purple-400"}
+    />
   );
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function TagEpochCounter(props: {
+  counter?: string;
+  isPending?: boolean;
+  className?: string;
+}) {
+  const { counter, isPending } = props;
+  const { className } = props;
+
+  const label = isPending ? <JumpingDots /> : `Epoch: ${counter}`;
+
+  return (
+    <SimpleTag
+      label={label}
+      title={`Current epoch number is ${counter}`}
+      category={<CalendarClock className={"h-4 w-4"} />}
+      className={cn(
+        isPending && "text-prism-text-muted",
+        !isPending && "text-prism-primary",
+        className,
+      )}
+    />
+  );
+}

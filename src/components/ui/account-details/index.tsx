@@ -7,8 +7,8 @@ import Odometer from "@/components/flowscan/Odometer";
 import FlowTokens from "@/components/flowscan/FlowTokens";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { useFindLeases } from "@/hooks/useFindLeases";
-import SimpleTag from "@/components/flowscan/SimpleTag";
 import { cn } from "@/lib/utils";
+import { TagDomain } from "@/components/ui/tags/client";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function BasicAccountDetails(props: {
@@ -137,14 +137,10 @@ export function FindLeases(props: { address?: string | null }) {
             })
             .map((item: FINDLeaseInfo) => {
               return (
-                <SimpleTag
+                <TagDomain
                   key={item.name}
-                  label={
-                    <span>
-                      <b>{item.name}</b>.find
-                    </span>
-                  }
-                  className={"text-prism-primary text-xs"}
+                  name={item.name}
+                  address={item.address}
                 />
               );
             })}
