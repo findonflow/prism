@@ -11,9 +11,11 @@ export async function Showcase(props: {
   title: string;
   className?: string;
   labelClassName?: string;
+  horizontal?: boolean;
 }) {
   const { children, title } = props;
   const { className, labelClassName } = props;
+  const { horizontal } = props;
 
   const code = constructCode(children, false);
 
@@ -21,18 +23,19 @@ export async function Showcase(props: {
     <div
       className={cn(
         "relative flex flex-col items-start space-y-2",
-        "border border-gray-400/20 p-6",
+        "border border-gray-400/20 p-4 pr-8",
+        horizontal && "flex-row items-center gap-4 space-y-0",
         className,
       )}
     >
-      <div className={"flex flex-row gap-2"}>
-        <TypeLabel className={cn("mr-8", labelClassName)}>{title}</TypeLabel>
+      <div className={"flex flex-row items-center gap-1"}>
         <CopyText
           text={code}
-          className={
-            "absolute top-2 right-2 text-sm opacity-30 hover:opacity-100"
-          }
+          className={"text-sm opacity-30 hover:opacity-100"}
         />
+        <TypeLabel className={cn("flex-0 text-nowrap", labelClassName)}>
+          {title}
+        </TypeLabel>
       </div>
       {children}
     </div>

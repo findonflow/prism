@@ -41,28 +41,30 @@ export default function Tags() {
       </ShowcaseGroup>
 
       <ShowcaseGroup>
-        <Showcase title={"Tag: Domain"}>
+        <Showcase title={"Tag: Domain"} horizontal>
           <TagDomain name={"design"} />
         </Showcase>
 
-        <Showcase title={"Tag: Epoch Counter"}>
-          <TagEpochCounter counter={"1337"}/>
-          <TagEpochCounter isPending={true} />
+        <Showcase title={"Tag: Epoch Counter"} horizontal>
+          <div className={"flex flex-row gap-2"}>
+            <TagEpochCounter isPending={true} />
+            <TagEpochCounter counter={"1337"} />
+          </div>
         </Showcase>
 
-        <Showcase title={"Tag: BigFish"}>
+        <Showcase title={"Tag: BigFish"} horizontal>
           <TagBigFish balance={"100"} />
           <TagBigFish balance={"10000"} />
         </Showcase>
-
-        <Showcase title={"Tag: Nodes"}>
-          <div className={"flex flex-row flex-wrap gap-2"}>
-            {Object.keys(NODE_TITLES).map((role) => {
-              return <TagNodeType role={role} key={role} />;
-            })}
-          </div>
-        </Showcase>
       </ShowcaseGroup>
+
+      <Showcase title={"Tag: Nodes"} horizontal>
+        <div className={"flex flex-row flex-wrap gap-2"}>
+          {Object.keys(NODE_TITLES).map((role) => {
+            return <TagNodeType role={role} key={role} />;
+          })}
+        </div>
+      </Showcase>
     </div>
   );
 }
