@@ -4,7 +4,6 @@ export function constructCode(
   element: ReactNode | Array<ReactNode>,
   innerLevel: boolean = true,
 ): string {
-  console.log(element);
 
   // Handle null/undefined
   if (!element) {
