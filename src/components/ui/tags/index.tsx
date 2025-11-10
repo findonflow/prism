@@ -16,12 +16,12 @@ import {
   VenetianMask,
   Zap,
 } from "lucide-react";
-import { formatNumberToAccounting } from "@/lib/format";
+import {formatNumberToAccounting} from "@/lib/format";
 import SimpleTag from "@/components/flowscan/SimpleTag";
-import { cn } from "@/lib/utils";
-import { getErrorInfo } from "@/consts/error-codes";
-import { NODE_TITLES } from "@/consts/node";
-import JumpingDots, { LoadingBlock } from "@/components/flowscan/JumpingDots";
+import {cn} from "@/lib/utils";
+import {getErrorInfo} from "@/consts/error-codes";
+import {NODE_TITLES} from "@/consts/node";
+import JumpingDots from "@/components/flowscan/JumpingDots";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function NumberOfItems(props: { items?: number }) {

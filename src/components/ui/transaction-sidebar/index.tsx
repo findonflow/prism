@@ -2,7 +2,6 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { TransactionSidebarProvider } from "./TransactionSidebarProvider";
 import { TransactionSidebarDisplay } from "./TransactionSidebarDisplay";
-import { useParams } from "next/navigation";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface TransactionSidebarProps {
@@ -11,10 +10,10 @@ interface TransactionSidebarProps {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function TransactionSidebar(props: TransactionSidebarProps) {
-  const { hash } = useParams();
+  const { hash } = props;
   return (
     <TransactionSidebarProvider
-      id={(hash as string) || ""}
+      hash={(hash as string) || ""}
       render={(props) => <TransactionSidebarDisplay {...props} />}
     />
   );
