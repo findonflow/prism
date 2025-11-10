@@ -89,7 +89,7 @@ export function TagMultisig(props: {
 }) {
   const { signers, short } = props;
 
-  if (!signers || signers.length === 0) {
+  if (!signers || signers.length < 2) {
     return null;
   }
 
