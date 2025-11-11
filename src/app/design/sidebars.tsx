@@ -5,6 +5,7 @@ import { TransactionSidebarProvider } from "@/components/ui/transaction-sidebar/
 import { TransactionSidebarDisplay } from "@/components/ui/transaction-sidebar/TransactionSidebarDisplay";
 import { Divider } from "@/components/ui/primitive";
 import { TypeH2, TypeP } from "@/components/ui/typography";
+import AccountSidebar from "@/components/ui/account-sidebar";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 const examples = [
@@ -31,15 +32,22 @@ export default function Sidebars() {
         </TypeP>
       </div>
 
-      <div className={"flex flex-row gap-10"}>
+      <div className={"bg-prism-level-1 flex h-[600px] flex-row gap-10 p-4"}>
+        {/* Transcaations Sidebar */}
         {examples.map((hash) => (
-          <div className="h-[600px]" key={hash}>
+          <div key={hash}>
             <TransactionSidebarProvider
               hash={hash}
               render={(props) => <TransactionSidebarDisplay {...props} />}
             />
           </div>
         ))}
+
+        <div className={"bg-prism-level-1 h-full w-10"} />
+
+        {/* Accounts Sidebar */}
+        <AccountSidebar id={"grock"} />
+        <AccountSidebar id={"christian"} />
       </div>
     </div>
   );
