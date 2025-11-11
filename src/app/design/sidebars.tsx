@@ -13,7 +13,6 @@ const examples = [
   //"a5846dcd5779368c7465ce3217d313e93171408f3e5463ebe61a661e5649a7e3", // multisig
   // "7155780825f0c2034932c48d8127af9cf21a44b020dc5230b7c9dc354625a2ce",
 
-
   // THIS IS BROKEN "BY DESIGN" - REST API returns non-compatible values
   // "263ae6234ad8537e62affc3cbfac844566bfdb2f2b20b4cdd63475c8e03e1b74", // system transaction spoiled by EVM ????
 ];
@@ -34,9 +33,8 @@ export default function Sidebars() {
 
       <div className={"flex flex-row gap-10"}>
         {examples.map((hash) => (
-          <div className="h-[600px]">
+          <div className="h-[600px]" key={hash}>
             <TransactionSidebarProvider
-              key={hash}
               hash={hash}
               render={(props) => <TransactionSidebarDisplay {...props} />}
             />
