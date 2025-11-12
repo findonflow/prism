@@ -136,6 +136,7 @@ function LoggedInWalletButton(props: {
             "border-prism-primary rounded-xs border border-solid p-2",
             "z-20 transition-all duration-200 ease-in-out",
             "flex flex-col text-white",
+            "w-6/7 lg:w-[14rem]",
             "connect-dropdown",
           )}
         >

@@ -29,7 +29,7 @@ export default function SimpleTag(props: SimpleTagProps) {
       style={style}
       title={title}
       className={cn(
-        "flex shrink-0 flex-row items-center justify-center gap-1",
+        "flex flex-none shrink-0 flex-row items-center justify-center gap-1",
         "border border-solid border-current/60",
         "rounded-xs p-1 text-xs",
         "group",

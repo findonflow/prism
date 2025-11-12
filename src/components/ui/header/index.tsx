@@ -1,8 +1,10 @@
-import { Pyramid } from "lucide-react";
+import { FlaskConical, Globe, Pyramid, Search } from "lucide-react";
 import ConnectWallet from "@/components/ui/connect-wallet";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import HeaderSearch from "@/components/ui/header-search";
+import SimpleTag from "@/components/flowscan/SimpleTag";
+import HeaderSearchMobile from "@/components/ui/header-search/mobile";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -24,7 +26,7 @@ export default function Header(props: { network: string }) {
   return (
     <div
       className={cn(
-        "bg-prism-level-1 flex w-full flex-row items-center justify-between gap-2",
+        "bg-prism-level-1 flex w-full flex-row items-center justify-between gap-4",
         "border-prism-border border-b",
         "px-4 py-2",
       )}
@@ -32,19 +34,41 @@ export default function Header(props: { network: string }) {
       <div className={"flex flex-row items-center justify-start gap-2"}>
         <PrismLogo link={"/"} />
 
-        <span
-          className={
-            "border-prism-primary text-prism-primary rounded-xs border-1 p-0.5 px-1 text-xs"
-          }
-        >
-          {network}
-        </span>
+        {network === "mainnet" && (
+          <>
+            <SimpleTag
+              className={"text-prism-primary hidden flex-none lg:flex"}
+              label={"Mainnet"}
+              category={<Globe className={"h-4 w-4"} />}
+            />
+            <SimpleTag
+              className={"text-prism-primary block lg:hidden"}
+              label={<Globe className={"h-4 w-4"} />}
+            />
+          </>
+        )}
+
+        {network === "testnet" && (
+          <>
+            <SimpleTag
+              className={"text-prism-primary hidden lg:flex"}
+              label={"Testnet"}
+              category={<FlaskConical className={"h-4 w-4"} />}
+            />
+            <SimpleTag
+              className={"text-prism-primary block lg:hidden"}
+              label={<FlaskConical className={"h-4 w-4"} />}
+            />
+          </>
+        )}
       </div>
 
       <div
-        className={"flex h-full w-1/2 flex-row items-stretch justify-end gap-4"}
+        className={"flex h-full w-1/2 flex-row items-stretch justify-end gap-2"}
       >
         <HeaderSearch />
+        <HeaderSearchMobile />
+
         <ConnectWallet />
       </div>
     </div>

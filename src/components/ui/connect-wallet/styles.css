@@ -7,7 +7,6 @@
   position-anchor: --connect-wallet-anchor;
   position-area: block-end span-inline-start;
   position-try: block-end span-inline-end;
-  width: 14rem;
 
   box-shadow: 0 2rem 5rem oklch(from var(--prism-primary) l c h / 25%);
 }
