@@ -1,22 +1,20 @@
 "use client";
-
-import { ChevronDown, ChevronRight, LogOut, Plus } from "lucide-react";
+/*--------------------------------------------------------------------------------------------------------------------*/
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useLoginContext } from "@/fetch/provider";
 import { useParams, usePathname } from "next/navigation";
-import "./styles.css";
+import { ChevronDown, ChevronRight, LogOut, Plus } from "lucide-react";
 import { Divider } from "@/components/ui/primitive";
+import { useLoginContext } from "@/fetch/provider";
+import { cn } from "@/lib/utils";
+import "./styles.css";
 
 /* --------------------------------------------------------------------------------------------- */
-
 export function truncateHash(hash?: string, steps: number = 4): string {
   return hash?.slice(0, steps) + "..." + hash?.slice(-steps);
 }
 
 /* --------------------------------------------------------------------------------------------- */
-
 export function HorizontalLine({ className }: { className?: string }) {
   return <div className={cn("bg-prism-border h-px w-full", className)} />;
 }
