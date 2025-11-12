@@ -1,4 +1,4 @@
-import { FlaskConical, Globe, Pyramid, Search } from "lucide-react";
+import { FlaskConical, Globe, Pyramid } from "lucide-react";
 import ConnectWallet from "@/components/ui/connect-wallet";
 import Link from "next/link";
 import { cn } from "@/lib/utils";

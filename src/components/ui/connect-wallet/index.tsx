@@ -107,7 +107,7 @@ function LoggedInWalletButton(props: {
       )}
       <button
         ref={buttonRef}
-        onClick={(e) => {
+        onClick={() => {
           setShowDropdown(!showDropdown);
         }}
         className={cn(
