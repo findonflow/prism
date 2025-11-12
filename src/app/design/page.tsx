@@ -1,8 +1,10 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import {Pyramid} from "lucide-react";
-import {TypeH1, TypeP} from "@/components/ui/typography";
+import { Pyramid } from "lucide-react";
+import { TypeH1, TypeP } from "@/components/ui/typography";
 import Sidebars from "@/app/design/sidebars";
-import QueryProvider, {FCLProvider} from "@/fetch/provider";
+import QueryProvider, { FCLProvider } from "@/fetch/provider";
+import Inputs from "@/app/design/inputs";
+import { Suspense } from "react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function DesignPage() {
@@ -29,8 +31,12 @@ export default function DesignPage() {
           {/*
             <Typography />
             <Tags />
-          */}
-          <Sidebars />
+
+          <Sidebars />*/}
+          <Suspense>
+            <Inputs />
+          </Suspense>
+
         </div>
       </QueryProvider>
     </FCLProvider>
