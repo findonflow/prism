@@ -1,10 +1,11 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Code, Globe } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
 
+import { AnimatePresence, motion } from "motion/react";
 import CodeBlock from "@/components/flowscan/CodeBlock";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import JumpingDots from "@/components/flowscan/JumpingDots";
@@ -74,7 +75,8 @@ export default function AccountContractsContent() {
               key={"no-contracts-to-show"}
             >
               <TypeLabel className={"opacity-50"}>
-                This account does not have any contracts deployed to it's storage
+                This account does not have any contracts deployed to it's
+                storage
               </TypeLabel>
             </motion.div>
           )}
@@ -91,15 +93,19 @@ function SingleContract(props: {
   name: string;
 }) {
   const { address, code, name } = props;
-  const { network } = useParams();
+  const { network, id } = useParams();
 
   const numberOfLines = code?.split(/\r?\n/).length || 0;
+
+  const contractName = `A.${address.slice(2)}.${name}`;
 
   const flowscanRoot =
     network === "mainnet"
       ? "https://flowscan.io"
       : "https://testnet.flowscan.io";
-  const flowscanURL = `${flowscanRoot}/contract/A.${address.slice(2)}.${name}?tab=deployments`;
+  const flowscanURL = `${flowscanRoot}/contract/${contractName}?tab=deployments`;
+
+  const contractUrl = `/${network}/account/${id}/contracts/${contractName}`;
 
   return (
     <FatRow
@@ -115,14 +121,14 @@ function SingleContract(props: {
         )}
       >
         <div className={"flex w-full flex-row justify-between gap-2"}>
-          <a key={name} href={flowscanURL}>
+          <Link key={name} href={contractUrl}>
             <SimpleTag
               title={`View ${name} contract on Flowscan`}
               className={"text-orange-400"}
               label={name}
               category={<Globe className={"h-3 w-3"} />}
             />
-          </a>
+          </Link>
           <span>
             <SimpleTag
               title={`Lines of code: ${numberOfLines}`}
