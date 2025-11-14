@@ -1,22 +1,51 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { useRef, useState } from "react";
-import {
-  BigButton,
-  Button,
-  buttonClasses,
-  hoverClasses,
-} from "@/components/ui/button";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { BigButton, hoverClasses } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FileUp } from "lucide-react";
+import { FileUp, RefreshCcw } from "lucide-react";
+import { TypeFineprint } from "@/components/ui/typography";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export function FilePicker() {
+async function readFile(file: File): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const content = reader.result as string;
+      resolve(content);
+    };
+    reader.onerror = () => {
+      reject(reader.error);
+    };
+    reader.readAsText(file);
+  });
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function FilePicker(props: { useFile: (code: string) => void }) {
+  const { useFile } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>("");
+  const [code, setCode] = useState("");
+
+  useEffect(() => {
+    if (fileName && fileName.endsWith(".cdc")) {
+      const file = inputRef.current?.files?.[0];
+      if (file) {
+        readFile(file).then((code) => {
+          setCode(code);
+          useFile(code);
+        });
+      }
+    }
+  }, [fileName]);
+
+  const reloadFile = useMemo(() => {
+    return () => useFile(code);
+  }, [code]);
 
   return (
-    <div className={"flex flex-row gap-4 items-center"}>
+    <div className={"flex flex-row items-center gap-4"}>
       <input
         ref={inputRef}
         id="file"
@@ -40,7 +69,12 @@ export function FilePicker() {
         Opens a file picker dialog
       </span>
 
-      {fileName && <div>Selected: {fileName}</div>}
+      {code && (
+        <BigButton title={"Reload"} onClick={reloadFile} className={cn(hoverClasses, "self-stretch px-4")}>
+          <RefreshCcw className={"h-5 w-5"} />
+        </BigButton>
+      )}
+      {fileName && <TypeFineprint className={"text-prism-primary"}>Selected: {fileName}</TypeFineprint>}
     </div>
   );
 }

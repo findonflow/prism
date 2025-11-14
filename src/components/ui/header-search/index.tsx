@@ -16,6 +16,19 @@ export default function HeaderSearch() {
   const [value, setValue] = useState("");
 
   function listenForUpdates(e: KeyboardEvent) {
+    // Ignore when typing in inputs, textareas, contenteditable, or Monaco editor
+    const target = e.target as HTMLElement | null;
+    if (
+      target &&
+      (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        (target as HTMLElement).isContentEditable ||
+        target.closest && target.closest(".monaco-editor")
+      )
+    ) {
+      return;
+    }
     if (e.key === "/") {
       setValue("");
       e.preventDefault();
