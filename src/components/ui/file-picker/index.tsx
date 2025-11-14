@@ -22,8 +22,12 @@ async function readFile(file: File): Promise<string> {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export function FilePicker(props: { useFile: (code: string) => void }) {
-  const { useFile } = props;
+export function FilePicker(props: {
+  useFile: (code: string) => void;
+  disabled?: boolean;
+  title?: string;
+}) {
+  const { useFile, disabled, title } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>("");
   const [code, setCode] = useState("");
@@ -57,9 +61,12 @@ export function FilePicker(props: { useFile: (code: string) => void }) {
       <BigButton
         className={cn(
           "flex flex-row items-center gap-2 px-6 text-lg",
-          hoverClasses,
+          disabled ? "cursor-not-allowed opacity-50" : hoverClasses,
         )}
-        onClick={() => inputRef.current?.click()}
+        title={title}
+        onClick={() => {
+          if (!disabled) inputRef.current?.click();
+        }}
       >
         <FileUp className={"h-[1.35em] w-[1.35em]"} />
         <span>Pick file</span>
@@ -70,7 +77,14 @@ export function FilePicker(props: { useFile: (code: string) => void }) {
       </span>
 
       {code && (
-        <BigButton title={"Reload"} onClick={reloadFile} className={cn(hoverClasses, "self-stretch px-4")}>
+        <BigButton
+          title={disabled ? title : "Reload"}
+          onClick={disabled ? undefined : reloadFile}
+          className={cn(
+            disabled ? "cursor-not-allowed opacity-50" : hoverClasses,
+            "self-stretch px-4",
+          )}
+        >
           <RefreshCcw className={"h-5 w-5"} />
         </BigButton>
       )}
