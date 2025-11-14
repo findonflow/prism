@@ -1,25 +1,30 @@
-import { Label } from "@atoms/text/primitives.tsx";
-import { cn } from "@utils/twMerge.ts";
-import { Timestamp } from "@molecules/Transactions/Components.tsx";
 import React from "react";
-import CopyText from "@atoms/CopyText";
-import FlowTokens from "@molecules/FlowTokens";
-import JumpingDots, { LoadingBlock } from "@atoms/JumpingDots";
-import { DetailsElement } from "@atoms/TransactionDetails";
-import CollapsablePanel from "@organisms/CollapsablePanel";
-import SimpleTag from "@atoms/SimpleTag";
 import { FileX2 } from "lucide-react";
-import { TagNotFound } from "@atoms/SimpleTag/variants.tsx";
+import DetailsElement from "@/components/flowscan/DetailsElement";
+import { Timestamp } from "@/components/flowscan/Timestamp";
+import { Label } from "@/components/flowscan/text/primitives";
+import CollapsablePanel from "@/components/flowscan/CollapsablePanel";
+import FlowTokens from "@/components/flowscan/FlowTokens";
+import JumpingDots, { LoadingBlock } from "@/components/flowscan/JumpingDots";
+import CopyText from "@/components/flowscan/CopyText";
+import SimpleTag from "@/components/flowscan/SimpleTag";
+import { TagNotFound } from "@/components/ui/tags";
+import { cn } from "@/lib/utils";
 
 /* --------------------------------------------------------------------------------------------- */
-export function SidebarHorizontalValue(props: { label: string; value: any; className?: string }) {
+export function SidebarHorizontalValue(props: {
+  label: string;
+  value: any;
+  className?: string;
+}) {
   const { label, value, className } = props;
   return (
     <div
       className={cn(
         "text-fineprint flex w-full flex-row items-center justify-between gap-2",
         className,
-      )}>
+      )}
+    >
       <Label text={label} className={"flex-shrink-0"} />
       {value}
     </div>
@@ -35,7 +40,7 @@ export function SidebarLongId(props: { text?: any }) {
 
   return (
     <div className="wrap-text flex w-full shrink flex-row gap-1">
-      <CopyText className="text-colors-accent mt-px" color="#5D6A7A" text={text} />
+      <CopyText className="text-prism-primary mt-px" text={text} />
       <p className="text-main text-text-color truncate" title={text}>
         {text}
       </p>
@@ -56,7 +61,10 @@ export function SidebarSection(props: { children: React.ReactNode }) {
 }
 
 /* --------------------------------------------------------------------------------------------- */
-export function SidebarDivider(props: { className?: string; spacing?: "top" | "bottom" }) {
+export function SidebarDivider(props: {
+  className?: string;
+  spacing?: "top" | "bottom";
+}) {
   const { className, spacing } = props;
 
   return (
@@ -77,7 +85,10 @@ export function SidebarTimestamp(props: { timestamp: any }) {
 
   return (
     <SidebarSection>
-      <SidebarHorizontalValue label={"Timestamp"} value={<Timestamp time={timestamp} />} />
+      <SidebarHorizontalValue
+        label={"Timestamp"}
+        value={<Timestamp time={timestamp} />}
+      />
     </SidebarSection>
   );
 }
@@ -121,24 +132,34 @@ export function SidebarFlowValue(props: {
 }
 
 /* --------------------------------------------------------------------------------------------- */
-export function SidebarContent(props: { top: React.ReactNode; bottom?: React.ReactNode }) {
+export function SidebarContent(props: {
+  top: React.ReactNode;
+  bottom?: React.ReactNode;
+}) {
   const { top, bottom } = props;
 
   return (
-    <div className={"sidebar-grid grid w-full flex-col items-start justify-between gap-4"}>
+    <div
+      className={
+        "sidebar-grid grid w-full flex-col items-start justify-between gap-4"
+      }
+    >
       {/* Top Part*/}
       <div
         className={cn(
           "flex h-auto w-auto flex-col items-start justify-start gap-4",
           "preview-scrollbar overflow-y-auto",
           "@md:h-full @md:w-full",
-        )}>
+        )}
+      >
         {top}
       </div>
 
       {/* Bottom Part */}
       {Boolean(!!bottom) && (
-        <div className={"flex w-full flex-shrink-0 flex-col gap-2"}>{bottom}</div>
+        <div className={"flex w-full flex-shrink-0 flex-col gap-2"}>
+          {bottom}
+        </div>
       )}
     </div>
   );
@@ -171,9 +192,14 @@ export function SidebarVerticalLabel(props: { title: string; value: string }) {
         "section-title-vertical",
         "flex w-full flex-row justify-between gap-2 truncate",
         "md:justify-end md:gap-2",
-      )}>
+      )}
+    >
       <p className={"opacity-50"}>{title}</p>
-      <span className={"bsn-max-label inline w-full truncate text-right text-ellipsis opacity-100"}>
+      <span
+        className={
+          "bsn-max-label inline w-full truncate text-right text-ellipsis opacity-100"
+        }
+      >
         {value}
       </span>
     </div>
@@ -195,8 +221,13 @@ export function SidebarVerticalContent(props: {
         "flex w-full flex-col items-start justify-between gap-2",
         "lg:items-between lg:h-full lg:flex-row lg:gap-16",
       )}
-      title={`${title}: ${value}`}>
-      <div className={"text-main flex w-full flex-row items-center justify-start gap-2"}>
+      title={`${title}: ${value}`}
+    >
+      <div
+        className={
+          "text-main flex w-full flex-row items-center justify-start gap-2"
+        }
+      >
         {children}
       </div>
 
@@ -217,10 +248,14 @@ export function SidebarLoadingState(props: { value: string; title: string }) {
             <SidebarLongId text={value} />
           </DetailsElement>
           <div
-            className={"flex h-full w-full flex-col items-center justify-center gap-6 opacity-30"}>
+            className={
+              "flex h-full w-full flex-col items-center justify-center gap-6 opacity-30"
+            }
+          >
             <LoadingBlock
-              className={"text-fineprint flex-col-reverse gap-6 text-center font-light"}
-              dotsClassName={"text-[1.25rem]"}
+              className={
+                "text-fineprint flex-col-reverse gap-6 text-center font-light"
+              }
             />
           </div>
         </div>
@@ -231,7 +266,7 @@ export function SidebarLoadingState(props: { value: string; title: string }) {
 
   const verticalContent = (
     <SidebarVerticalContent title={title} value={value}>
-      <JumpingDots className={"w-full"} />
+      <JumpingDots />
     </SidebarVerticalContent>
   );
 
@@ -263,12 +298,16 @@ export function SidebarNotFound(props: { value: string; title: string }) {
           </div>
 
           <div
-            className={"flex h-full w-full flex-col items-center justify-center gap-6 opacity-30"}>
+            className={
+              "flex h-full w-full flex-col items-center justify-center gap-6 opacity-30"
+            }
+          >
             <div className={"flex w-full items-center justify-center"}>
               <FileX2 className={"bsn-not-found h-15 w-15 opacity-50"} />
             </div>
             <p className={"text-fineprint text-center font-light"}>
-              Could not find record in our database for this {title.toLowerCase()}
+              Could not find record in our database for this{" "}
+              {title.toLowerCase()}
             </p>
           </div>
         </div>
@@ -278,7 +317,11 @@ export function SidebarNotFound(props: { value: string; title: string }) {
 
   const verticalContent = (
     <SidebarVerticalContent title={title} value={value}>
-      <SimpleTag label={"Not found"} className={"text-bsn-failure"} category={<FileX2 />} />
+      <SimpleTag
+        label={"Not found"}
+        className={"text-bsn-failure"}
+        category={<FileX2 />}
+      />
     </SidebarVerticalContent>
   );
 
@@ -318,7 +361,9 @@ export function SidebarContainer(props: {
     finalContent = (
       <SidebarContent
         top={
-          <div className={"grid h-full w-full grid-cols-1 grid-rows-[auto_1fr]"}>
+          <div
+            className={"grid h-full w-full grid-cols-1 grid-rows-[auto_1fr]"}
+          >
             <div className={"flex w-full flex-col gap-4"}>
               <div className={"flex flex-row gap-2"}>
                 <TagNotFound />
@@ -331,12 +376,14 @@ export function SidebarContainer(props: {
             <div
               className={
                 "flex h-full w-full flex-col items-center justify-center gap-6 opacity-30"
-              }>
+              }
+            >
               <div className={"flex w-full items-center justify-center"}>
                 <FileX2 className={"bsn-not-found h-15 w-15 opacity-50"} />
               </div>
               <p className={"text-fineprint text-center font-light"}>
-                Could not find record in our database for this {title.toLowerCase()}
+                Could not find record in our database for this{" "}
+                {title.toLowerCase()}
               </p>
             </div>
           </div>
@@ -346,7 +393,11 @@ export function SidebarContainer(props: {
 
     finalVerticalContent = (
       <SidebarVerticalContent title={title} value={value}>
-        <SimpleTag label={"Not found"} className={"text-bsn-failure"} category={<FileX2 />} />
+        <SimpleTag
+          label={"Not found"}
+          className={"text-bsn-failure"}
+          category={<FileX2 />}
+        />
       </SidebarVerticalContent>
     );
   }
