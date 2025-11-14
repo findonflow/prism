@@ -97,7 +97,7 @@ function EventDetails(props: { event: any }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function TransactionEvents() {
   const { hash } = useParams();
-  const { data, isLoading } = useTransactionDetails(hash as string);
+  const { data, isPending } = useTransactionDetails(hash as string);
 
   const [filter, setFilter] = useState("");
   const [contractFilter, setContractFilter] = useState("All");
@@ -135,7 +135,7 @@ export default function TransactionEvents() {
         Events ({filteredEvents.length} of {events.length}):
       </TypeLabel>
 
-      {isLoading && <LoadingBlock title="Loading transaction events..." />}
+      {isPending && <LoadingBlock title="Loading transaction events..." />}
 
       {events.length > 0 && (
         <>

@@ -11,11 +11,11 @@ import TransactionErrorBlock from "@/components/flowscan/TransactionErrorBlock";
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function TransactionScript() {
   const { hash } = useParams();
-  const { data, isLoading } = useTransactionDetails(hash as string);
+  const { data, isPending } = useTransactionDetails(hash as string);
 
   return (
     <div className="flex w-full flex-col gap-4">
-      {isLoading && <LoadingBlock title="Loading transaction script..." />}
+      {isPending && <LoadingBlock title="Loading transaction script..." />}
 
       {data && (
         <div className="flex flex-col gap-6">

@@ -9,13 +9,26 @@ import { isHash } from "@/lib/validate";
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function HeaderSearch() {
   const params = useParams();
-  const { network } = params;
+  const { network, id, hash } = params;
 
   const ref = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [value, setValue] = useState("");
 
   function listenForUpdates(e: KeyboardEvent) {
+    // Ignore when typing in inputs, textareas, contenteditable, or Monaco editor
+    const target = e.target as HTMLElement | null;
+    if (
+      target &&
+      (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        (target as HTMLElement).isContentEditable ||
+        target.closest && target.closest(".monaco-editor")
+      )
+    ) {
+      return;
+    }
     if (e.key === "/") {
       setValue("");
       e.preventDefault();
@@ -30,6 +43,10 @@ export default function HeaderSearch() {
     };
   }, []);
 
+  if (!id && !hash) {
+    return null;
+  }
+
   return (
     <Input
       ref={ref}
@@ -40,6 +57,7 @@ export default function HeaderSearch() {
         "focus:text-prism-primary focus:border-current",
         "shadow-prism-primary/50 focus:shadow-[0_0_3rem_0.2rem]",
         "truncate transition-colors duration-300",
+        "hidden lg:block",
       )}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => {

@@ -80,7 +80,7 @@ export function TypeFineprint(props: TextProps) {
   const { children, className } = props;
 
   return (
-    <p className={cn("text-muted-foreground text-sm", "leading-7", className)}>
+    <p className={cn("text-muted-foreground text-sm", "leading-6", className)}>
       {children}
     </p>
   );

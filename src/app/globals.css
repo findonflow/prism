@@ -53,6 +53,8 @@
   /* Prism Theme */
   --color-prism-primary: var(--prism-primary);
   --color-prism-secondary: var(--prism-secondary);
+  --color-prism-mainnet: var(--prism-mainnet);
+  --color-prism-testnet:var(--prism-testnet);
 
   --color-prism-level-1: var(--prism-level-1);
   --color-prism-level-2: var(--prism-level-2);

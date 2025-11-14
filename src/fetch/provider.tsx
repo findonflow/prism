@@ -95,8 +95,10 @@ const LoginContext = createContext<{
   logoutUser: () => void;
 } | null>(null);
 
-export function FCLProvider(props: { children: ReactNode }) {
-  const { network } = useParams();
+export function FCLProvider(props: { children: ReactNode; override?: string }) {
+  const { override = "mainnet" } = props;
+  const { network = override } = useParams();
+
   const router = useRouter();
   const navigate = (path: string) => {
     router.push(path);
@@ -124,6 +126,8 @@ export function FCLProvider(props: { children: ReactNode }) {
 
   useEffect(() => {
     if (network) {
+      initFCL(network as string);
+
       currentUser.subscribe((user: any) => {
         /*        const walletNetwork = user.services.find(
           (el: any) => el.network,
@@ -140,7 +144,6 @@ export function FCLProvider(props: { children: ReactNode }) {
           });
         }
       });
-      initFCL(network as string);
     }
   }, [network]);
 
