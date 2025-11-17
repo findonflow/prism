@@ -1,7 +1,7 @@
 "use client";
 /* --------------------------------------------------------------------------------------------- */
 import React, { CSSProperties, Ref, useEffect, useState } from "react";
-import cn from "@design/tailwind/utils/cn.ts";
+import {cn} from "@/lib/utils"
 import { PanelRightOpen } from "lucide-react";
 /* --------------------------------------------------------------------------------------------- */
 const EVENT_COLLAPSE_PANEL = "ui-event-collapse-panel";
