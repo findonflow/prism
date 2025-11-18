@@ -3,18 +3,18 @@
 import CopyText from "@/components/flowscan/CopyText";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
 import FlowTokens from "@/components/flowscan/FlowTokens";
-import JumpingDots from "@/components/flowscan/JumpingDots";
-import { NodeRole } from "@/components/flowscan/NodeRole";
-import SimpleTag from "@/components/flowscan/SimpleTag";
+import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { Label } from "@/components/flowscan/text/Label";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useStakingInfo } from "@/hooks/useStakingInfo";
 import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { CalendarClock } from "lucide-react";
 import { useParams } from "next/navigation";
 import type { DelegatorInfo, NodeInfo } from "./types";
 import { TagEpochCounter, TagNodeType } from "@/components/ui/tags";
+import { TypeLabel } from "@/components/ui/typography";
+import { motion } from "motion/react";
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 export function getRole(roleNumber: number | string) {
@@ -57,8 +57,19 @@ export default function AccountStakingContent() {
         />
       </div>
       <div className={"fat-row-column w-full"}>
-        {isPending && <JumpingDots />}
+        {isPending && (
+          <motion.div initial={{ y: 10 }} animate={{ y: 0 }}>
+            <LoadingBlock />
+          </motion.div>
+        )}
 
+        {!isPending && !stakingInfo && (
+          <motion.div initial={{ y: 10 }} animate={{ y: 0 }}>
+            <TypeLabel className={"text-md opacity-50"}>
+              This account hasn't participated in staking activity
+            </TypeLabel>
+          </motion.div>
+        )}
         {showList &&
           stakingInfo?.delegatorInfos.map((delegatorInfo) => {
             const details = (
