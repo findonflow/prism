@@ -44,7 +44,7 @@ export default function DeployContractPage() {
         </div>
       </div>
 
-      <CodeBlock code={""} newCode={fileCode} editable/>
+      <CodeBlock code={"// Type your code here on import using button above"} newCode={fileCode} editable/>
     </div>
   );
 }

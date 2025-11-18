@@ -1,12 +1,6 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useState } from "react";
-import {
-  ArrowUpRight,
-  ChevronLeft,
-  ChevronRight,
-  Database,
-  DatabaseZap,
-} from "lucide-react";
+import { ArrowUpRightSquare, ChevronLeft, ChevronRight } from "lucide-react";
 import QRCode from "react-qr-code";
 
 import { TagBigFish } from "@/components/ui/tags";
@@ -15,17 +9,10 @@ import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import CopyText from "@/components/flowscan/CopyText";
 import { isFindName } from "@/lib/validate";
 import { cn } from "@/lib/utils";
-import {
-  SidebarContainer,
-  SidebarContent,
-  SidebarLongId,
-  SidebarSection,
-  SidebarVerticalContent,
-} from "@/components/flowscan/Sidebar";
+import { SidebarContainer, SidebarContent, SidebarLongId, SidebarVerticalContent } from "@/components/flowscan/Sidebar";
 import DetailsElement from "@/components/flowscan/DetailsElement";
 import { Divider } from "@/components/ui/primitive";
 import { useBasicDetails } from "@/hooks/useBasicDetails";
-import FlowTokens from "@/components/flowscan/FlowTokens";
 import { BalanceBlock } from "@/components/ui/account-details";
 import Odometer from "@/components/flowscan/Odometer";
 
@@ -190,7 +177,7 @@ export default function AccountSidebarDisplay(props: any) {
       </DetailsElement>
 
       <DetailsElement heading={"QR Code"}>
-        <div className="aspect-square w-5/7 md:w-40 mb-4">
+        <div className="mb-4 aspect-square w-5/7 md:w-40">
           <QRCode
             size={64}
             value={qrData}
@@ -211,14 +198,14 @@ export default function AccountSidebarDisplay(props: any) {
     <div className={"flex flex-row gap-2"}>
       <a
         className={cn(
-          "text-md text-prism-text-muted flex flex-row gap-2 underline",
+          "text-md text-prism-text-muted flex flex-row items-center gap-2 underline",
           "hover:text-white",
         )}
         target={"_blank"}
         href={`https://${network === "testnet" ? "testnet." : ""}flowscan.io/account/${address}`}
       >
         <span>Full Log on Flowscan</span>
-        <ArrowUpRight className={"h-4 w-4"} />
+        <ArrowUpRightSquare className={"h-4.5 w-4.5"} />
       </a>
     </div>
   );

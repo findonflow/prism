@@ -55,7 +55,7 @@ export function TypeH3(props: TextProps) {
   return (
     <h3
       className={cn(
-        "text-md text-center font-bold",
+        "text-md text-left font-bold",
         "tracking-tight text-balance", // tight interline space and balanced wrap
         "scroll-m-6", // add space when navigating to this header
         className,
@@ -98,4 +98,22 @@ export function TypeLabel(props: TextProps) {
   const { children, className } = props;
 
   return <span className={cn("text-sm text-prism-text-muted", className)}>{children}</span>;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function TypeSubsection(props: TextProps){
+  const { children, className } = props;
+
+  return (
+    <h3
+      className={cn(
+        "text-xl text-left font-light text-prism-text-muted",
+        "tracking-tight text-balance", // tight interline space and balanced wrap
+        "scroll-m-6", // add space when navigating to this header
+        className,
+      )}
+    >
+      {children}
+    </h3>
+  );
 }

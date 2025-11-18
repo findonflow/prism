@@ -1,11 +1,10 @@
-import JumpingDots from "@/components/flowscan/JumpingDots";
-import { Suspense } from "react";
 import AccountStakingContent from "./content";
+import PageLayout from "@/components/ui/layout";
 
 export default function Page() {
   return (
-    <Suspense fallback={<JumpingDots />}>
+    <PageLayout title={"Staking Info"}>
       <AccountStakingContent />
-    </Suspense>
+    </PageLayout>
   );
 }

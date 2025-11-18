@@ -84,8 +84,6 @@ export default function TokensPageContent() {
 
   return (
     <div className={"flex w-full flex-col gap-4"}>
-      <TypeLabel>Account Tokens:</TypeLabel>
-
       <div
         className={
           "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"
@@ -113,8 +111,8 @@ export default function TokensPageContent() {
       )}
       {haveItemsButHidden && (
         <p className={"text-md opacity-50"}>
-          There are {formatted.length} tokens, but all of them are hidden. Try to
-          relax filter criteria
+          There are {formatted.length} tokens, but all of them are hidden. Try
+          to relax filter criteria
         </p>
       )}
       {filtered.length > 0 && !isLoading && (
@@ -144,9 +142,7 @@ export default function TokensPageContent() {
               animate={{ opacity: 1, scale: 1 }}
               key={"no-tokens-to-show"}
             >
-              <TypeLabel className={"opacity-50"}>
-                No tokens to show.
-              </TypeLabel>
+              <TypeLabel className={"opacity-50"}>No tokens to show.</TypeLabel>
             </motion.div>
           )}
         </AnimatePresence>
@@ -171,12 +167,12 @@ function SingleToken(props: { token: any }) {
       width={20}
       height={20}
       unoptimized
-      className={"h-6 w-6 rounded-full flex-0"}
+      className={"h-6 w-6 flex-0 rounded-full"}
     />
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row flex-0 items-center justify-center bg-prism-level-2 text-prism-text-muted font-bold"
+        "bg-prism-level-2 text-prism-text-muted flex h-full w-full flex-0 flex-row items-center justify-center font-bold"
       }
     >
       ?
@@ -192,12 +188,12 @@ function SingleToken(props: { token: any }) {
       <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
         <div
           className={
-            "flex w-full flex-col items-start justify-start gap-4 lg:items-center flex-row"
+            "flex w-full flex-col flex-row items-start justify-start gap-4 lg:items-center"
           }
         >
           <div
             className={
-              "h-8 w-8 overflow-hidden rounded-full flex flex-col items-center justify-center"
+              "flex h-8 w-8 flex-col items-center justify-center overflow-hidden rounded-full"
             }
           >
             {previewImage}
@@ -205,8 +201,8 @@ function SingleToken(props: { token: any }) {
 
           <div
             className={cn(
-              "flex flex-row flex-wrap items-start justify-start font-bold truncate w-full gap-2 lg:gap-4",
-              unknown && "opacity-50 font-normal",
+              "flex w-full flex-row flex-wrap items-start justify-start gap-2 truncate font-bold lg:gap-4",
+              unknown && "font-normal opacity-50",
             )}
           >
             <span>{displayName}</span>
@@ -216,7 +212,7 @@ function SingleToken(props: { token: any }) {
                   return (
                     <SimpleTag
                       label={tag}
-                      className={"text-gray-500/75 text-xs"}
+                      className={"text-xs text-gray-500/75"}
                     />
                   );
                 })}
@@ -274,17 +270,17 @@ function SingleTokenDetails(props: any) {
         </div>
       )}
 
-      <hr className={"w-full border-gray-400/50 "} />
-      <div className={"flex flex-row gap-2 items-center truncate w-full"}>
+      <hr className={"w-full border-gray-400/50"} />
+      <div className={"flex w-full flex-row items-center gap-2 truncate"}>
         <TypeLabel>Storage path:</TypeLabel>
-        <span className={"text-sm font-bold truncate"}>{token.path}</span>
+        <span className={"truncate text-sm font-bold"}>{token.path}</span>
         <CopyText text={token.path} />
       </div>
 
       {publicPathBalance && (
-        <div className={"flex flex-row gap-2 items-center truncate w-full"}>
+        <div className={"flex w-full flex-row items-center gap-2 truncate"}>
           <TypeLabel>Balance path:</TypeLabel>
-          <span className={"text-sm font-bold truncate"}>
+          <span className={"truncate text-sm font-bold"}>
             {publicPathBalance}
           </span>
           <CopyText text={publicPathBalance} />
@@ -292,23 +288,23 @@ function SingleTokenDetails(props: any) {
       )}
 
       {publicPathReceiver && (
-        <div className={"flex flex-row gap-2 items-center truncate w-full"}>
+        <div className={"flex w-full flex-row items-center gap-2 truncate"}>
           <TypeLabel>Receiver path:</TypeLabel>
-          <span className={"text-sm font-bold truncate"}>
+          <span className={"truncate text-sm font-bold"}>
             {publicPathReceiver}
           </span>
           <CopyText text={publicPathReceiver} />
         </div>
       )}
-      <hr className={"w-full border-gray-400/50 "} />
+      <hr className={"w-full border-gray-400/50"} />
 
       {contractUrl && (
-        <div className={"flex flex-row gap-2 items-center truncate w-full"}>
+        <div className={"flex w-full flex-row items-center gap-2 truncate"}>
           <TypeLabel>Contract:</TypeLabel>
           <a
             href={contractUrl}
             target={"_blank"}
-            className={"text-sm font-bold underline truncate"}
+            className={"truncate text-sm font-bold underline"}
           >
             {contractUrl}
           </a>

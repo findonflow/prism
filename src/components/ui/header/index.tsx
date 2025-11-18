@@ -64,7 +64,7 @@ export default function Header(props: { network: string }) {
       </div>
 
       <div
-        className={"flex h-full w-1/2 flex-row items-stretch justify-end gap-2"}
+        className={"flex h-full w-1/2 flex-row items-stretch justify-end gap-4"}
       >
         <HeaderSearch />
         <HeaderSearchMobile />

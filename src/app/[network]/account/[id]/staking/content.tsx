@@ -11,7 +11,7 @@ import { formatNumberToAccounting } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import type { DelegatorInfo, NodeInfo } from "./types";
-import { TagEpochCounter, TagNodeType } from "@/components/ui/tags";
+import { TagNodeType } from "@/components/ui/tags";
 import { TypeLabel } from "@/components/ui/typography";
 import { motion } from "motion/react";
 
@@ -44,18 +44,7 @@ export default function AccountStakingContent() {
   const showList = !isPending && Boolean(data?.stakingInfo);
 
   return (
-    <div className={"flex w-full flex-col"}>
-      <div
-        className={
-          "mb-4 flex w-full flex-row items-center justify-between gap-2"
-        }
-      >
-        <h2 className={"text-xl font-bold"}>Delegator Info</h2>
-        <TagEpochCounter
-          isPending={isPending}
-          counter={stakingInfo?.epochInfo?.currentEpochCounter}
-        />
-      </div>
+    <div className={"flex w-full flex-col items-start justify-start gap-4"}>
       <div className={"fat-row-column w-full"}>
         {isPending && (
           <motion.div initial={{ y: 10 }} animate={{ y: 0 }}>

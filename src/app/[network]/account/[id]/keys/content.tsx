@@ -17,7 +17,7 @@ import { SearchBar } from "@/components/flowscan/SearchBar";
 export default function AccountKeysContent() {
   const { id } = useParams();
 
-  const { data: resolved, isPending: isResolving } = useAccountResolver(
+  const { data: resolved, isPending } = useAccountResolver(
     id as string,
   );
   const address = resolved?.owner;
@@ -51,7 +51,6 @@ export default function AccountKeysContent() {
 
   return (
     <div className={"flex w-full flex-col gap-4"}>
-      <TypeLabel>Account Keys:</TypeLabel>
       {isLoading && <LoadingBlock title={"Loading account keys "} />}
       {dataReady && (
         <>

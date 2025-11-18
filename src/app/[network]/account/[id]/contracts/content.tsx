@@ -8,7 +8,7 @@ import { Code, ExternalLink, Globe } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import CodeBlock from "@/components/flowscan/CodeBlock";
 import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
-import JumpingDots from "@/components/flowscan/JumpingDots";
+import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import SimpleTag from "@/components/flowscan/SimpleTag";
 import useAccountResolver from "@/hooks/useAccountResolver";
 import { useAccountDetails } from "@/hooks/useAccountDetails";
@@ -35,8 +35,12 @@ export default function AccountContractsContent() {
 
   return (
     <div className={"flex w-full flex-col gap-4"}>
-      <TypeLabel>Account Contracts:</TypeLabel>
-      {isPending || (isResolving && <JumpingDots />)}
+      {(isPending || isResolving) && (
+        <LoadingBlock
+          className={"text-md"}
+          title={"Loading account contracts"}
+        />
+      )}
 
       {!isResolving && !address && (
         <p className={"opacity-50"}>Unable to resolve account address.</p>

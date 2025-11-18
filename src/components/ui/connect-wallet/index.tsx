@@ -152,7 +152,7 @@ function LoggedInWalletButton(props: {
             </div>
           </Link>
           <Link
-            href={`/${network}/account/${user.address}/contracts`}
+            href={`/${network}/account/${user.address}/contracts/deploy`}
             className=""
           >
             <div

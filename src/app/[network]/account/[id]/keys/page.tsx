@@ -1,15 +1,12 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import AccountKeysContent from "@/app/[network]/account/[id]/keys/content";
-import { Suspense } from "react";
-import JumpingDots from "@/components/flowscan/JumpingDots";
+import PageLayout from "@/components/ui/layout";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountKeys() {
   return (
-    <div className={"w-full"}>
-      <Suspense fallback={<JumpingDots />}>
-        <AccountKeysContent />
-      </Suspense>
-    </div>
+    <PageLayout title={"Account Public Keys"}>
+      <AccountKeysContent />
+    </PageLayout>
   );
 }

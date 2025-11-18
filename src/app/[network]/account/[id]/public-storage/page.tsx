@@ -1,15 +1,12 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { Suspense } from "react";
-import JumpingDots from "@/components/flowscan/JumpingDots";
-import AccountPublicStorageContent from "@/app/[network]/account/[id]/public-storage/content";
+import PageLayout from "@/components/ui/layout";
+import AccountStoredItemsContent from "@/app/[network]/account/[id]/stored-items/content";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountPublicStorage() {
   return (
-    <div className={"w-full"}>
-      <Suspense fallback={<JumpingDots />}>
-        <AccountPublicStorageContent />
-      </Suspense>
-    </div>
+    <PageLayout title={"Public Storage"}>
+      <AccountStoredItemsContent />
+    </PageLayout>
   );
 }
