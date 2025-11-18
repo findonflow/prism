@@ -53,7 +53,7 @@ export default function HeaderSearch() {
       type="text"
       value={value}
       className={cn(
-        "h-full w-full border-1 px-4 text-sm outline-0",
+        "h-full w-full border-1 px-4 text-sm outline-0 bg-prism-level-1",
         "focus:text-prism-primary focus:border-current",
         "shadow-prism-primary/50 focus:shadow-[0_0_3rem_0.2rem]",
         "truncate transition-colors duration-300",
