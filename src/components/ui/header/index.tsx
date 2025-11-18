@@ -26,7 +26,7 @@ export default function Header(props: { network: string }) {
   return (
     <div
       className={cn(
-        "bg-prism-level-1 flex w-full flex-row items-center justify-between gap-4",
+        "bg-prism-level-2 flex w-full flex-row items-center justify-between gap-4",
         "border-prism-border border-b",
         "px-4 py-2",
       )}

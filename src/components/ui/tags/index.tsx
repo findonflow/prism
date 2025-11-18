@@ -16,11 +16,11 @@ import {
   VenetianMask,
   Zap,
 } from "lucide-react";
-import {formatNumberToAccounting} from "@/lib/format";
+import { formatNumberToAccounting } from "@/lib/format";
 import SimpleTag from "@/components/flowscan/SimpleTag";
-import {cn} from "@/lib/utils";
-import {getErrorInfo} from "@/consts/error-codes";
-import {NODE_TITLES} from "@/consts/node";
+import { cn } from "@/lib/utils";
+import { getErrorInfo } from "@/consts/error-codes";
+import { NODE_TITLES } from "@/consts/node";
 import JumpingDots from "@/components/flowscan/JumpingDots";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -318,6 +318,10 @@ export function TagEpochCounter(props: {
   const { className } = props;
 
   const label = isPending ? <JumpingDots /> : `Epoch: ${counter}`;
+
+  if (isPending || !counter) {
+    return null;
+  }
 
   return (
     <SimpleTag

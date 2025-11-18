@@ -17,8 +17,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         className={cn(
           "input input-sm input-bordered",
-          "border-prism-border bg-prism-level-3 text-prism-text text-base",
-          "focus:border-prism-interactive focus:bg-prism-level-4",
+          "border-prism-border bg-prism-level-1 text-prism-text text-base",
+          "focus:border-prism-interactive focus:bg-prism-level-2",
           "w-full",
           className
         )}

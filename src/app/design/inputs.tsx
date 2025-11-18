@@ -6,6 +6,7 @@ import { Showcase } from "@/app/design/templates";
 import ConnectWallet from "@/components/ui/connect-wallet";
 import { SearchBar } from "@/components/flowscan/SearchBar";
 import { useState } from "react";
+import Select from "@/components/flowscan/Select";
 
 export default function Inputs() {
   const [filter, setFilter] = useState("");
@@ -32,6 +33,14 @@ export default function Inputs() {
           onChange={setFilter}
           placeholder={"Enter query to filter keys"}
           className={"min-h-[40px]"}
+        />
+      </Showcase>
+
+      <Showcase title={"Select"} className={"w-1/2"}>
+        <Select
+          initialValue={"All"}
+          options={["All", "First", "Second"]}
+          onChange={() => {}}
         />
       </Showcase>
     </div>

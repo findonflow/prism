@@ -40,7 +40,8 @@ export default function Select(props: SelectProps) {
       value={_value}
       onChange={({ target }) => handleChange(target.value)}
       className={clsx(
-        "select bg-background border-border border-px border-solid p-2 [&:focus]:outline-none",
+        "select bg-prism-level-3 border-border border-solid border-1 px-3",
+        "[&:focus]:outline-prism-text-muted",
         "[&:after]:absolute [&:after]:border-border [&:after]:border-1 [&:after]:border-solid [&:after]:w-full [&:after]:h-full [&:after]:top-0 [&:after]:left-0 [&:after]:rounded-md [&:after]:pointer-events-none",
         className
       )}
