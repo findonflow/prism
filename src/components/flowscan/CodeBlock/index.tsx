@@ -122,15 +122,12 @@ export default function CodeBlock(props: CodeBlockProps) {
   // Update code
   useEffect(() => {
     // shoot!
-    console.log("shoot!");
     if (!newCode) {
-      console.log("something is off...");
       return;
     }
 
     if (vars.editor) {
       const cleaned = newCode.replace(/\/\/\#pragma-timestamp-.*\n/, "");
-      console.log({ cleaned });
       vars.editor.setValue(cleaned);
     }
   }, [newCode, vars.editor]);
