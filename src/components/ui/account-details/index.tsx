@@ -52,7 +52,7 @@ export default function BasicAccountDetails(props: {
   );
 }
 
-function StorageBlock(props: {
+export function StorageBlock(props: {
   title: string;
   size?: number;
   active?: boolean;
@@ -83,13 +83,10 @@ export function BalanceBlock(props: { title: string; balance?: string }) {
     <div
       className={cn(
         "flex w-full flex-row items-center gap-1",
-        "justify-between md:flex-col md:items-start",
+        "justify-between md:flex-row md:items-center md:flex-wrap",
       )}
     >
-      <div className={cn("flex flex-row items-center gap-2")}>
-        <Wallet className={"h-4 w-4"} />
-        <TypeLabel>{title}:</TypeLabel>
-      </div>
+      <TypeLabel className={"text-prism-text-muted text-md"}>{title}:</TypeLabel>
       <FlowTokens
         animated
         digits={4}

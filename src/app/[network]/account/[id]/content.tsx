@@ -49,7 +49,7 @@ function AccountCoa(props: { address?: string | null }) {
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeH3>Cadence Owned Account (COA):</TypeH3>
+      <TypeLabel>Cadence Owned Account (COA):</TypeLabel>
       {isPending && <LoadingBlock title={`Loading coa for ${address} ... `} />}
       {!coa && (
         <p className={"opacity-50"}>This account doesn't have COA set up</p>

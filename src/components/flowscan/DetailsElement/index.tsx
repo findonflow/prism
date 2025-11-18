@@ -21,7 +21,7 @@ export default function DetailsElement(props: DetailsElementProps) {
 
   return (
     <div className={cn("flex w-full flex-col items-start gap-1", className)}>
-      <Label text={heading} className={"shrink-0"} />
+      <Label text={heading} className={"shrink-0 text-prism-text-muted"} />
       <div className={cn("flex w-full flex-row items-center text-copy-color", className)}>
         {isLoading && <JumpingDots />}
         {!isLoading && children}

@@ -97,5 +97,5 @@ export function TypeTextBlock(props: TextProps) {
 export function TypeLabel(props: TextProps) {
   const { children, className } = props;
 
-  return <span className={cn("text-sm", className)}>{children}</span>;
+  return <span className={cn("text-sm text-prism-text-muted", className)}>{children}</span>;
 }

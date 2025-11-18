@@ -31,8 +31,8 @@ export function SidebarHorizontalValue(props: {
   );
 }
 
-export function SidebarLongId(props: { text?: any }) {
-  const { text } = props;
+export function SidebarLongId(props: { text?: any; className?: string }) {
+  const { text, className } = props;
 
   if (!text) {
     return null;
@@ -41,7 +41,10 @@ export function SidebarLongId(props: { text?: any }) {
   return (
     <div className="wrap-text flex w-full shrink flex-row gap-1">
       <CopyText className="text-prism-primary mt-px" text={text} />
-      <p className="text-main text-text-color truncate" title={text}>
+      <p
+        className={cn("text-main text-text-color truncate", className)}
+        title={text}
+      >
         {text}
       </p>
     </div>
@@ -149,7 +152,7 @@ export function SidebarContent(props: {
         className={cn(
           "flex h-auto w-auto flex-col items-start justify-start gap-4",
           "preview-scrollbar overflow-y-auto",
-          "@md:h-full @md:w-full",
+          "lg:h-full lg:w-full",
         )}
       >
         {top}
@@ -170,7 +173,7 @@ export function SidebarHorizontalLoading() {
   return (
     <SidebarSection>
       <SidebarHorizontalValue
-        className={"text-bsn-label"}
+        className={"text-prism-text-muted text-sm"}
         label={"Loading"}
         value={
           <div className={"flex flex-row gap-2"}>
@@ -254,7 +257,7 @@ export function SidebarLoadingState(props: { value: string; title: string }) {
           >
             <LoadingBlock
               className={
-                "text-fineprint flex-col-reverse gap-6 text-center font-light"
+                "text-sm flex-col-reverse gap-6 text-center font-light"
               }
             />
           </div>
@@ -275,7 +278,7 @@ export function SidebarLoadingState(props: { value: string; title: string }) {
       title={title}
       verticalContent={verticalContent}
       content={content}
-      className={"bg-bsn-layer-1.5"}
+      className={"bg-prism-level-2"}
     />
   );
 }
@@ -362,7 +365,7 @@ export function SidebarContainer(props: {
       <SidebarContent
         top={
           <div
-            className={"grid h-full w-full grid-cols-1 grid-rows-[auto_1fr]"}
+            className={"grid h-full w-full grid-cols-1 grid-rows-[auto_1fr] @container"}
           >
             <div className={"flex w-full flex-col gap-4"}>
               <div className={"flex flex-row gap-2"}>
@@ -407,7 +410,7 @@ export function SidebarContainer(props: {
       title={title}
       content={finalContent}
       verticalContent={finalVerticalContent}
-      className={"bg-bsn-layer-1.5"}
+      className={"bg-prism-level-2"}
     />
   );
 }

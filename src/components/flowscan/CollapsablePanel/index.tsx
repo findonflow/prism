@@ -1,8 +1,8 @@
 "use client";
 /* --------------------------------------------------------------------------------------------- */
 import React, { CSSProperties, Ref, useEffect, useState } from "react";
-import {cn} from "@/lib/utils"
-import { PanelRightOpen } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArrowLeftFromLine } from "lucide-react";
 /* --------------------------------------------------------------------------------------------- */
 const EVENT_COLLAPSE_PANEL = "ui-event-collapse-panel";
 
@@ -45,7 +45,8 @@ export default function CollapsablePanel(props: CollapsableProps) {
   useEffect(() => {
     // Simple mobile detection
     const isMobile =
-      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+      window.innerWidth <= 768;
     if (isMobile) setOpen(false);
   }, []);
 
@@ -72,11 +73,14 @@ export default function CollapsablePanel(props: CollapsableProps) {
         "sm:w-full sm:text-left",
         "sm:pb-8",
         "md:h-full",
-      )}>
+      )}
+    >
       {!verticalContent && (
         <>
           <span>{verticalTitle}</span>
-          {verticalValue && <span className={"truncate font-bold"}>{verticalValue}</span>}
+          {verticalValue && (
+            <span className={"truncate font-bold"}>{verticalValue}</span>
+          )}
         </>
       )}
       {verticalContent}
@@ -84,7 +88,10 @@ export default function CollapsablePanel(props: CollapsableProps) {
   );
 
   const horizontalNode = props.noTitle ? null : (
-    <h1 key={"details-title"} className={"section-title mb-2 opacity-50 md:mb-4"}>
+    <h1
+      key={"details-title"}
+      className={"section-title mb-2 md:mb-4"}
+    >
       {title}
     </h1>
   );
@@ -102,12 +109,14 @@ export default function CollapsablePanel(props: CollapsableProps) {
       }}
       className={cn(
         "relative flex h-auto w-full flex-col items-start justify-start transition-all",
-        "shrink-0 p-4",
+        "shrink-0 p-8",
         "md:items-between md:h-full md:w-auto",
+        "thin-scrollbar",
         open && "items-start justify-start md:h-full",
-        open && "md:w-[320px]",
+        open && "md:w-[360px]",
         className,
-      )}>
+      )}
+    >
       {/* Collapse controller */}
       <div
         onClick={toggle}
@@ -117,9 +126,11 @@ export default function CollapsablePanel(props: CollapsableProps) {
           "hover:text-bsn-accent hover:opacity-100",
           "rotate-90 lg:rotate-0",
           !open && "-rotate-90",
-          !open && "lg:right-[unset] lg:left-1/2 lg:-translate-x-1/2 lg:rotate-180",
-        )}>
-        <PanelRightOpen className={cn("h-4 w-4")} />
+          !open &&
+            "lg:right-[unset] lg:left-1/2 lg:-translate-x-1/2 lg:rotate-180",
+        )}
+      >
+        <ArrowLeftFromLine className={cn("h-4 w-4 text-prism-text-muted")} />
       </div>
 
       {titleContent}

@@ -1,18 +1,36 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Database,
+  DatabaseZap,
+} from "lucide-react";
 import QRCode from "react-qr-code";
 
 import { TagBigFish } from "@/components/ui/tags";
 import { TypeH2, TypeLabel } from "@/components/ui/typography";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
-import BasicAccountDetails from "@/components/ui/account-details";
 import CopyText from "@/components/flowscan/CopyText";
 import { isFindName } from "@/lib/validate";
 import { cn } from "@/lib/utils";
+import {
+  SidebarContainer,
+  SidebarContent,
+  SidebarLongId,
+  SidebarSection,
+  SidebarVerticalContent,
+} from "@/components/flowscan/Sidebar";
+import DetailsElement from "@/components/flowscan/DetailsElement";
+import { Divider } from "@/components/ui/primitive";
+import { useBasicDetails } from "@/hooks/useBasicDetails";
+import FlowTokens from "@/components/flowscan/FlowTokens";
+import { BalanceBlock } from "@/components/ui/account-details";
+import Odometer from "@/components/flowscan/Odometer";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function AccountSidebarDisplay(props: any) {
+export function AccountSidebarDisplay2(props: any) {
   const [isExpanded, setIsExpanded] = useState(true);
   const { details, id, address, network } = props;
   const { isLoading } = props;
@@ -144,6 +162,119 @@ export default function AccountSidebarDisplay(props: any) {
           <BasicAccountDetails address={address} />
         </div>
       </div>
+    </div>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export default function AccountSidebarDisplay(props: any) {
+  const { details, id, address, network } = props;
+  const { isLoading } = props;
+
+  const title = "Account";
+  const isFind = isFindName(id as string);
+  const verticalLabel = isFind ? `${id}.find` : id;
+  const showFish = !isLoading && details && Number(details?.balance) > 10000;
+  const qrData = `https://prism.flowscan.io/${network}/account/${id}`;
+
+  const top = (
+    <>
+      {isFind && (
+        <DetailsElement heading={".find name"}>
+          <SidebarLongId text={id} className={"font-bold"} />
+        </DetailsElement>
+      )}
+
+      <DetailsElement heading={"Address"}>
+        <SidebarLongId text={address} className={"font-bold"} />
+      </DetailsElement>
+
+      <DetailsElement heading={"QR Code"}>
+        <div className="aspect-square w-5/7 md:w-40 mb-4">
+          <QRCode
+            size={64}
+            value={qrData}
+            viewBox="0 0 256 256"
+            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+          />
+        </div>
+      </DetailsElement>
+
+      <Divider />
+
+      <BasicAccountDetails address={address} />
+      <Divider />
+    </>
+  );
+
+  const bottom = (
+    <div className={"flex flex-row gap-2"}>
+      <a
+        className={cn(
+          "text-md text-prism-text-muted flex flex-row gap-2 underline",
+          "hover:text-white",
+        )}
+        target={"_blank"}
+        href={`https://${network === "testnet" ? "testnet." : ""}flowscan.io/account/${address}`}
+      >
+        <span>Full Log on Flowscan</span>
+        <ArrowUpRight className={"h-4 w-4"} />
+      </a>
+    </div>
+  );
+
+  const verticalContent = (
+    <SidebarVerticalContent title={title} value={verticalLabel} />
+  );
+
+  return (
+    <SidebarContainer
+      title={title}
+      value={id}
+      content={<SidebarContent top={top} bottom={bottom} />}
+      verticalContent={verticalContent}
+      isPending={isLoading}
+      itemMissing={false}
+      idLabel={"Account"}
+    />
+  );
+}
+
+export function StorageBlock(props: { used?: number; capacity?: number }) {
+  const { used, capacity } = props;
+
+  return (
+    <div
+      className={cn("flex w-full flex-row items-center justify-between gap-1")}
+    >
+      <TypeLabel className={"text-md text-prism-text-muted"}>
+        Storage:
+      </TypeLabel>
+      <div className={"flex flex-row items-center justify-start gap-1"}>
+        <Odometer value={used} type={"storage"} className={"font-bold"} />
+        <span>/</span>
+        <Odometer value={capacity} type={"storage"} className={"font-bold"} />
+      </div>
+    </div>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function BasicAccountDetails(props: { address?: string | null }) {
+  const { address } = props;
+
+  const { data, isLoading, error } = useBasicDetails(address);
+
+  const showData = !isLoading && Boolean(data);
+  if (!address) {
+    return null;
+  }
+
+  return (
+    <div className={"my-4 flex w-full flex-col space-y-4 overflow-hidden"}>
+      <BalanceBlock title={"Balance"} balance={data?.balance} />
+      <BalanceBlock title={"Available Balance"} balance={data?.balance} />
+      <StorageBlock used={data?.storageUsed} capacity={data?.storageCapacity} />
     </div>
   );
 }
