@@ -18,6 +18,7 @@ interface ButtonProps {
   onClick?: () => void;
   title?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -40,13 +41,14 @@ export function Button(props: ButtonProps) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 export function BigButton(props: ButtonProps) {
   const { onClick, title, className } = props;
-  const { children } = props;
+  const { children, disabled } = props;
 
   return (
     <button
       title={title || ""}
       onClick={onClick}
       type={"button"}
+      disabled={disabled}
       className={cn(buttonClasses, "p-3", className)}
     >
       {children}

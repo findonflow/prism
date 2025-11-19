@@ -26,8 +26,10 @@ export function FilePicker(props: {
   useFile: (code: string) => void;
   disabled?: boolean;
   title?: string;
+  accept?: string;
 }) {
   const { useFile, disabled, title } = props;
+  const { accept } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>("");
   const [code, setCode] = useState("");
@@ -55,6 +57,7 @@ export function FilePicker(props: {
         id="file"
         type="file"
         className="sr-only"
+        accept={accept}
         onChange={(e) => setFileName(e.target.files?.[0]?.name ?? "")}
       />
 
@@ -88,7 +91,11 @@ export function FilePicker(props: {
           <RefreshCcw className={"h-5 w-5"} />
         </BigButton>
       )}
-      {fileName && <TypeFineprint className={"text-prism-primary"}>Selected: {fileName}</TypeFineprint>}
+      {fileName && (
+        <TypeFineprint className={"text-prism-primary"}>
+          Selected: {fileName}
+        </TypeFineprint>
+      )}
     </div>
   );
 }
