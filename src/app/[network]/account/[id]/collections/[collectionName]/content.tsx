@@ -33,7 +33,7 @@ export default function CollectionPathContent() {
     parseInt(offset) + parseInt(limit),
   );
 
-  console.log({collectionDetails})
+  console.log({ collectionDetails });
 
   if (!address || !collectionName)
     return <div>Please provide a valid account identifier.</div>;
@@ -57,14 +57,16 @@ export default function CollectionPathContent() {
       )}
       <div className="mt-4 grid w-full grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
         {fetchingItems && <LoadingBlock title="Loading Items" />}
-        {itemsList?.map((token: any, i: number) => (
-          <Link
-            href={`/${network}/account/${id}/collections/${collectionName}/${token.tokenId}`}
-            className="truncate underline"
-          >
-            <NftCard token={token} key={token.tokenId} />
-          </Link>
-        ))}
+        {itemsList?.map((token: any, i: number) => {
+          return (
+            <Link
+              href={`/${network}/account/${id}/collections/${collectionName}/${token.id || token.tokenId}`}
+              className="truncate underline"
+            >
+              <NftCard token={token} key={token.tokenId} />
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

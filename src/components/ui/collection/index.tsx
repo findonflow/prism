@@ -22,7 +22,7 @@ export function NftCard(props: { token: any }) {
 
   return (
     <div
-      className="shadow-subtle bg-prism-level-3 hover:bg-prism-level-4 h-full overflow-hidden rounded-xs"
+      className="shadow-subtle bg-prism-level-3 hover:bg-prism-level-4 h-full overflow-hidden rounded-xs truncate"
       key={`${nftId}-${collectionName}`}
     >
       <div className="bg relative mx-auto min-h-[200px] w-full overflow-hidden">
@@ -32,13 +32,13 @@ export function NftCard(props: { token: any }) {
           dimension={"width"}
         />
       </div>
-      <div className="flex flex-col gap-2 p-4">
+      <div className="flex flex-col gap-2 p-4 truncate">
         <a
           href={`/${network}/account/${id}/collections/${storagePath}/${nftId}`}
           className={"underline"}
           target={"_blank"}
         >
-          <p className="text-main text-text-color font-bold">{token.name}</p>
+          <p className="text-main text-text-color font-bold truncate">{token.name}</p>
         </a>
 
         <div className="flex flex-col gap-1">
@@ -129,24 +129,29 @@ export function CollectionDetailsHeader(props: {
             </div>
           </div>
 
-          <TypeP className={"mb-4 text-balance"}>
+          <TypeP className={"mb-4"}>
             {collectionDetails?.display?.description}
           </TypeP>
 
-          <div className={"flex flex-row items-center justify-between"}>
+          <div
+            className={cn(
+              "flex flex-col items-start justify-between gap-4",
+              "lg:flex-row lg:items-center",
+            )}
+          >
             {/*Socials*/}
             <div className={"flex flex-row items-center justify-end gap-2"}>
               {mapExtensions(extraDetails?.extensions)}
             </div>
 
             {/* Other platforms*/}
-            <div className={"flex flex-row items-center justify-end gap-2"}>
+            <div className={"grid grid-cols-1 items-center justify-end gap-4 w-full lg:w-auto lg:grid-cols-2"}>
               {contractName && (
                 <a
                   target={"_blank"}
                   title={`Trade ${contractName} on Flowverse`}
                   href={`https://nft.flowverse.co/marketplace/${contractName}`}
-                  className={cn(buttonClasses, hoverClasses, "self-stretch")}
+                  className={cn(buttonClasses, hoverClasses, "py-3 text-center")}
                 >
                   Trade on Flowverse
                 </a>
@@ -155,7 +160,7 @@ export function CollectionDetailsHeader(props: {
                 target={"_blank"}
                 title={`Trade ${name} on Flowty`}
                 href={`https://www.flowty.io/collection/${contractAddress}/${contractName}`}
-                className={cn(buttonClasses, hoverClasses, "py-2")}
+                className={cn(buttonClasses, hoverClasses, "py-3 text-center")}
               >
                 Trade on Flowty
               </a>
@@ -177,7 +182,9 @@ const socials: Record<string, ReactNode> = {
   discord: <Gamepad className={"h-4 w-4"} />,
 };
 
-function mapExtensions(extraDetails: NFTCollection): Array<ReactNode> | null {
+export function mapExtensions(
+  extraDetails: NFTCollection,
+): Array<ReactNode> | null {
   if (!extraDetails) {
     return null;
   }
