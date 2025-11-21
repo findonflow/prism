@@ -4,18 +4,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { NumberOfItems } from "../tags";
 import { useParams } from "next/navigation";
-import { TypeP } from "@/components/ui/typography";
+import { TypeH1, TypeP } from "@/components/ui/typography";
+import { Panel } from "@/components/ui/primitive";
+import { useCollectionRegistry } from "@/hooks/useCollectionDetails";
+import { ReactNode } from "react";
+import { Gamepad, Globe, Twitter } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { buttonClasses, hoverClasses } from "@/components/ui/button";
+import { withPrefix } from "@/lib/validate";
 
 export function NftCard(props: { token: any }) {
   const { token } = props;
   const { network, id, collectionName } = useParams();
   const nftId = token.id;
 
-  const {storagePath} = token;
+  const { storagePath } = token;
 
   return (
     <div
-      className="shadow-subtle h-full overflow-hidden rounded-xs bg-prism-level-3 hover:bg-prism-level-4"
+      className="shadow-subtle bg-prism-level-3 hover:bg-prism-level-4 h-full overflow-hidden rounded-xs"
       key={`${nftId}-${collectionName}`}
     >
       <div className="bg relative mx-auto min-h-[200px] w-full overflow-hidden">
@@ -58,59 +65,140 @@ export function CollectionDetailsHeader(props: {
   collectionDetails: NFTCollection;
 }) {
   const { collectionDetails } = props;
-  console.log(collectionDetails);
+  const { data: registry, isPending: loadingRegistry } =
+    useCollectionRegistry();
+
+  const extraDetails = registry?.tokenByPath[collectionDetails?.path];
+  const logoUrl =
+    extraDetails?.logoURI || collectionDetails?.display?.squareImage || "/";
+
   const previewImage = collectionDetails?.display?.squareImage ? (
     <Image
       unoptimized
       width={20}
       height={20}
-      src={collectionDetails?.display.squareImage.file.url || "/"}
+      src={logoUrl}
       alt={"name"}
-      className={"h-full w-full"}
+      className={"bg-prism-level-2 h-full w-full"}
     />
   ) : (
     <div
       className={
-        "flex h-full w-full flex-row items-center justify-center bg-prism-level-2 font-bold text-prism-text-muted"
+        "bg-prism-level-2 text-prism-text-muted flex h-full w-full flex-row items-center justify-center font-bold"
       }
     >
       ?
     </div>
   );
-
   const name = extractCollectionName(collectionDetails);
-  return (
-    <div className="flex w-full flex-row items-start justify-between">
-      <div className="flex flex-col gap-3">
-        <div
-          className={"flex w-full flex-row items-center justify-start gap-4"}
-        >
-          <div
-            className={
-              "flex h-8 w-8 flex-col items-center justify-center overflow-hidden rounded-full"
-            }
-          >
-            {previewImage}
-          </div>
 
-          <div className={"flex flex-col"}>
+  const parts = collectionDetails?.type?.typeID?.split(".") || [];
+  const contractAddress = parts ? withPrefix(parts[1]) : null;
+  const contractName = parts ? withPrefix(parts[2]) : null;
+
+  return (
+    <Panel>
+      <div className="flex w-full flex-row items-start justify-between">
+        <div className="flex w-full flex-col gap-3">
+          <div
+            className={"flex w-full flex-row items-center justify-start gap-4"}
+          >
             <div
               className={
-                "flex w-full flex-col flex-wrap items-start justify-start truncate font-bold"
+                "flex h-16 w-16 flex-none flex-col items-center justify-center overflow-hidden rounded-full"
               }
             >
-              <span>{name}</span>
-              <p className={"text-sm font-normal"}>{collectionDetails?.path}</p>
+              {previewImage}
+            </div>
+
+            <div className={"my-4 flex w-full flex-col truncate"}>
+              <div
+                className={
+                  "flex w-full flex-col flex-wrap items-start justify-start truncate font-bold"
+                }
+              >
+                <TypeH1>{name}</TypeH1>
+                <p
+                  className={
+                    "text-md text-prism-primary w-full truncate font-normal"
+                  }
+                >
+                  {collectionDetails?.path}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <TypeP className={"mb-4 text-balance"}>
+            {collectionDetails?.display?.description}
+          </TypeP>
+
+          <div className={"flex flex-row items-center justify-between"}>
+            {/*Socials*/}
+            <div className={"flex flex-row items-center justify-end gap-2"}>
+              {mapExtensions(extraDetails?.extensions)}
+            </div>
+
+            {/* Other platforms*/}
+            <div className={"flex flex-row items-center justify-end gap-2"}>
+              {contractName && (
+                <a
+                  target={"_blank"}
+                  title={`Trade ${contractName} on Flowverse`}
+                  href={`https://nft.flowverse.co/marketplace/${contractName}`}
+                  className={cn(buttonClasses, hoverClasses, "self-stretch")}
+                >
+                  Trade on Flowverse
+                </a>
+              )}
+              <a
+                target={"_blank"}
+                title={`Trade ${name} on Flowty`}
+                href={`https://www.flowty.io/collection/${contractAddress}/${contractName}`}
+                className={cn(buttonClasses, hoverClasses, "py-2")}
+              >
+                Trade on Flowty
+              </a>
             </div>
           </div>
         </div>
-        <TypeP className={"text-balance mb-4"}>
-          {collectionDetails?.display?.description}
-        </TypeP>
+
+        <span className="absolute top-6 right-6 hidden font-bold whitespace-nowrap text-green-500 lg:block">
+          <NumberOfItems items={collectionDetails?.tokenIDs?.length} />
+        </span>
       </div>
-      <span className="font-bold whitespace-nowrap text-green-500">
-        <NumberOfItems items={collectionDetails?.tokenIDs?.length} />
-      </span>
-    </div>
+    </Panel>
   );
+}
+
+const socials: Record<string, ReactNode> = {
+  twitter: <Twitter className={"h-4 w-4"} />,
+  website: <Globe className={"h-4 w-4"} />,
+  discord: <Gamepad className={"h-4 w-4"} />,
+};
+
+function mapExtensions(extraDetails: NFTCollection): Array<ReactNode> | null {
+  if (!extraDetails) {
+    return null;
+  }
+
+  return Object.entries(extraDetails).map(([key, value]) => {
+    const title = key[0].toUpperCase() + key.slice(1);
+    return (
+      <a
+        href={value}
+        key={key}
+        title={title}
+        className={cn(
+          // "text-prism-text-muted bg-prism-level-3 border-prism-text-muted/25 rounded-sm border-1 p-3 transition-colors duration-500",
+          //"hover:text-prism-primary hover:border-current",
+          buttonClasses,
+          hoverClasses,
+          "p-3",
+        )}
+      >
+        {socials[key]}
+      </a>
+    );
+  });
 }

@@ -8,6 +8,7 @@ export const buttonClasses = cn(
   "bg-prism-level-2 border-prism-border",
   "text-sm font-normal",
   "transition-colors duration-150",
+  "cursor-pointer"
 );
 
 export const hoverClasses = "bg-prism-primary/10 hover:bg-prism-primary/25";

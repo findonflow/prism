@@ -34,11 +34,11 @@ export function NumberOfItems(props: { items?: number }) {
       title={`This collection has ${items} item${items > 1 ? "s" : ""} in it`}
       className={cn(
         "flex flex-row items-center justify-end gap-1",
-        items === 0 ? "text-grey-200/10" : "text-blue-500",
+        items === 0 ? "text-grey-200/10" : "text-prism-text-muted",
       )}
     >
       <Package className={"h-4 w-4"} />
-      <b className={"text-copy"}>{items}</b>
+      <b className={"text-sm"}>{items}</b>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import CodeBlock from "@/components/flowscan/CodeBlock";
 import { useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import * as fcl from "@onflow/fcl";
+import { Panel } from "@/components/ui/primitive";
 
 // Transaction to deploy a new contract
 const deployContractTransaction = `
@@ -96,7 +97,7 @@ export default function DeployContractPage() {
 
   return (
     <div className={"w-full space-y-6"}>
-      <div className={"bg-prism-level-2 space-y-6 p-6 text-left"}>
+      <Panel>
         <TypeH1 className={"text-left"}>Deploy a new contract</TypeH1>
         <TypeP>
           Paste or upload your contract code, enter a name, and click "Deploy"
@@ -150,7 +151,7 @@ export default function DeployContractPage() {
             </BigButton>
           </div>
         </div>
-      </div>
+      </Panel>
 
       <CodeBlock
         code={"// Type your code here or import using button above"}

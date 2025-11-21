@@ -1,16 +1,14 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import {
-  getCollectionPathItems,
-  getSingleCollectionDetails,
-  reconstructList,
-} from "@/fetch/get-collections";
+import { getSingleCollectionDetails } from "@/fetch/get-collections";
 import { useQuery } from "@tanstack/react-query";
+import { getCollectionRegistry } from "@/fetch/getTokenRegistry";
+import { useParams } from "next/navigation";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 export function useCollectionDetails(
   address: string | undefined | null,
-  storagePath: string
+  storagePath: string,
 ) {
   const result = useQuery({
     queryKey: [
@@ -23,4 +21,18 @@ export function useCollectionDetails(
   });
 
   return result;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function useCollectionRegistry() {
+  const { network } = useParams();
+
+  return useQuery({
+    queryKey: [`prism-token-registry-${network}`],
+    queryFn: () => {
+      return getCollectionRegistry(network as string);
+    },
+    gcTime: 1000 * 60 * 60,
+  });
 }
