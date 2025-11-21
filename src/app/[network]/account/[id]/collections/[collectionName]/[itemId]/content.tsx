@@ -83,7 +83,7 @@ export default function SingleCollectionItemPage() {
             </div>
           </Panel>
 
-          <div className={"space-y-8"}>
+          <div className={"space-y-8 w-full"}>
             {/* Traits and Royalties*/}
             {data?.traits && <NFTTraits traits={data?.traits} />}
             {data?.royalties && (
