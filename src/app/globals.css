@@ -272,3 +272,16 @@ html {
   color: var(--prism-text-muted);
   font-weight: 200;
 }
+
+@media screen and (max-width: 640px) {
+  .vertical-text {
+    writing-mode: horizontal-tb;
+    rotate: 0deg;
+  }
+
+  .vertical-text .vertical-text-icon svg,
+  .vertical-text .vertical-text-icon img,
+  .vertical-text .vertical-text-icon-container {
+    rotate: 0deg;
+  }
+}

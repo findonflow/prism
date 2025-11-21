@@ -109,8 +109,8 @@ export default function CollapsablePanel(props: CollapsableProps) {
       }}
       className={cn(
         "relative flex h-auto w-full flex-col items-start justify-start transition-all",
-        "shrink-0 p-8",
-        "md:items-between md:h-full md:w-auto",
+        "shrink-0 p-6 pb-3 pt-6",
+        "md:items-between md:h-full md:w-auto md:p-8",
         "thin-scrollbar",
         open && "items-start justify-start md:h-full",
         open && "md:w-[360px]",
