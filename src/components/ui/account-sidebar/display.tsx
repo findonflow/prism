@@ -173,7 +173,7 @@ export default function AccountSidebarDisplay(props: any) {
       )}
 
       <DetailsElement heading={"Address"}>
-        <SidebarLongId text={address} className={"font-bold"} />
+        <SidebarLongId text={address} className={"font-bold"} href={`/${network}/account/${id}`} />
       </DetailsElement>
 
       <DetailsElement heading={"QR Code"}>
