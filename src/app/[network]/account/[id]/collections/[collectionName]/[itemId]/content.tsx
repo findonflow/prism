@@ -1,5 +1,7 @@
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
+import { AnimatePresence, motion } from "motion/react";
+import { variants } from "@/lib/animate";
 import { useParams } from "next/navigation";
 import { useNFTMetadata } from "@/hooks/useNFTMetadata";
 import useAccountResolver from "@/hooks/useAccountResolver";
@@ -10,6 +12,9 @@ import { TypeH2, TypeP, TypeSubsection } from "@/components/ui/typography";
 import { splitCase } from "@/lib/format";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { Panel } from "@/components/ui/primitive";
+import VideoPlayer from "@/components/flowscan/VideoPlayer";
+import TokenImage from "@/components/flowscan/TokenImage";
+import { buttonClasses, hoverClasses } from "@/components/ui/button";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function SingleCollectionItemPage() {
@@ -29,7 +34,8 @@ export default function SingleCollectionItemPage() {
   const loading = isResolving || isPending;
   const showData = !isPending && data;
 
-  console.log({ data });
+  const parts = data?.type?.split(".") || [];
+  const contractAddress = parts[1]
 
   return (
     <div className={"flex flex-col items-start justify-start gap-4"}>
@@ -42,14 +48,15 @@ export default function SingleCollectionItemPage() {
                 "grid w-full grid-cols-1 gap-4 lg:grid-cols-[auto_1fr] lg:gap-6"
               }
             >
-              <div className="relative w-full overflow-hidden py-2.5 lg:w-[24rem]">
+              <div className="relative w-full overflow-hidden py-2.5 lg:w-[24rem] lg:h-[24rem] bg-prism-level-3">
                 <ImageClient
                   src={data?.thumbnail || "/"}
                   alt={data?.tokenId || ""}
                   dimension={"width"}
                 />
               </div>
-              <div className={"flex flex-col items-start space-y-2 text-left"}>
+
+              <div className={"flex flex-col items-start justify-center space-y-3 text-left"}>
                 <a
                   href={`/${network}/account/${id}/collections/${collectionName}`}
                   className={"underline"}
@@ -79,11 +86,44 @@ export default function SingleCollectionItemPage() {
                     {data?.description}
                   </TypeP>
                 )}
+
+                {/* Other platforms*/}
+                <div
+                  className={
+                    "grid w-full grid-cols-1 items-center justify-end gap-4 lg:w-auto lg:grid-cols-2"
+                  }
+                >
+                  {collectionName && (
+                    <a
+                      target={"_blank"}
+                      title={`Trade ${collectionName} on Flowverse`}
+                      href={`https://nft.flowverse.co/marketplace/${collectionName}`}
+                      className={cn(
+                        buttonClasses,
+                        hoverClasses,
+                        "py-3 text-center",
+                      )}
+                    >
+                      Trade on Flowverse
+                    </a>
+                  )}
+                  <a
+                    target={"_blank"}
+                    title={`Trade ${collectionName} on Flowty`}
+                    href={`https://www.flowty.io/collection/${contractAddress}/${collectionName}`}
+                    className={cn(buttonClasses, hoverClasses, "py-3 text-center")}
+                  >
+                    Trade on Flowty
+                  </a>
+                </div>
+
+
               </div>
+
             </div>
           </Panel>
 
-          <div className={"space-y-8 w-full"}>
+          <div className={"w-full space-y-8"}>
             {/* Traits and Royalties*/}
             {data?.traits && <NFTTraits traits={data?.traits} />}
             {data?.royalties && (
@@ -106,38 +146,43 @@ function NFTTraits(props: { traits: Array<any> }) {
   if (!traits) return null;
 
   return (
-    <div className={"flex w-full flex-col items-start justify-start space-y-4"}>
-      <TypeSubsection className={"opacity-75"}>Traits</TypeSubsection>
-      <div
-        className={
-          "grid w-full grid-cols-1 gap-3 lg:grid-cols-4 2xl:grid-cols-6"
-        }
+    <div className={cn("w-full space-y-4")}>
+      <h3 className={cn("text-xl font-bold")}>Traits</h3>
+      <motion.div 
+        className={cn("grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3")}
+        variants={variants}
+        initial="hidden"
+        animate="show"
       >
-        {traits?.map((trait, i) => {
-          const name = splitCase(trait.name);
-
-          return (
-            <div
-              className={cn(
-                "bg-prism-level-2 hover:bg-prism-level-3 flex w-full flex-col space-y-1 rounded-sm p-4",
-                "border-prism-border rounded-xs border-1",
-              )}
-              key={trait.name}
-            >
-              <div className={"flex flex-row items-center justify-between"}>
-                <p className={"text-sm capitalize opacity-75"}>{name}</p>
-                <TagTrait rarity={trait.rarity} />
-              </div>
-              <p
-                className={"truncate text-lg font-semibold capitalize"}
-                title={trait.value}
+        <AnimatePresence>
+          {traits.map((trait, index) => {
+            const name = trait.name.replace(/([A-Z])/g, " $1").trim();
+            return (
+              <motion.div
+                variants={variants}
+                key={`${trait.name}-${index}`}
+                className={cn(
+                  "bg-prism-level-2 hover:bg-prism-level-3 flex w-full flex-col space-y-1 rounded-sm p-4",
+                  "border-prism-border rounded-xs border-1",
+                )}
               >
-                {trait.value}
-              </p>
-            </div>
-          );
-        })}
-      </div>
+                <div className={"flex flex-row items-center justify-between"}>
+                  <p className={"text-sm capitalize opacity-75"}>{name}</p>
+                  <TagTrait rarity={trait.rarity} />
+                </div>
+                <p
+                  className={"truncate text-lg font-semibold capitalize"}
+                  title={trait.value}
+                >
+                  {typeof trait.value === "boolean"
+                    ? trait.value.toString()
+                    : trait.value}
+                </p>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
@@ -241,24 +286,47 @@ export function NFTMedias(props: { medias: Array<any> }) {
     return null;
   }
 
+  const images =
+    medias?.filter((item) => item.contentType?.includes("image")) || [];
+  const videos =
+    medias?.filter((item) => item.contentType?.includes("video")) || [];
+
   return (
     <div className={"flex w-full flex-col items-start justify-start space-y-2"}>
-      <TypeSubsection className={"opacity-75"}>Medias</TypeSubsection>
-
       <div className={"flex w-full flex-col items-start justify-start gap-px"}>
-        {medias?.map((media: any) => {
-          return (
-            <div
-              className={
-                "bg-prism-level-2 flex w-full flex-row items-center justify-start gap-2 p-4"
-              }
-            >
-              <a href={media.url} className={"underline"}>
-                {media.url}
-              </a>
-            </div>
-          );
-        })}
+        <TypeSubsection className={"opacity-75"}>Media: Videos</TypeSubsection>
+        <div
+          className={cn(
+            "items-top grid grid-cols-1 justify-start gap-2",
+            "lg:grid-cols-3",
+          )}
+        >
+          {videos.map((video) => {
+            return <VideoPlayer src={video.uri} key={video.uri} />;
+          })}
+        </div>
+
+        <TypeSubsection className={"opacity-75"}>Media: Images</TypeSubsection>
+        <div
+          className={cn(
+            "items-top grid grid-cols-2 justify-start gap-2",
+            "lg:flex lg:flex-wrap",
+          )}
+        >
+          {images.map(({ uri = "" }) => {
+            return (
+              <div
+                key={uri}
+                className={cn(
+                  "relative h-[45vw] w-full",
+                  "lg:h-48 lg:w-auto",
+                )}
+              >
+                <TokenImage src={uri} alt={uri} />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
