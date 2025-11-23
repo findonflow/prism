@@ -12,6 +12,7 @@ import { Gamepad, Globe, Instagram, Twitter } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonClasses, hoverClasses } from "@/components/ui/button";
 import { withPrefix } from "@/lib/validate";
+import { FlowtyLogo, FlowverseLogo } from "@/components/ui/icons";
 
 export function NftCard(props: { token: any }) {
   const { token } = props;
@@ -160,19 +161,25 @@ export function CollectionDetailsHeader(props: {
                   className={cn(
                     buttonClasses,
                     hoverClasses,
-                    "py-3 text-center",
+                    "flex flex-row items-center gap-2 py-3 text-center",
                   )}
                 >
-                  Trade on Flowverse
+                  <FlowverseLogo />
+                  <span>Trade on Flowverse</span>
                 </a>
               )}
               <a
                 target={"_blank"}
                 title={`Trade ${name} on Flowty`}
                 href={`https://www.flowty.io/collection/${contractAddress}/${contractName}`}
-                className={cn(buttonClasses, hoverClasses, "py-3 text-center")}
+                className={cn(
+                  buttonClasses,
+                  hoverClasses,
+                  "flex flex-row items-center gap-2 py-3 text-center",
+                )}
               >
-                Trade on Flowty
+                <FlowtyLogo className={"h-5 w-5 rounded-full"} />
+                <span>Trade on Flowty</span>
               </a>
             </div>
           </div>
