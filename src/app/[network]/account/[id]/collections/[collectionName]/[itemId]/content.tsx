@@ -8,13 +8,21 @@ import useAccountResolver from "@/hooks/useAccountResolver";
 import ImageClient from "@/components/flowscan/ImageClient";
 import SimpleTag from "@/components/flowscan/SimpleTag";
 import { cn } from "@/lib/utils";
-import { TypeH2, TypeP, TypeSubsection } from "@/components/ui/typography";
+import {
+  TypeH2,
+  TypeLabel,
+  TypeP,
+  TypeSubsection,
+} from "@/components/ui/typography";
 import { splitCase } from "@/lib/format";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { Panel } from "@/components/ui/primitive";
 import VideoPlayer from "@/components/flowscan/VideoPlayer";
 import TokenImage from "@/components/flowscan/TokenImage";
 import { buttonClasses, hoverClasses } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowLeft, Globe } from "lucide-react";
+import { FlowtyLogo, FlowverseLogo } from "@/components/ui/icons";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function SingleCollectionItemPage() {
@@ -35,10 +43,21 @@ export default function SingleCollectionItemPage() {
   const showData = !isPending && data;
 
   const parts = data?.type?.split(".") || [];
-  const contractAddress = parts[1]
+  const contractAddress = parts[1];
+
+  console.log({ data });
 
   return (
-    <div className={"flex flex-col items-start justify-start gap-4"}>
+    <div className={"flex flex-col items-start justify-start space-y-6"}>
+      <Link
+        href={`/${network}/account/${id}/collections/${collectionName}`}
+        className={
+          "text-prism-primary flex flex-row items-center gap-1 underline"
+        }
+      >
+        <ArrowLeft className={"h-4 w-4"} />
+        <span>Back to collection</span>
+      </Link>
       {loading && <LoadingBlock />}
       {showData && (
         <>
@@ -48,7 +67,7 @@ export default function SingleCollectionItemPage() {
                 "grid w-full grid-cols-1 gap-4 lg:grid-cols-[auto_1fr] lg:gap-6"
               }
             >
-              <div className="relative w-full overflow-hidden py-2.5 lg:w-[24rem] lg:h-[24rem] bg-prism-level-3">
+              <div className="bg-prism-level-3 relative w-full overflow-hidden py-2.5 lg:h-[24rem] lg:w-[24rem]">
                 <ImageClient
                   src={data?.thumbnail || "/"}
                   alt={data?.tokenId || ""}
@@ -56,13 +75,21 @@ export default function SingleCollectionItemPage() {
                 />
               </div>
 
-              <div className={"flex flex-col items-start justify-center space-y-3 text-left"}>
-                <a
-                  href={`/${network}/account/${id}/collections/${collectionName}`}
-                  className={"underline"}
-                >
-                  {data?.collectionName}
-                </a>
+              <div
+                className={
+                  "flex flex-col items-start justify-center space-y-3 text-left"
+                }
+              >
+                <div className={"flex flex-row items-center gap-2"}>
+                  <TypeLabel>Collection:</TypeLabel>
+                  <a
+                    href={`/${network}/account/${id}/collections/${collectionName}`}
+                    className={"text-md text-prism-primary underline"}
+                  >
+                    {data?.collectionName}
+                  </a>
+                </div>
+
                 <div className={"flex flex-wrap justify-start gap-2"}>
                   <SimpleTag
                     label={data?.id}
@@ -70,9 +97,9 @@ export default function SingleCollectionItemPage() {
                     className={"text-xs"}
                   />
 
-                  {data?.serial?.number && (
+                  {data?.serial && (
                     <SimpleTag
-                      label={data?.serial?.number}
+                      label={data.serial || data?.serial?.number}
                       category={"Serial"}
                       className={"text-xs"}
                     />
@@ -86,14 +113,19 @@ export default function SingleCollectionItemPage() {
                     {data?.description}
                   </TypeP>
                 )}
+                <SimpleTag
+                  label={data.uuid}
+                  category={"UUID"}
+                  className={"text-prism-text-muted/75 mb-8 text-[11px]"}
+                />
 
                 {/* Other platforms*/}
                 <div
                   className={
-                    "grid w-full grid-cols-1 items-center justify-end gap-4 lg:w-auto lg:grid-cols-2"
+                    "grid w-full grid-cols-1 items-center justify-end gap-4 lg:flex lg:w-full lg:flex-wrap lg:justify-start"
                   }
                 >
-                  {collectionName && (
+                  {data?.externalUrl && (
                     <a
                       target={"_blank"}
                       title={`Trade ${collectionName} on Flowverse`}
@@ -101,25 +133,46 @@ export default function SingleCollectionItemPage() {
                       className={cn(
                         buttonClasses,
                         hoverClasses,
-                        "py-3 text-center",
+                        "flex items-center gap-2 py-3 text-center",
                       )}
                     >
-                      Trade on Flowverse
+                      <Globe className={"h-4 w-4"} />
+                      <span>Website</span>
                     </a>
                   )}
-                  <a
-                    target={"_blank"}
-                    title={`Trade ${collectionName} on Flowty`}
-                    href={`https://www.flowty.io/collection/${contractAddress}/${collectionName}`}
-                    className={cn(buttonClasses, hoverClasses, "py-3 text-center")}
-                  >
-                    Trade on Flowty
-                  </a>
+
+                  <div className={"flex flex-row gap-4"}>
+                    {collectionName && (
+                      <a
+                        target={"_blank"}
+                        title={`Trade ${collectionName} on Flowverse`}
+                        href={`https://nft.flowverse.co/marketplace/${collectionName}`}
+                        className={cn(
+                          buttonClasses,
+                          hoverClasses,
+                          "flex flex-row items-center gap-2 py-3 text-center",
+                        )}
+                      >
+                        <FlowverseLogo />
+                        <span>Trade on Flowverse</span>
+                      </a>
+                    )}
+                    <a
+                      target={"_blank"}
+                      title={`Trade ${collectionName} on Flowty`}
+                      href={`https://www.flowty.io/collection/${contractAddress}/${collectionName}`}
+                      className={cn(
+                        buttonClasses,
+                        hoverClasses,
+                        "flex flex-row items-center gap-2 py-3 text-center",
+                      )}
+                    >
+                      <FlowtyLogo className={"rounded-full w-5 h-5"}/>
+                      <span>Trade on Flowty</span>
+                    </a>
+                  </div>
                 </div>
-
-
               </div>
-
             </div>
           </Panel>
 
@@ -147,8 +200,8 @@ function NFTTraits(props: { traits: Array<any> }) {
 
   return (
     <div className={cn("w-full space-y-4")}>
-      <h3 className={cn("text-xl font-bold")}>Traits</h3>
-      <motion.div 
+      <TypeSubsection>Traits</TypeSubsection>
+      <motion.div
         className={cn("grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3")}
         variants={variants}
         initial="hidden"
@@ -317,10 +370,7 @@ export function NFTMedias(props: { medias: Array<any> }) {
             return (
               <div
                 key={uri}
-                className={cn(
-                  "relative h-[45vw] w-full",
-                  "lg:h-48 lg:w-auto",
-                )}
+                className={cn("relative h-[45vw] w-full", "lg:h-48 lg:w-auto")}
               >
                 <TokenImage src={uri} alt={uri} />
               </div>
