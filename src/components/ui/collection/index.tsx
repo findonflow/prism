@@ -8,7 +8,7 @@ import { TypeH1, TypeP } from "@/components/ui/typography";
 import { Panel } from "@/components/ui/primitive";
 import { useCollectionRegistry } from "@/hooks/useCollectionDetails";
 import { ReactNode } from "react";
-import { Gamepad, Globe, Twitter } from "lucide-react";
+import { Gamepad, Globe, Instagram, Twitter } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonClasses, hoverClasses } from "@/components/ui/button";
 import { withPrefix } from "@/lib/validate";
@@ -22,7 +22,7 @@ export function NftCard(props: { token: any }) {
 
   return (
     <div
-      className="shadow-subtle bg-prism-level-3 hover:bg-prism-level-4 h-full overflow-hidden rounded-xs truncate"
+      className="shadow-subtle bg-prism-level-3 hover:bg-prism-level-4 h-full truncate overflow-hidden rounded-xs"
       key={`${nftId}-${collectionName}`}
     >
       <div className="bg relative mx-auto min-h-[200px] w-full overflow-hidden">
@@ -32,13 +32,15 @@ export function NftCard(props: { token: any }) {
           dimension={"width"}
         />
       </div>
-      <div className="flex flex-col gap-2 p-4 truncate">
+      <div className="flex flex-col gap-2 truncate p-4">
         <a
           href={`/${network}/account/${id}/collections/${storagePath}/${nftId}`}
           className={"underline"}
           target={"_blank"}
         >
-          <p className="text-main text-text-color font-bold truncate">{token.name}</p>
+          <p className="text-main text-text-color truncate font-bold">
+            {token.name}
+          </p>
         </a>
 
         <div className="flex flex-col gap-1">
@@ -145,13 +147,21 @@ export function CollectionDetailsHeader(props: {
             </div>
 
             {/* Other platforms*/}
-            <div className={"grid grid-cols-1 items-center justify-end gap-4 w-full lg:w-auto lg:grid-cols-2"}>
+            <div
+              className={
+                "grid w-full grid-cols-1 items-center justify-end gap-4 lg:w-auto lg:grid-cols-2"
+              }
+            >
               {contractName && (
                 <a
                   target={"_blank"}
                   title={`Trade ${contractName} on Flowverse`}
                   href={`https://nft.flowverse.co/marketplace/${contractName}`}
-                  className={cn(buttonClasses, hoverClasses, "py-3 text-center")}
+                  className={cn(
+                    buttonClasses,
+                    hoverClasses,
+                    "py-3 text-center",
+                  )}
                 >
                   Trade on Flowverse
                 </a>
@@ -177,6 +187,7 @@ export function CollectionDetailsHeader(props: {
 }
 
 const socials: Record<string, ReactNode> = {
+  instagram: <Instagram className={"h-4 w-4"} />,
   twitter: <Twitter className={"h-4 w-4"} />,
   website: <Globe className={"h-4 w-4"} />,
   discord: <Gamepad className={"h-4 w-4"} />,
