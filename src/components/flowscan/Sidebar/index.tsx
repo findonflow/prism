@@ -10,6 +10,7 @@ import CopyText from "@/components/flowscan/CopyText";
 import SimpleTag from "@/components/flowscan/SimpleTag";
 import { TagNotFound } from "@/components/ui/tags";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 /* --------------------------------------------------------------------------------------------- */
 export function SidebarHorizontalValue(props: {
@@ -31,22 +32,30 @@ export function SidebarHorizontalValue(props: {
   );
 }
 
-export function SidebarLongId(props: { text?: any; className?: string }) {
-  const { text, className } = props;
+export function SidebarLongId(props: {
+  text?: any;
+  className?: string;
+  href?: string;
+}) {
+  const { text, className, href } = props;
 
   if (!text) {
     return null;
   }
 
+  const content = (
+    <p
+      className={cn("text-main text-text-color truncate", className)}
+      title={text}
+    >
+      {text}
+    </p>
+  );
+
   return (
     <div className="wrap-text flex w-full shrink flex-row gap-1">
       <CopyText className="text-prism-primary mt-px" text={text} />
-      <p
-        className={cn("text-main text-text-color truncate", className)}
-        title={text}
-      >
-        {text}
-      </p>
+      {href ? <Link href={href} className={"underline"}>{content}</Link> : content}
     </div>
   );
 }
@@ -257,7 +266,7 @@ export function SidebarLoadingState(props: { value: string; title: string }) {
           >
             <LoadingBlock
               className={
-                "text-sm flex-col-reverse gap-6 text-center font-light"
+                "flex-col-reverse gap-6 text-center text-sm font-light"
               }
             />
           </div>
@@ -365,7 +374,9 @@ export function SidebarContainer(props: {
       <SidebarContent
         top={
           <div
-            className={"grid h-full w-full grid-cols-1 grid-rows-[auto_1fr] @container"}
+            className={
+              "@container grid h-full w-full grid-cols-1 grid-rows-[auto_1fr]"
+            }
           >
             <div className={"flex w-full flex-col gap-4"}>
               <div className={"flex flex-row gap-2"}>
