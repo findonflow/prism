@@ -7,7 +7,7 @@ import { TypeH3, TypeLabel } from "@/components/ui/typography";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { useAccountCoa } from "@/hooks/useAccountCoa";
 import CopyText from "@/components/flowscan/CopyText";
-import { Check, Wallet } from "lucide-react";
+import { Blend, Check, Wallet } from "lucide-react";
 import FlowTokens from "@/components/flowscan/FlowTokens";
 import { useHybridCustody } from "@/hooks/useHybridCustody";
 import Image from "next/image";
@@ -16,6 +16,8 @@ import BasicAccountDetails from "@/components/ui/account-details";
 import { useOwnedAccountInfo } from "@/hooks/useOwnedAccountInfo";
 import SimpleTag from "@/components/flowscan/SimpleTag";
 import { cn } from "@/lib/utils";
+import { Entitlement } from "@/components/ui/hybrid-custody";
+import { Divider } from "@/components/ui/primitive";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function LinkedAccountsContent() {
@@ -51,7 +53,7 @@ function AccountCoa(props: { address?: string | null }) {
     <div className={"flex flex-col items-start justify-start gap-2"}>
       <TypeLabel>Cadence Owned Account (COA):</TypeLabel>
       {isPending && <LoadingBlock title={`Loading coa for ${address} ... `} />}
-      {!coa && (
+      {!coa && !isPending && (
         <p className={"opacity-50"}>This account doesn't have COA set up</p>
       )}
       {coa && (
@@ -91,6 +93,8 @@ function AccountHybrid(props: { address?: string | null }) {
   const { address } = props;
   const { network } = useParams();
   const { data, isPending } = useHybridCustody(address);
+
+  console.log({ data });
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
@@ -170,29 +174,57 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
         </div>
       </div>
 
-      <div className={"flex flex-col items-start"}>
+      <div className={"flex w-full flex-col items-start"}>
         <BasicAccountDetails address={account.address || ""} />
       </div>
 
       {/* Supported types */}
-      <div
-        className={
-          "flex w-full flex-col flex-wrap items-start justify-start gap-2 truncate"
-        }
-      >
+      <Divider />
+      <div className="flex w-full flex-col gap-2">
         <TypeLabel>Supported Types:</TypeLabel>
-        <div
-          className={
-            "bg-prism-level-3 flex w-full flex-col gap-1 rounded-xs p-3"
-          }
-        >
-          {account.factorySupportedTypes?.map((supportedType) => {
+        <div className={"flex flex-col items-start gap-2"}>
+          {account.factorySupportedTypes?.map((supportedType, index) => {
+            console.log({ supportedType });
             return (
-              <div className={"text-sm"}>{supportedType?.type?.typeID}</div>
+              <div className={"flex flex-row items-center gap-2"}>
+                {supportedType.authorization?.kind ===
+                  "EntitlementConjunctionSet" && (
+                  <div className={"flex flex-row items-center gap-2"}>
+                    {supportedType.authorization.entitlements.map(
+                      (ent: any, i: number) => {
+                        return <Entitlement entitlement={ent} />;
+                      },
+                    )}
+                  </div>
+                )}
+
+                {supportedType.type?.kind === "Intersection" && (
+                  <SimpleTag
+                    label={<Blend className={"h-4 w-4"} />}
+                    title={`Intersection: ${supportedType.type?.typeID || ""}`}
+                    className={"text-pink-400"}
+                  />
+                )}
+
+                <div className={"flex flex-row items-center gap-2"}>
+                  {supportedType.type?.types?.map(
+                    (t: any, j: number, arr: any) => {
+                      const last = j === arr.length - 1;
+                      return (
+                        <span className={"text-xs"}>
+                          {t.typeID}
+                          {last ? "" : ","}
+                        </span>
+                      );
+                    },
+                  )}
+                </div>
+              </div>
             );
           })}
         </div>
       </div>
+      <Divider />
 
       {/* Filter Details */}
       {account.filterDetails && (
