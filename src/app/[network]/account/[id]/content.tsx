@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { useParams } from "next/navigation";
 import useAccountResolver from "@/hooks/useAccountResolver";
-import { TypeH3, TypeLabel } from "@/components/ui/typography";
+import { TypeH3, TypeLabel, TypeSubsection } from "@/components/ui/typography";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { useAccountCoa } from "@/hooks/useAccountCoa";
 import CopyText from "@/components/flowscan/CopyText";
@@ -51,7 +51,7 @@ function AccountCoa(props: { address?: string | null }) {
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeLabel>Cadence Owned Account (COA):</TypeLabel>
+      <TypeH3>COA</TypeH3>
       {isPending && <LoadingBlock title={`Loading coa for ${address} ... `} />}
       {!coa && !isPending && (
         <p className={"opacity-50"}>This account doesn't have COA set up</p>
@@ -59,9 +59,10 @@ function AccountCoa(props: { address?: string | null }) {
       {coa && (
         <>
           <div
-            className={"flex w-full flex-row items-center justify-start gap-3"}
+            className={"flex w-full flex-row items-center justify-start gap-2"}
           >
-            <TypeH3 className={"truncate"}>{coaPrefixed}</TypeH3>
+            <TypeLabel>Address:</TypeLabel>
+            <p className={"truncate"}>{coaPrefixed}</p>
             <CopyText text={coaPrefixed} className={"text-lg"} />
           </div>
 
@@ -94,65 +95,94 @@ function AccountHybrid(props: { address?: string | null }) {
   const { network } = useParams();
   const { data, isPending } = useHybridCustody(address);
 
-  console.log({ data });
+  console.log({ hc: data });
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeH3>Hybrid Custody</TypeH3>
+      <TypeSubsection className={"capitalize"}>Hybrid Custody</TypeSubsection>
+      <TypeH3>Manager</TypeH3>
       {isPending && (
         <LoadingBlock
           title={`Loading hybrid custody info for ${address} ... `}
         />
       )}
 
+      {!isPending && data?.childAccounts && (
+        <TypeLabel>Child Accounts:</TypeLabel>
+      )}
+      {data?.childAccounts?.length === 0 && (
+        <p className={"mb-4 opacity-50"}>
+          This account doesn't hold <b>ChildAccounts</b>
+        </p>
+      )}
       {data?.childAccounts?.map((childAccount: FlowChildAccount) => {
-        const imgSrc = childAccount?.display?.thumbnail?.url;
         return (
-          <div key={childAccount.address} className={"flex w-full flex-col"}>
-            <TypeLabel>Child Accounts:</TypeLabel>
-            <FatRow
-              id={"child-account"}
-              details={<ChildAccountDetails account={childAccount} />}
-              key={childAccount.address}
-              className={[]}
-            >
-              <div
-                className={
-                  "flex w-full flex-row items-center justify-start gap-2 p-4"
-                }
-              >
-                {imgSrc && (
-                  <Image
-                    unoptimized
-                    src={imgSrc}
-                    alt={childAccount?.display?.name || ""}
-                    width={20}
-                    height={20}
-                    className={"h-auto w-12"}
-                  />
-                )}
-                <div className={"flex flex-col items-start justify-start"}>
-                  <a href={`/${network}/account/${childAccount.address}`}>
-                    <TypeH3 className={"underline"}>
-                      {childAccount.address}
-                    </TypeH3>
-                  </a>
-                  {childAccount?.display && (
-                    <p className={"inline-flex flex-wrap gap-1 text-sm"}>
-                      <span className={"font-bold"}>
-                        {childAccount?.display?.name}
-                      </span>
-                      <span className={"opacity-50"}>|</span>
-                      <span>{childAccount?.display?.description}</span>
-                    </p>
-                  )}
-                </div>
-              </div>
-            </FatRow>
-          </div>
+          <SingleChildAccount
+            childAccount={childAccount}
+            key={childAccount.address}
+          />
+        );
+      })}
+
+      {!isPending && data?.childAccounts && (
+        <TypeLabel>Owned Accounts:</TypeLabel>
+      )}
+      {data?.childAccounts?.length === 0 && (
+        <p className={"opacity-50"}>
+          This account doesn't hold <b>OwnedAccounts</b>
+        </p>
+      )}
+
+      {data?.ownedAccounts?.map((childAccount: FlowChildAccount) => {
+        return (
+          <SingleChildAccount
+            childAccount={childAccount}
+            key={childAccount.address}
+          />
         );
       })}
     </div>
+  );
+}
+
+function SingleChildAccount(props: { childAccount: FlowChildAccount }) {
+  const { childAccount } = props;
+  const imgSrc = childAccount?.display?.thumbnail?.url;
+  const { network } = useParams();
+  return (
+    <FatRow
+      key={childAccount.address}
+      id={"child-account"}
+      details={<ChildAccountDetails account={childAccount} />}
+      className={[]}
+    >
+      <div
+        className={"flex w-full flex-row items-center justify-start gap-2 p-4"}
+      >
+        {imgSrc && (
+          <Image
+            unoptimized
+            src={imgSrc}
+            alt={childAccount?.display?.name || ""}
+            width={20}
+            height={20}
+            className={"h-auto w-12"}
+          />
+        )}
+        <div className={"flex flex-col items-start justify-start"}>
+          <a href={`/${network}/account/${childAccount.address}`}>
+            <TypeH3 className={"underline"}>{childAccount.address}</TypeH3>
+          </a>
+          {childAccount?.display && (
+            <p className={"inline-flex flex-wrap gap-1 text-sm"}>
+              <span className={"font-bold"}>{childAccount?.display?.name}</span>
+              <span className={"opacity-50"}>|</span>
+              <span>{childAccount?.display?.description}</span>
+            </p>
+          )}
+        </div>
+      </div>
+    </FatRow>
   );
 }
 
@@ -266,8 +296,6 @@ function AccountOwnedInfo(props: { address?: string | null }) {
   const { data, isPending } = useOwnedAccountInfo(address);
   const { network } = useParams();
 
-  console.log({ data });
-
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
       <TypeH3>Owned Account</TypeH3>
@@ -277,7 +305,13 @@ function AccountOwnedInfo(props: { address?: string | null }) {
         />
       )}
 
-      {!isPending && data && (
+      {!isPending && !data?.isOwnedAccountExists && (
+        <div className={"opacity-50"}>
+          This account doesn't have <b>OwnedAccount</b> set up
+        </div>
+      )}
+
+      {!isPending && data?.isOwnedAccountExists && (
         <>
           {data.owner && (
             <div className={"flex flex-row items-center justify-start gap-2"}>
