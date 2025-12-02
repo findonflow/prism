@@ -1,21 +1,18 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import { TypeH1, TypeP, TypeTextBlock } from "@/components/ui/typography";
-import Footer from "@/components/ui/footer";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { FAQAccordion } from "@/components/ui/faq";
 import { FlaskConical, Globe, Pyramid } from "lucide-react";
-import SimpleTag from "@/components/flowscan/SimpleTag";
-import type { ReactNode } from "react";
+import Footer from "@/components/ui/footer";
+import { TypeH1, TypeP, TypeTextBlock } from "@/components/ui/typography";
+import NetworkSelector from "@/components/ui/network-selector";
+import { FAQAccordion } from "@/components/ui/faq";
+import { cn } from "@/lib/utils";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function Home() {
   return (
     <div className="flex w-full flex-col items-center text-center">
-
       {/* Anchor */}
-      <div className={"absolute top-0 "} id={"welcome-to-prism"}></div>
-
+      <div className={"absolute top-0"} id={"welcome-to-prism"}></div>
 
       {/* First section - Full height with network selector */}
       <div className={"max-w-5xl px-4 lg:px-6"}>
@@ -82,50 +79,5 @@ export default function Home() {
       {/* Bottom Footer */}
       <Footer />
     </div>
-  );
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-function NetworkSelector(props: {
-  link: string;
-  title: string;
-  copy: string;
-  className?: string;
-  icon: ReactNode;
-}) {
-  const { link, title, copy } = props;
-  const { className, icon } = props;
-
-  return (
-    <Link href={link}>
-      <div
-        className={cn(
-          "flex h-full w-full flex-col items-center justify-center border-1 pt-6 pb-4",
-          "hover:bg-prism-level-2 hover:border-current hover:shadow-[0_0_3rem_0]",
-          "border-current/75 shadow-current/50 shadow-[0_0_0_0]",
-          "md:border-prism-text-muted/40 md:p-6 md:px-8",
-          "group rounded-sm transition-colors duration-500",
-          className,
-        )}
-      >
-        <div className={"flex flex-col items-center justify-center space-y-2"}>
-          <SimpleTag
-            label={title}
-            category={icon}
-            hideArrow
-            className={"text-md px-2"}
-          />
-          <TypeP
-            className={cn(
-              "max-w-[10em] group-hover:text-current",
-              "[.group:not(:hover)_&]:text-prism-text-muted",
-              "transition duration-300",
-            )}
-          >
-            {copy}
-          </TypeP>
-        </div>
-      </div>
-    </Link>
   );
 }

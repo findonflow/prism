@@ -31,7 +31,7 @@ export default function AccountStoredItemsContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
-    id as string
+    id as string,
   );
   const address = resolved?.owner;
 
@@ -86,7 +86,7 @@ export default function AccountStoredItemsContent() {
 
   const itemsList = filteredList?.slice(
     parseInt(offset),
-    parseInt(offset) + parseInt(limit)
+    parseInt(offset) + parseInt(limit),
   );
 
   const isLoading = isPending;
@@ -96,11 +96,9 @@ export default function AccountStoredItemsContent() {
 
   return (
     <div className={"flex w-full flex-col gap-4"}>
-      <TypeLabel>Account Stored Items:</TypeLabel>
-
       <div
         className={
-          "flex w-full flex-row max-md:flex-wrap items-center justify-start gap-4"
+          "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"
         }
       >
         <SearchBar
@@ -117,7 +115,7 @@ export default function AccountStoredItemsContent() {
             setType(val);
             setQueryParams(
               { type: val, refKind: false, limit: false, offset: false },
-              { push: false }
+              { push: false },
             );
             setRefKind("All");
           }}
@@ -141,7 +139,7 @@ export default function AccountStoredItemsContent() {
                   }
                   return typeFilter;
                 })
-                .map((item) => item.type.kind)
+                .map((item) => item.type.kind),
             ),
           ]}
           onChange={(val) => {
@@ -198,9 +196,7 @@ export default function AccountStoredItemsContent() {
               animate={{ opacity: 1, scale: 1 }}
               key={"no-items-to-show"}
             >
-              <TypeLabel className={"opacity-50"}>
-                No items to show.
-              </TypeLabel>
+              <TypeLabel className={"opacity-50"}>No items to show.</TypeLabel>
             </motion.div>
           )}
         </AnimatePresence>
@@ -229,13 +225,13 @@ function StorageInfo(props: {
       <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
         <div
           className={
-            "flex flex-row items-center justify-start gap-2 flex-wrap truncate"
+            "flex flex-row flex-wrap items-center justify-start gap-2 truncate"
           }
         >
           <SimpleTag
             label={"storage"}
             category={<Database className={"h-4 w-4"} />}
-            className={"text-gray-400 text-xs"}
+            className={"text-xs text-gray-400"}
           />
 
           {storageInfo.isResource && (
@@ -270,7 +266,7 @@ function StorageInfo(props: {
             />
           )}
 
-          <p className={"text-sm truncate font-bold"}>{storageInfo.path}</p>
+          <p className={"truncate text-sm font-bold"}>{storageInfo.path}</p>
         </div>
 
         <div>
@@ -290,7 +286,7 @@ function StorageInfo(props: {
                         document?.createElement("div");
                       errorReplacementDiv.className = cn(
                         "flex items-center justify-center text-primary rounded-full aspect-square font-bold text-accent capitalize bg-prism-level-3",
-                        "h-5 w-5 p-2"
+                        "h-5 w-5 p-2",
                       );
                       errorReplacementDiv.innerText =
                         token?.name.split("")[0] ||
@@ -298,7 +294,7 @@ function StorageInfo(props: {
                         "T";
                       e.currentTarget.parentNode?.replaceChild(
                         errorReplacementDiv,
-                        e.currentTarget
+                        e.currentTarget,
                       );
                     }}
                     alt={"token"}
@@ -355,12 +351,12 @@ function StorageInfoDetails(props: {
         )}
         <div
           className={
-            "flex flex-row items-center justify-start gap-2 truncate flex-wrap"
+            "flex flex-row flex-wrap items-center justify-start gap-2 truncate"
           }
         >
           <TypeLabel>Path:</TypeLabel>
-          <div className={"flex flex-row gap-2 flex-wrap w-full"}>
-            <span className={"text-sm font-bold truncate"}>
+          <div className={"flex w-full flex-row flex-wrap gap-2"}>
+            <span className={"truncate text-sm font-bold"}>
               {storageInfo.path}
             </span>
             <CopyText text={storageInfo.path} />
@@ -369,18 +365,18 @@ function StorageInfoDetails(props: {
 
         <div
           className={
-            "flex flex-row items-center justify-start gap-2 truncate flex-wrap"
+            "flex flex-row flex-wrap items-center justify-start gap-2 truncate"
           }
         >
           <TypeLabel>Type Kind:</TypeLabel>
-          <div className={"flex flex-row gap-2 flex-wrap"}>
+          <div className={"flex flex-row flex-wrap gap-2"}>
             <span className={"text-sm font-bold"}>{storageInfo.type.kind}</span>
           </div>
         </div>
 
         <div
           className={
-            "flex flex-row items-center justify-start gap-2 truncate flex-wrap"
+            "flex flex-row flex-wrap items-center justify-start gap-2 truncate"
           }
         >
           <TypeLabel>Type ID:</TypeLabel>
@@ -412,9 +408,9 @@ function StorageInfoResourceDetails(props: {
     <div className={"flex flex-col items-start justify-start gap-2"}>
       {isPending && <LoadingBlock title={`Loading resource data... `} />}
       {!isPending && data && (
-        <div className={"flex flex-col items-start justify-start gap-2 w-full"}>
+        <div className={"flex w-full flex-col items-start justify-start gap-2"}>
           <TypeLabel>Resource Details:</TypeLabel>
-          <div className={"bg-prism-level-2 p-4 w-full"}>
+          <div className={"bg-prism-level-2 w-full p-4"}>
             <JsonView src={data} displaySize={"collapsed"} />
           </div>
         </div>

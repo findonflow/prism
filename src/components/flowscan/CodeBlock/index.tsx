@@ -2,25 +2,16 @@
 "use client";
 /* --------------------------------------------------------------------------------------------- */
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import MonacoEditor, { DiffEditor, Monaco, MonacoDiffEditor } from "@monaco-editor/react";
+import MonacoEditor, {
+  DiffEditor,
+  Monaco,
+  MonacoDiffEditor,
+} from "@monaco-editor/react";
 import configureCadence from "./configureCadence";
 import type { Highlight } from "./types.ts";
+import "./style.css";
 
 /* --------------------------------------------------------------------------------------------- */
-
-interface Props {
-  code: string;
-  diff?: string;
-  showDiff?: boolean;
-  highlights?: Array<Highlight>;
-  setEditorPropLift?: Dispatch<SetStateAction<any>>;
-}
-
-interface Vars {
-  editor: any; // we can fix this by importing monaco-editor package and getting "editor" namespace from it later
-  monaco: Monaco | null;
-}
-
 function addHighlight(monaco: Monaco) {
   return function (highlight: Highlight) {
     const { row, errorMessage } = highlight;
@@ -41,6 +32,23 @@ function addHighlight(monaco: Monaco) {
   };
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
+interface CodeBlockProps {
+  code: string;
+  diff?: string;
+  showDiff?: boolean;
+  highlights?: Array<Highlight>;
+  setEditorPropLift?: Dispatch<SetStateAction<any>>;
+  editable?: boolean;
+  newCode?: string;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+interface Vars {
+  editor: any; // we can fix this by importing monaco-editor package and getting "editor" namespace from it later
+  monaco: Monaco | null;
+}
+
 const makeTheme = (monaco: any, themeName: string) => {
   const baseName = themeName.split("-")[1];
   const base = baseName === "dark" ? "vs-dark" : "vs";
@@ -51,14 +59,15 @@ const makeTheme = (monaco: any, themeName: string) => {
     inherit: true,
     rules: [],
     colors: {
-      "editor.background": "#2e353f",
+      "editor.background": "#0e0e0e",
     },
   });
   monaco.editor.setTheme(editorTheme);
 };
 
-export default function CodeBlock(props: Props) {
+export default function CodeBlock(props: CodeBlockProps) {
   const { code, highlights, setEditorPropLift } = props;
+  const { editable, newCode } = props;
   const { showDiff, diff } = props;
 
   const themeName = "fd-dark";
@@ -68,7 +77,7 @@ export default function CodeBlock(props: Props) {
     monaco: null,
   });
   const options = {
-    readOnly: true,
+    readOnly: !editable,
     minimap: {
       enabled: false,
     },
@@ -109,6 +118,19 @@ export default function CodeBlock(props: Props) {
       makeTheme(vars.monaco, themeName);
     }
   }, [themeName]);
+
+  // Update code
+  useEffect(() => {
+    // shoot!
+    if (!newCode) {
+      return;
+    }
+
+    if (vars.editor) {
+      const cleaned = newCode.replace(/\/\/\#pragma-timestamp-.*\n/, "");
+      vars.editor.setValue(cleaned);
+    }
+  }, [newCode, vars.editor]);
 
   function registerResizeListener(editor: any) {
     const resizeObserver = new ResizeObserver(() => {
@@ -158,16 +180,21 @@ export default function CodeBlock(props: Props) {
 
     // editor.updateOptions({wordWrap: "on"})
     const diffEditor = editor.getOriginalEditor();
-    const editorElement = editor && editor.getContainerDomNode && editor?.getContainerDomNode();
+    const editorElement =
+      editor && editor.getContainerDomNode && editor?.getContainerDomNode();
 
     if (!editorElement) {
       return;
     }
 
-    const lineHeight = diffEditor.getOption(monaco.editor.EditorOption.lineHeight);
+    const lineHeight = diffEditor.getOption(
+      monaco.editor.EditorOption.lineHeight,
+    );
 
-    const originalLineCount = editor.getOriginalEditor().getModel()?.getLineCount() || 0;
-    const diffLineCount = editor.getModifiedEditor().getModel()?.getLineCount() || 0;
+    const originalLineCount =
+      editor.getOriginalEditor().getModel()?.getLineCount() || 0;
+    const diffLineCount =
+      editor.getModifiedEditor().getModel()?.getLineCount() || 0;
 
     const lineCount = Math.max(originalLineCount, diffLineCount);
 
@@ -182,7 +209,8 @@ export default function CodeBlock(props: Props) {
   return (
     <div
       ref={editorContainer}
-      className="flex h-full w-full flex-col items-start gap-4 overflow-hidden bg-blue-dark [&:last-child]:mb-0 [&_section]:min-h-[40vh]">
+      className="flex h-full w-full flex-col items-start gap-4 overflow-hidden [&_section]:min-h-[40vh] [&:last-child]:mb-0"
+    >
       {!editorWithDiff && (
         <MonacoEditor
           language={"cadence"}
@@ -209,7 +237,11 @@ export default function CodeBlock(props: Props) {
           original={diff}
           modified={code}
           onMount={onDiffMount}
-          options={{ ...(options as any), renderSideBySide: false, fontSize: 14 }}
+          options={{
+            ...(options as any),
+            renderSideBySide: false,
+            fontSize: 14,
+          }}
           beforeMount={(monaco: any) => makeTheme(monaco, themeName)}
         />
       )}

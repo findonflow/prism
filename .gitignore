@@ -42,3 +42,8 @@ next-env.d.ts
 
 #editors
 .idea
+
+# flow
+emulator-account.pkey
+imports
+*.pkey

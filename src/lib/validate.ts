@@ -41,7 +41,8 @@ export function isBlockHeight(value: string) {
   return isNumber;
 }
 
-export function isAddress(value: string) {
+export function isAddress(value?: string) {
+  if(!value) return false;
   const validLength = value.startsWith("0x") ? [17, 18] : [15, 16];
   return validLength.includes(value.length) && !value.includes(".");
 }

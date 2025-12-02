@@ -27,7 +27,7 @@ export function SearchBar(props: {
       <Input
         ref={inputRef}
         type="text"
-        className={cn("text-main h-full border-1 px-4 pl-8 text-lg outline-0 min-h-[40px]")}
+        className={cn("text-main h-full border-1 px-4 pl-8 text-lg outline-0 min-h-[40px] bg-prism-level-1")}
         value={value}
         onChange={(e: any) => onChange(e.target.value)}
         placeholder={placeholder}

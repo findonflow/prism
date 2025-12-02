@@ -9,7 +9,8 @@ interface AccountProps {
   params: Promise<{ id: string; network: string }>;
 }
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function AccountDetailsLayout(props: AccountProps) {
+export default async function AccountDetailsLayout(props: AccountProps) {
+  const { id } = await props.params;
   const { children } = props;
 
   return (
@@ -33,7 +34,7 @@ export default function AccountDetailsLayout(props: AccountProps) {
         }
       >
         <Suspense>
-          <AccountSidebar />
+          <AccountSidebar id={id} />
         </Suspense>
       </aside>
 
@@ -49,12 +50,12 @@ export default function AccountDetailsLayout(props: AccountProps) {
         {/* Mobile sidebar content */}
         <div className="border-prism-border bg-prism-level-2 border-b md:hidden">
           <Suspense>
-            <AccountSidebar />
+            <AccountSidebar id={id} />
           </Suspense>
         </div>
 
         {/* Main content */}
-        <div className="p-6 h-full overflow-y-auto">
+        <div className="h-full overflow-y-auto p-6">
           <Suspense>
             <AccountNavigation />
           </Suspense>

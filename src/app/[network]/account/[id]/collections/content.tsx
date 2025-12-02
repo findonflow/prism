@@ -72,7 +72,6 @@ export default function AccountCollectionsContent() {
 
   return (
     <div className={"flex w-full flex-col gap-4"}>
-      <TypeLabel>Account Collections:</TypeLabel>
       <div
         className={
           "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"

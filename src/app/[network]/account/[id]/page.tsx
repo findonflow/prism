@@ -1,9 +1,12 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import LinkedAccountsContent from "@/app/[network]/account/[id]/content";
+import PageLayout from "@/components/ui/layout";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default async function AccountDetailsPage() {
   return (
-    <LinkedAccountsContent />
+    <PageLayout title={"Linked Accounts"}>
+      <LinkedAccountsContent />
+    </PageLayout>
   );
 }

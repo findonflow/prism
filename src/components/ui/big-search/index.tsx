@@ -27,7 +27,7 @@ export default function BigSearch() {
       type="text"
       value={value}
       className={cn(
-        "text-main border-2 px-4 py-6 text-lg outline-0",
+        "text-main border px-4 py-6 text-lg outline-0",
         "focus:text-prism-primary focus:border-current",
         "shadow-prism-primary/50 focus:shadow-[0_0_3rem_0.2rem]",
         "truncate transition-colors duration-300",

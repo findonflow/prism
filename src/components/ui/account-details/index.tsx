@@ -7,8 +7,8 @@ import Odometer from "@/components/flowscan/Odometer";
 import FlowTokens from "@/components/flowscan/FlowTokens";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { useFindLeases } from "@/hooks/useFindLeases";
-import SimpleTag from "@/components/flowscan/SimpleTag";
 import { cn } from "@/lib/utils";
+import { TagDomain } from "@/components/ui/tags/client";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function BasicAccountDetails(props: {
@@ -30,21 +30,25 @@ export default function BasicAccountDetails(props: {
         {isLoading && <LoadingBlock title={"Loading basic details"} />}
         {showData && (
           <>
-            <BalanceBlock title={"Balance"} balance={data?.balance} />
-            <BalanceBlock
-              title={"Available Balance"}
-              balance={data?.availableBalance}
-            />
+            <div className={"flex w-full flex-row justify-start gap-10"}>
+              <BalanceBlock title={"Balance"} balance={data?.balance} />
+              <BalanceBlock
+                title={"Available Balance"}
+                balance={data?.availableBalance}
+              />
+            </div>
 
-            <StorageBlock
-              active
-              size={data?.storageUsed}
-              title={"Storage Used"}
-            />
-            <StorageBlock
-              size={data?.storageCapacity}
-              title={"Storage Available"}
-            />
+            <div className={"flex w-full flex-row justify-start gap-10"}>
+              <StorageBlock
+                active
+                size={data?.storageUsed}
+                title={"Storage Used"}
+              />
+              <StorageBlock
+                size={data?.storageCapacity}
+                title={"Storage Available"}
+              />
+            </div>
           </>
         )}
       </div>
@@ -52,7 +56,7 @@ export default function BasicAccountDetails(props: {
   );
 }
 
-function StorageBlock(props: {
+export function StorageBlock(props: {
   title: string;
   size?: number;
   active?: boolean;
@@ -61,7 +65,7 @@ function StorageBlock(props: {
   return (
     <div
       className={cn(
-        "flex w-full flex-row items-center gap-1",
+        "flex flex-row items-center gap-1",
         "justify-between md:flex-col md:items-start",
       )}
     >
@@ -82,14 +86,13 @@ export function BalanceBlock(props: { title: string; balance?: string }) {
   return (
     <div
       className={cn(
-        "flex w-full flex-row items-center gap-1",
-        "justify-between md:flex-col md:items-start",
+        "flex flex-row items-center gap-4",
+        "justify-between md:flex-row md:flex-wrap md:items-center",
       )}
     >
-      <div className={cn("flex flex-row items-center gap-2")}>
-        <Wallet className={"h-4 w-4"} />
-        <TypeLabel>{title}:</TypeLabel>
-      </div>
+      <TypeLabel className={"text-prism-text-muted text-md"}>
+        {title}:
+      </TypeLabel>
       <FlowTokens
         animated
         digits={4}
@@ -137,14 +140,10 @@ export function FindLeases(props: { address?: string | null }) {
             })
             .map((item: FINDLeaseInfo) => {
               return (
-                <SimpleTag
+                <TagDomain
                   key={item.name}
-                  label={
-                    <span>
-                      <b>{item.name}</b>.find
-                    </span>
-                  }
-                  className={"text-prism-primary text-xs"}
+                  name={item.name}
+                  address={item.address}
                 />
               );
             })}

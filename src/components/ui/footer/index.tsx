@@ -18,7 +18,6 @@ export default function Footer() {
         <a href={"https://www.findlabs.io/"} className={"underline"}>
           Find Labs
         </a>
-        .
       </TypeFineprint>
 
       <TypeFineprint
@@ -32,7 +31,6 @@ export default function Footer() {
           <GithubOctaCat className={"fill-white"} />
           <span>Prism on Github</span>
         </a>
-        .
       </TypeFineprint>
     </footer>
   );

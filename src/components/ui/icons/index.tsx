@@ -8,7 +8,7 @@ export function GithubOctaCat(props: { className?: string }) {
       viewBox="0 0 24 24"
       version="1.1"
       data-view-component="true"
-      className={cn("w-4 h-4 aspect-square", className)}
+      className={cn("aspect-square h-4 w-4", className)}
     >
       <path d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.127-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.663 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.432 0-1.196.426-2.186 1.128-2.956-.111-.275-.496-1.402.11-2.915 0 0 .921-.288 3.024 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.513.221 2.64.111 2.915.701.77 1.127 1.747 1.127 2.956 0 4.222-2.571 5.157-5.019 5.432.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"></path>
     </svg>
@@ -51,5 +51,63 @@ export default function FlowIcon(props: { className?: string }) {
         ></path>
       </svg>
     </div>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function FlowverseLogo(props: { className?: string }) {
+  const { className } = props;
+
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("aspect-square h-4 w-4", className)}
+    >
+      <circle cx="10" cy="10" r="10" fill="url(#paint0_linear_2077_8753)" />
+      <path
+        d="M14.9339 5.43327H9.93115V14.5667H5.06609V9.93116H13.7865"
+        stroke="#385D57"
+      />
+      <defs>
+        <linearGradient
+          id="paint0_linear_2077_8753"
+          x1="16.8852"
+          y1="0.933164"
+          x2="3.3456"
+          y2="19.6591"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#5FDFD2" />
+          <stop offset="1" stop-color="#6ADEBE" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function FlowtyLogo(props: { className?: string }) {
+  const { className } = props;
+
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("aspect-square h-4 w-4", className)}
+    >
+      <rect width="20" height="20" fill="#031022" />
+      <path
+        d="M10.9459 6.74182H13.7062L14.2714 4.50162C14.2874 4.43845 14.2396 4.37715 14.1745 4.37715H10.5738C9.44228 4.37715 8.45184 5.13714 8.15898 6.2301L5.7309 15.2918C5.71389 15.3553 5.76174 15.4177 5.8275 15.4177H8.33073L9.41481 11.3718H11.1902L11.8473 8.91931H9.97877L10.4629 7.11241C10.5215 6.89382 10.7196 6.74182 10.9459 6.74182Z"
+        fill="#F6F8F9"
+      />
+      <circle cx="10.8491" cy="14.5328" r="1.09005" fill="#28D6A4" />
+    </svg>
   );
 }
