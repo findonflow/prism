@@ -140,6 +140,9 @@ interface ValueType {
   typeID?: string | null;
   fields?: FieldType | null;
   initializers?: Array<any> | null;
+  types?: Array<{
+    ValueType;
+  }>;
 }
 
 interface FieldType {

@@ -30,21 +30,25 @@ export default function BasicAccountDetails(props: {
         {isLoading && <LoadingBlock title={"Loading basic details"} />}
         {showData && (
           <>
-            <BalanceBlock title={"Balance"} balance={data?.balance} />
-            <BalanceBlock
-              title={"Available Balance"}
-              balance={data?.availableBalance}
-            />
+            <div className={"flex w-full flex-row justify-start gap-10"}>
+              <BalanceBlock title={"Balance"} balance={data?.balance} />
+              <BalanceBlock
+                title={"Available Balance"}
+                balance={data?.availableBalance}
+              />
+            </div>
 
-            <StorageBlock
-              active
-              size={data?.storageUsed}
-              title={"Storage Used"}
-            />
-            <StorageBlock
-              size={data?.storageCapacity}
-              title={"Storage Available"}
-            />
+            <div className={"flex w-full flex-row justify-start gap-10"}>
+              <StorageBlock
+                active
+                size={data?.storageUsed}
+                title={"Storage Used"}
+              />
+              <StorageBlock
+                size={data?.storageCapacity}
+                title={"Storage Available"}
+              />
+            </div>
           </>
         )}
       </div>
@@ -61,7 +65,7 @@ export function StorageBlock(props: {
   return (
     <div
       className={cn(
-        "flex w-full flex-row items-center gap-1",
+        "flex flex-row items-center gap-1",
         "justify-between md:flex-col md:items-start",
       )}
     >
@@ -82,11 +86,13 @@ export function BalanceBlock(props: { title: string; balance?: string }) {
   return (
     <div
       className={cn(
-        "flex w-full flex-row items-center gap-1",
-        "justify-between md:flex-row md:items-center md:flex-wrap",
+        "flex flex-row items-center gap-4",
+        "justify-between md:flex-row md:flex-wrap md:items-center",
       )}
     >
-      <TypeLabel className={"text-prism-text-muted text-md"}>{title}:</TypeLabel>
+      <TypeLabel className={"text-prism-text-muted text-md"}>
+        {title}:
+      </TypeLabel>
       <FlowTokens
         animated
         digits={4}

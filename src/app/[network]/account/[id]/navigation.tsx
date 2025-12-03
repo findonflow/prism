@@ -24,7 +24,7 @@ function NavigationLink(props: { to: string; children: ReactNode }) {
     <Link
       href={`${baseUrl}/${to}`}
       className={cn(
-        "bg-prism-level-3 whitespace-nowrap hover:bg-prism-interactive/75 px-4 py-3",
+        "bg-prism-level-3 hover:bg-prism-interactive/75 px-4 py-3 whitespace-nowrap",
         isActive && "bg-prism-interactive hover:bg-prism-interactive",
       )}
     >
@@ -105,7 +105,9 @@ export default function FlatAccountNavigation() {
         <SelectNavigation />
       </div>
       <div
-        className={"mb-6 hidden flex-row flex-nowrap max-md:flex-wrap items-center gap-4 lg:flex"}
+        className={
+          "mb-6 hidden flex-row flex-nowrap items-center gap-4 max-md:flex-wrap lg:flex"
+        }
       >
         <NavigationGroup>
           <NavigationLink to={""}>Linked Accounts</NavigationLink>
