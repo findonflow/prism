@@ -40,7 +40,7 @@ export const HYBRID_CUSTODY = {
 
 export const CAPABILITY_UTILS = {
   mainnet: "0xd8a7e05a7ac670c0",
-  testnet: "0x1055970ee34ef4dc",
+  testnet: "0x294e44e1ec6993c6",
 };
 
 export const LOCKED_FLOW = {
