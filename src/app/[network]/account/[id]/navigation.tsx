@@ -24,7 +24,7 @@ function NavigationLink(props: { to: string; children: ReactNode }) {
     <Link
       href={`${baseUrl}/${to}`}
       className={cn(
-        "bg-prism-level-3 hover:bg-prism-interactive/75 px-4 py-3",
+        "bg-prism-level-3 whitespace-nowrap hover:bg-prism-interactive/75 px-4 py-3",
         isActive && "bg-prism-interactive hover:bg-prism-interactive",
       )}
     >
@@ -47,7 +47,6 @@ function NavigationGroup(props: { children: ReactNode }) {
   );
 }
 
-
 function SelectNavigation() {
   const pathName = usePathname();
   const params = useParams();
@@ -58,14 +57,15 @@ function SelectNavigation() {
 
   // Navigation items mapping: label -> route
   const navigationItems: Record<string, string> = {
-    "Collections": "collections",
-    "Contracts": "contracts",
+    Collections: "collections",
+    Contracts: "contracts",
     "Linked Accounts": "",
     "Public Keys": "keys",
     "Public Storage": "public-storage",
-    "Staking": "staking",
+    Staking: "staking",
     "Stored Items": "stored-items",
-    "Tokens": "tokens",
+    Tokens: "tokens",
+    Storefront: "storefront",
   };
 
   const labels = Object.keys(navigationItems);
@@ -90,7 +90,7 @@ function SelectNavigation() {
 
   return (
     <Select
-      className={"w-full h-[3rem] px-4 mb-6"}
+      className={"mb-6 h-[3rem] w-full px-4"}
       initialValue={getCurrentLabel()}
       options={labels}
       onChange={handleChange}
@@ -105,7 +105,7 @@ export default function FlatAccountNavigation() {
         <SelectNavigation />
       </div>
       <div
-        className={"mb-6 hidden flex-row flex-wrap items-center gap-4 lg:flex"}
+        className={"mb-6 hidden flex-row flex-nowrap max-md:flex-wrap items-center gap-4 lg:flex"}
       >
         <NavigationGroup>
           <NavigationLink to={""}>Linked Accounts</NavigationLink>
@@ -124,6 +124,7 @@ export default function FlatAccountNavigation() {
         <NavigationGroup>
           <NavigationLink to={"keys"}>Public Keys</NavigationLink>
           <NavigationLink to={"contracts"}>Contracts</NavigationLink>
+          <NavigationLink to={"storefront"}>Storefront</NavigationLink>
         </NavigationGroup>
       </div>
     </div>
