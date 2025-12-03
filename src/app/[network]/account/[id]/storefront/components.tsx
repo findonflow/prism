@@ -152,7 +152,7 @@ export function CleanupButtons(props: {
     data?.invalidItems?.filter((item: any) => item.isExpired).length || 0;
   return (
     <div className="ml-auto flex items-center gap-2">
-      {!hasStorefront && (
+      {user && user.loggedIn && user.addr == account && !hasStorefront && (
         <button
           className="mb-6 cursor-pointer rounded-md bg-blue-500/20 px-4 py-2 text-sm font-semibold text-blue-500 hover:bg-blue-500/30 disabled:opacity-50"
           disabled={transactionInProgress}
