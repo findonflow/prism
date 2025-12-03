@@ -210,30 +210,32 @@ export function CleanupButtons(props: {
           {`)`}
         </button>
       )}
-      <button
-        disabled={transactionInProgress}
-        className="mb-6 ml-4 cursor-pointer rounded-md bg-blue-500/20 px-4 py-2 text-sm font-semibold text-blue-500 hover:bg-blue-500/30 disabled:opacity-50"
-        onClick={async () => {
-          const itemCount =
-            data.validItems?.length + data.invalidItems?.length - 1;
-          cleanupExpired(
-            account,
-            "0",
-            `${itemCount}`,
-            setTransactionInProgress,
-            (val) => {
-              setTransactionStatus(val);
-              if (val.status === "Success") {
-                mutate([`prism-account-listings`, account]);
-              }
-            },
-          );
-        }}
-      >
-        Cleanup Expired {`(`}
-        {expiredItemsCount}
-        {`)`}
-      </button>
+      {expiredItemsCount > 0 && (
+        <button
+          disabled={transactionInProgress}
+          className="mb-6 ml-4 cursor-pointer rounded-md bg-blue-500/20 px-4 py-2 text-sm font-semibold text-blue-500 hover:bg-blue-500/30 disabled:opacity-50"
+          onClick={async () => {
+            const itemCount =
+              data.validItems?.length + data.invalidItems?.length - 1;
+            cleanupExpired(
+              account,
+              "0",
+              `${itemCount}`,
+              setTransactionInProgress,
+              (val) => {
+                setTransactionStatus(val);
+                if (val.status === "Success") {
+                  mutate([`prism-account-listings`, account]);
+                }
+              },
+            );
+          }}
+        >
+          Cleanup Expired {`(`}
+          {expiredItemsCount}
+          {`)`}
+        </button>
+      )}
     </div>
   );
 }
