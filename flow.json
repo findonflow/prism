@@ -1,0 +1,105 @@
+{
+  "contracts": {
+    "Counter": {
+      "source": "cadence/contracts/Counter.cdc",
+      "aliases": {
+        "testing": "0000000000000007"
+      }
+    },
+    "FungibleToken": {
+      "aliases": {
+        "testnet": "0x9a0766d93b6608b7",
+        "mainnet": "0xf233dcee88fe0abe",
+        "emulator": "0xee82856bf20e2aa6"
+      }
+    },
+    "NonFungibleToken": {
+      "aliases": {
+        "testnet": "0x631e88ae7f1d7c20",
+        "mainnet": "0x1d7e57aa55817448",
+        "emulator": "0xf8d6e0586b0a20c7"
+      }
+    },
+    "FlowToken": {
+      "aliases": {
+        "testnet": "0x7e60df042a9c0868",
+        "mainnet": "0x1654653399040a61",
+        "emulator": "0x0ae53cb6e3f42a79"
+      }
+    },
+    "MetadataViews": {
+      "aliases": {
+        "testnet": "0x631e88ae7f1d7c20",
+        "mainnet": "0x1d7e57aa55817448",
+        "emulator": "0x631e88ae7f1d7482"
+      }
+    },
+    "ViewResolver": {
+      "aliases": {
+        "testnet": "0x631e88ae7f1d7c20"
+      }
+    },
+    "HybridCustody": {
+      "aliases": {
+        "testnet": "0x294e44e1ec6993c6"
+      }
+    },
+    "CapabilityFactory": {
+      "aliases": {
+        "testnet": "0x294e44e1ec6993c6"
+      }
+    },
+    "CapabilityFilter": {
+      "aliases": {
+        "testnet": "0x294e44e1ec6993c6"
+      }
+    },
+    "CapabilityDelegator": {
+      "aliases": {
+        "testnet": "0x294e44e1ec6993c6"
+      }
+    },
+    "NFTCollectionPublicFactory": {
+      "aliases": {
+        "testnet": "0x294e44e1ec6993c6"
+      }
+    },
+    "NFTProviderAndCollectionFactory": {
+      "aliases": {
+        "testnet": "0x294e44e1ec6993c6"
+      }
+    },
+    "NFTProviderFactory": {
+      "aliases": {
+        "testnet": "0x294e44e1ec6993c6"
+      }
+    },
+    "NFTCollectionFactory": {
+      "aliases": {
+        "testnet": "0x294e44e1ec6993c6"
+      }
+    }
+  },
+  "networks": {
+    "emulator": "127.0.0.1:3569",
+    "mainnet": "access.mainnet.nodes.onflow.org:9000",
+    "testing": "127.0.0.1:3569",
+    "testnet": "access.devnet.nodes.onflow.org:9000"
+  },
+  "accounts": {
+    "emulator-account": {
+      "address": "f8d6e0586b0a20c7",
+      "key": {
+        "type": "file",
+        "location": "emulator-account.pkey"
+      }
+    },
+    "manager": {
+      "address": "ed0f17ed584f5253",
+      "key": {
+        "type": "file",
+        "location": "manager.pkey"
+      }
+    }
+  }
+}
