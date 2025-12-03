@@ -112,7 +112,7 @@ function AccountHybrid(props: { address?: string | null }) {
       )}
       {data?.childAccounts?.length === 0 && (
         <p className={"mb-4 opacity-50"}>
-          This account doesn't hold <b>ChildAccounts</b>
+          This Manager doesn't control any <b>ChildAccounts</b>
         </p>
       )}
       {data?.childAccounts?.map((childAccount: FlowChildAccount) => {
@@ -127,9 +127,9 @@ function AccountHybrid(props: { address?: string | null }) {
       {!isPending && data?.childAccounts && (
         <TypeLabel>Owned Accounts:</TypeLabel>
       )}
-      {data?.childAccounts?.length === 0 && (
+      {data?.ownedAccounts?.length === 0 && (
         <p className={"opacity-50"}>
-          This account doesn't hold <b>OwnedAccounts</b>
+          This Manager doesn't control any <b>OwnedAccounts</b>
         </p>
       )}
 
@@ -295,6 +295,8 @@ function AccountOwnedInfo(props: { address?: string | null }) {
   const { address } = props;
   const { data, isPending } = useOwnedAccountInfo(address);
   const { network } = useParams();
+
+  console.log({parents: data?.parents})
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
