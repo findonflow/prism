@@ -14,7 +14,6 @@ import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import Toggle from "@/components/flowscan/Toggle";
 
 const groupListings = (listings: Listing[] = []): Listing[][] => {
-  console.log("Listings to group:", listings);
   const grouped: Record<string, Listing[]> = listings?.reduce(
     (acc: Record<string, Listing[]>, listing: Listing) => {
       const typeId = listing.details.nftType.typeID;
@@ -71,12 +70,14 @@ export default function ViewAccountListings() {
   }
   return (
     <div className="flex w-full flex-col gap-y-5">
-      <div className="flex w-full items-center justify-between">
-        <Toggle
-          text="Show Invalid Listings"
-          toggleString="showInvalid"
-          tooltipText="Show Ghosted/Expired/Purchased Listings"
-        />
+      <div className="flex w-full flex-wrap items-center justify-between gap-y-5">
+        {Boolean(data?.invalidItems.length) && (
+          <Toggle
+            text="Show Invalid Listings"
+            toggleString="showInvalid"
+            tooltipText="Show Ghosted/Expired/Purchased Listings"
+          />
+        )}
         <CleanupButtons
           data={data}
           user={user}
