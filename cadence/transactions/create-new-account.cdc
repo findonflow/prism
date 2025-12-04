@@ -11,7 +11,7 @@ import "CapabilityFilter"
 import "CapabilityDelegator"
 
 // NOTE: "factoryAddress" and "filterAddress" should point to a preconfigured filter and factory
-transaction(pubKey: String, initialFundingAmount: UFix64, factoryAddress: Address, filterAddress: Address){
+transaction(pubKey: String, initialFundingAmount: UFix64, factoryAddress: Address, filterAddress: Address, publishTo: Address?){
     prepare(parent: auth(Storage, Capabilities, Inbox) &Account){
         let newAccount = Account(payer: parent)
 
@@ -59,7 +59,8 @@ transaction(pubKey: String, initialFundingAmount: UFix64, factoryAddress: Addres
         assert(filter.check(), message: "capability filter is not configured properly")
 
         // Publish to parent
-        ownedRef.publishToParent(parentAddress: parent.address, factory: factory, filter: filter)
+        let parentAddress = publishTo ?? parent.address
+        ownedRef.publishToParent(parentAddress: parentAddress, factory: factory, filter: filter)
 
         // Add delegation to parent account
         // Check HybridCustody.Manager on parent
@@ -79,16 +80,18 @@ transaction(pubKey: String, initialFundingAmount: UFix64, factoryAddress: Addres
             )
         }
 
-        // Claim ChildAccount capability
-        let inboxName = HybridCustody.getChildAccountIdentifier(parent.address)
-        let childCapability = parent.inbox
-            .claim<auth(HybridCustody.Child) &{HybridCustody.AccountPrivate, HybridCustody.AccountPublic, ViewResolver.Resolver}>(
-                inboxName,
-                provider: newAccount.address
-            ) ?? panic("ChildAccount capability is not found")
+        if  publishTo == parent.address {
+            // Claim ChildAccount capability
+            let inboxName = HybridCustody.getChildAccountIdentifier(parent.address)
+            let childCapability = parent.inbox
+                .claim<auth(HybridCustody.Child) &{HybridCustody.AccountPrivate, HybridCustody.AccountPublic, ViewResolver.Resolver}>(
+                    inboxName,
+                    provider: newAccount.address
+                ) ?? panic("ChildAccount capability is not found")
 
-        let managerRef = parent.storage.borrow<auth(HybridCustody.Manage) &HybridCustody.Manager>(from: HybridCustody.ManagerStoragePath)
-            ?? panic("Manager is not found")
-        managerRef.addAccount(cap: childCapability)
+            let managerRef = parent.storage.borrow<auth(HybridCustody.Manage) &HybridCustody.Manager>(from: HybridCustody.ManagerStoragePath)
+                ?? panic("Manager is not found")
+            managerRef.addAccount(cap: childCapability)
+        }
     }
 }

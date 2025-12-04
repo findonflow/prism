@@ -7,7 +7,7 @@ import { TypeH3, TypeLabel, TypeSubsection } from "@/components/ui/typography";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { useAccountCoa } from "@/hooks/useAccountCoa";
 import CopyText from "@/components/flowscan/CopyText";
-import { Blend, Check, Wallet } from "lucide-react";
+import { Blend, Check, MailQuestionMark, Wallet } from "lucide-react";
 import FlowTokens from "@/components/flowscan/FlowTokens";
 import { useHybridCustody } from "@/hooks/useHybridCustody";
 import Image from "next/image";
@@ -18,6 +18,8 @@ import SimpleTag from "@/components/flowscan/SimpleTag";
 import { cn } from "@/lib/utils";
 import { Entitlement } from "@/components/ui/hybrid-custody";
 import { Divider } from "@/components/ui/primitive";
+import { useLoginContext } from "@/fetch/provider";
+import { buttonClasses, hoverClasses } from "@/components/ui/button";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function LinkedAccountsContent() {
@@ -92,10 +94,7 @@ function AccountCoa(props: { address?: string | null }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 function AccountHybrid(props: { address?: string | null }) {
   const { address } = props;
-  const { network } = useParams();
   const { data, isPending } = useHybridCustody(address);
-
-  console.log({ hc: data });
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
@@ -296,7 +295,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
   const { data, isPending } = useOwnedAccountInfo(address);
   const { network } = useParams();
 
-  console.log({parents: data?.parents})
+  console.log({ parents: data?.parents });
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
@@ -337,10 +336,10 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                   <div
                     key={item.address}
                     className={cn(
-                      "bg-prism-level-3 flex w-full flex-col items-center justify-between",
+                      "bg-prism-level-3 flex w-full flex-row items-center justify-between p-4",
                     )}
                   >
-                    <div className="flex w-full flex-row items-center justify-start gap-4 p-4">
+                    <div className="flex flex-row items-center justify-start gap-4">
                       {item.isClaimed && (
                         <SimpleTag
                           label={"Claimed"}
@@ -348,6 +347,16 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                           category={<Check />}
                         />
                       )}
+
+                      {!item.isClaimed && (
+                        <SimpleTag
+                          title={"Parent account hasn't claimed this"}
+                          label={"Not Claimed"}
+                          className={"text-prism-text-muted"}
+                          category={<MailQuestionMark />}
+                        />
+                      )}
+
                       <a
                         href={`/${network}/account/${item.address}`}
                         className={"font-bold underline"}
@@ -355,6 +364,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                         {item.address}
                       </a>
                     </div>
+                    <ClaimAccount address={item.address} />
                   </div>
                 );
               })}
@@ -363,5 +373,30 @@ function AccountOwnedInfo(props: { address?: string | null }) {
         </>
       )}
     </div>
+  );
+}
+
+function ClaimAccount(props: { address?: string | null }) {
+  const { address } = props;
+  const { user } = useLoginContext();
+
+  const canClaim = user?.address === address;
+  const title = canClaim ? "Claim" : "You can't claim this ChildAccount";
+
+  console.log({canClaim, address, user})
+  return (
+    <button
+      disabled={!canClaim}
+      className={cn(
+        buttonClasses,
+        "text-prism-text-muted",
+        "disabled:bg-prism-level-3 disabled:opacity-50",
+        canClaim && hoverClasses,
+        canClaim ? "cursor-pointer" : "cursor-not-allowed",
+      )}
+      title={title}
+    >
+      Claim
+    </button>
   );
 }
