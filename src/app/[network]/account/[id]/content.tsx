@@ -105,7 +105,7 @@ function AccountCoa(props: { address?: string | null }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 function AccountHybrid(props: { address?: string | null }) {
   const { address } = props;
-  const { data, isPending } = useHybridCustody(address);
+  const { data, isPending, refetch } = useHybridCustody(address);
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
@@ -129,6 +129,7 @@ function AccountHybrid(props: { address?: string | null }) {
         return (
           <SingleChildAccount
             childAccount={childAccount}
+            refetch={refetch}
             key={childAccount.address}
           />
         );
@@ -147,6 +148,7 @@ function AccountHybrid(props: { address?: string | null }) {
         return (
           <SingleChildAccount
             childAccount={childAccount}
+            refetch={refetch}
             key={childAccount.address}
           />
         );
@@ -155,8 +157,8 @@ function AccountHybrid(props: { address?: string | null }) {
   );
 }
 
-function SingleChildAccount(props: { childAccount: FlowChildAccount }) {
-  const { childAccount } = props;
+function SingleChildAccount(props: { childAccount: FlowChildAccount; refetch?: () => void }) {
+  const { childAccount, refetch } = props;
   const imgSrc = childAccount?.display?.thumbnail?.url;
   const { network } = useParams();
   return (
@@ -191,7 +193,7 @@ function SingleChildAccount(props: { childAccount: FlowChildAccount }) {
             </p>
           )}
         </div>
-        <SetupDisplay address={childAccount.address} />
+        <SetupDisplay address={childAccount.address} refetch={refetch} />
       </div>
     </FatRow>
   );
@@ -694,8 +696,8 @@ function PublishToParent(props: { refetch: () => void }) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-function SetupDisplay(props: { address: string }) {
-  const { address } = props;
+function SetupDisplay(props: { address: string; refetch?: () => void }) {
+  const { address, refetch } = props;
 
   const [showOverlay, setShowOverlay] = useState(false);
   const mainInput = useRef<HTMLInputElement>(null);
@@ -739,6 +741,7 @@ function SetupDisplay(props: { address: string }) {
       );
 
       reset();
+      refetch?.();
       setShowOverlay(false);
     } catch (e) {
       console.error(e);
