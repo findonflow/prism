@@ -190,6 +190,7 @@ function SingleChildAccount(props: { childAccount: FlowChildAccount }) {
             </p>
           )}
         </div>
+        <SetupDisplay address={childAccount.address} />
       </div>
     </FatRow>
   );
@@ -302,7 +303,7 @@ function ChildAccountDetails(props: { account: FlowChildAccount }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 function AccountOwnedInfo(props: { address?: string | null }) {
   const { address } = props;
-  const { data, isPending } = useOwnedAccountInfo(address);
+  const { data, isPending, refetch } = useOwnedAccountInfo(address);
   const { network } = useParams();
 
   return (
@@ -319,7 +320,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
           <div className={"opacity-50"}>
             This account doesn't have <b>OwnedAccount</b> set up
           </div>
-          <PublishToParent />
+          <PublishToParent refetch={refetch} />
         </div>
       )}
 
@@ -341,7 +342,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
             className={"flex w-full flex-col items-start justify-start gap-2"}
           >
             <TypeH3>Parents</TypeH3>
-            <PublishToParent />
+            <PublishToParent refetch={refetch} />
             {data?.parents.length === 0 && (
               <p>This account doesn't have any parents</p>
             )}
@@ -379,7 +380,9 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                     </a>
                   </div>
 
-                  <div className={"flex flex-row items-center justify-end gap-2"}>
+                  <div
+                    className={"flex flex-row items-center justify-end gap-2"}
+                  >
                     <RemoveParent
                       address={item.address}
                       childAddress={address}
@@ -407,7 +410,9 @@ function RemoveParent(props: {
   const { user } = useLoginContext();
 
   const canRemove = user?.address === childAddress;
-  const title = canRemove ? "Remove parent link" : "You are not allowed to control this ChildAccount";
+  const title = canRemove
+    ? "Remove parent link"
+    : "You are not allowed to control this ChildAccount";
 
   const [txProgress, setTxProgress] = useState<boolean>(false);
   const [txStatus, setTxStatus] = useState<any>(null);
@@ -512,7 +517,8 @@ const schema = z.object({
     .regex(/^0x[a-fA-F0-9]{16}$/, `Invalid address`),
 });
 /*--------------------------------------------------------------------------------------------------------------------*/
-function PublishToParent() {
+function PublishToParent(props: { refetch: () => void }) {
+  const { refetch } = props;
   const [showOverlay, setShowOverlay] = useState(false);
   const mainInput = useRef<HTMLInputElement>(null);
 
@@ -554,12 +560,15 @@ function PublishToParent() {
         throw new Error("All fields are required");
       }
 
-      await publishToParent(data, {
+      const result = await publishToParent(data, {
         setInProgress: setTxProgress,
         setStatus: setTxStatus,
       });
 
+      console.log({ result });
+
       reset();
+      refetch();
     } catch (error) {
       console.error("Error submitting form:", error);
       // You can add error handling here (e.g., show toast notification)
@@ -680,5 +689,15 @@ function PublishToParent() {
         </div>
       )}
     </>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+function SetupDisplay(props: { address: string }) {
+  const { address } = props;
+  return (
+    <div>
+      <button className={cn(buttonClasses, hoverClasses)}>Setup display</button>
+    </div>
   );
 }
