@@ -6,6 +6,11 @@
         "testing": "0000000000000007"
       }
     },
+    "Burner": {
+      "aliases": {
+        "testnet": "0x9a0766d93b6608b7"
+      }
+    },
     "FungibleToken": {
       "aliases": {
         "testnet": "0x9a0766d93b6608b7",
@@ -96,6 +101,13 @@
     },
     "manager": {
       "address": "ed0f17ed584f5253",
+      "key": {
+        "type": "file",
+        "location": "manager.pkey"
+      }
+    },
+    "child": {
+      "address": "0xa6c0d4b9f2272f4f",
       "key": {
         "type": "file",
         "location": "manager.pkey"

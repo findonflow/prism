@@ -58,6 +58,7 @@ export function TypeH3(props: TextProps) {
         "text-md text-left font-bold",
         "tracking-tight text-balance", // tight interline space and balanced wrap
         "scroll-m-6", // add space when navigating to this header
+        "select-none",
         className,
       )}
     >
@@ -97,7 +98,7 @@ export function TypeTextBlock(props: TextProps) {
 export function TypeLabel(props: TextProps) {
   const { children, className } = props;
 
-  return <span className={cn("text-sm text-prism-text-muted", className)}>{children}</span>;
+  return <span className={cn("text-sm text-prism-text-muted select-none", className)}>{children}</span>;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
