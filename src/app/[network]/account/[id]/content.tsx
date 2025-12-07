@@ -27,6 +27,7 @@ import {
   claimChildAccount,
   publishToParent,
   removeParent,
+  setChildDisplay,
 } from "@/mutate/hybrid-custody";
 import { Input } from "@/components/ui/input";
 import useAccountResolver from "@/hooks/useAccountResolver";
@@ -695,9 +696,165 @@ function PublishToParent(props: { refetch: () => void }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 function SetupDisplay(props: { address: string }) {
   const { address } = props;
+
+  const [showOverlay, setShowOverlay] = useState(false);
+  const mainInput = useRef<HTMLInputElement>(null);
+
+  const [txProgress, setTxProgress] = useState<boolean>(false);
+  const [txStatus, setTxStatus] = useState<any>(null);
+
+  const displaySchema = z.object({
+    name: z.string().min(1, `name is required`),
+    description: z.string().optional(),
+    thumbnail: z.union([z.string().url(`Invalid URL`), z.literal("")]).optional(),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<z.infer<typeof displaySchema>>({
+    resolver: zodResolver(displaySchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      thumbnail: "",
+    },
+    mode: "onChange",
+  });
+
+  const onSubmit = async (data: z.infer<typeof displaySchema>) => {
+    try {
+      setTxProgress(true);
+
+      await setChildDisplay(
+        {
+          childAddress: address,
+          name: data.name,
+          description: data.description || "",
+          thumbnail: data.thumbnail || "",
+        },
+        { setInProgress: setTxProgress, setStatus: setTxStatus },
+      );
+
+      reset();
+      setShowOverlay(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setTxProgress(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showOverlay && mainInput.current) {
+      mainInput.current.focus();
+    } else if (!showOverlay) {
+      reset();
+    }
+  }, [showOverlay, reset]);
+
   return (
-    <div>
-      <button className={cn(buttonClasses, hoverClasses)}>Setup display</button>
-    </div>
+    <>
+      <div>
+        <button
+          className={cn(buttonClasses, hoverClasses)}
+          onClick={() => setShowOverlay(true)}
+        >
+          Setup display
+        </button>
+      </div>
+
+      {showOverlay && (
+        <div
+          className={cn(
+            "bg-prism-level-1/90 fixed top-0 right-0 bottom-0 left-0 z-100 backdrop-blur-xs",
+            "flex items-center justify-center",
+          )}
+        >
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={cn(
+              "bg-prism-level-2 flex w-full max-w-[360px] flex-col rounded-sm p-6 shadow-2xl",
+              "space-y-4",
+            )}
+          >
+            <TypeH3>Setup Display</TypeH3>
+
+            <div className={"flex flex-col gap-2"}>
+              <TypeLabel>Name:</TypeLabel>
+              <Input
+                {...register("name", { required: "Name is required" })}
+                className={cn(
+                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
+                  errors.name && "border-red-500",
+                )}
+                placeholder="Enter name"
+                autoComplete="off"
+              />
+              {errors.name && (
+                <p className="text-sm text-red-500">{errors.name.message as string}</p>
+              )}
+            </div>
+
+            <div className={"flex flex-col gap-2"}>
+              <TypeLabel>Description:</TypeLabel>
+              <Input
+                {...register("description")}
+                placeholder="Enter description (optional)"
+                className={cn(
+                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
+                  errors.description && "border-red-500",
+                )}
+              />
+            </div>
+
+            <div className={"flex flex-col gap-2"}>
+              <TypeLabel>Thumbnail URL:</TypeLabel>
+              <Input
+                {...register("thumbnail")}
+                placeholder="https://... (optional)"
+                className={cn(
+                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
+                  "placeholder:opacity-50",
+                  errors.thumbnail && "border-red-500",
+                )}
+              />
+              {errors.thumbnail && (
+                <p className="text-sm text-red-500">{errors.thumbnail.message as string}</p>
+              )}
+            </div>
+
+            <div
+              className={
+                "mt-6 flex w-full flex-row items-center justify-between gap-4"
+              }
+            >
+              <button
+                type="submit"
+                disabled={txProgress}
+                className={cn(
+                  buttonClasses,
+                  hoverClasses,
+                  "w-full",
+                  txProgress && "cursor-not-allowed opacity-50",
+                )}
+              >
+                {txProgress ? "Saving..." : "Save"}
+              </button>
+
+              <button
+                type={"button"}
+                className={cn(buttonClasses, hoverClasses, "w-full")}
+                onClick={() => setShowOverlay(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </>
   );
 }

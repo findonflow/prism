@@ -4,6 +4,7 @@ import { txHandler } from "@/app/[network]/account/[id]/storefront/storefront_tr
 import { mutateClaimChildAccount } from "@/mutate/mutate-claim-child-account";
 import { mutate } from "@onflow/fcl";
 import { cadenceMutatePublishToParent } from "@/mutate/cadence/cadence-mutate-publish-to-parent";
+import { cadenceMutateSetChildDisplay } from "@/mutate/cadence/cadence-mutate-set-child-display";
 import { cadenceMutateClaimChildAccount } from "@/mutate/cadence/cadence-mutate-claim-child-account";
 import { cadenceMutateRemoveParent } from "@/mutate/cadence/cadence-mutate-remove-parent";
 
@@ -88,6 +89,39 @@ export async function removeParent(
       return mutate({
         args: (arg, t) => [arg(parentAddress, t.Address)],
         cadence: cadenceMutateRemoveParent,
+        limit: 9999,
+      });
+    },
+
+    hooks.setInProgress,
+    hooks.setStatus,
+  );
+}
+
+export async function setChildDisplay(
+  params: {
+    childAddress: string;
+    name: string;
+    description: string;
+    thumbnail: string;
+  },
+  hooks: {
+    setInProgress: Dispatch<SetStateAction<boolean>>;
+    setStatus: Dispatch<SetStateAction<any>>;
+  },
+) {
+  const { childAddress, name, description, thumbnail } = params;
+
+  return txHandler(
+    () => {
+      return mutate({
+        args: (arg, t) => [
+          arg(childAddress, t.Address),
+          arg(name, t.String),
+          arg(description, t.String),
+          arg(thumbnail, t.String),
+        ],
+        cadence: cadenceMutateSetChildDisplay,
         limit: 9999,
       });
     },
