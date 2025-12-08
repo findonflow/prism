@@ -28,6 +28,7 @@ import {
   publishToParent,
   removeParent,
   setChildDisplay,
+  setOwnedDisplay,
 } from "@/mutate/hybrid-custody";
 import { Input } from "@/components/ui/input";
 import useAccountResolver from "@/hooks/useAccountResolver";
@@ -157,7 +158,10 @@ function AccountHybrid(props: { address?: string | null }) {
   );
 }
 
-function SingleChildAccount(props: { childAccount: FlowChildAccount; refetch?: () => void }) {
+function SingleChildAccount(props: {
+  childAccount: FlowChildAccount;
+  refetch?: () => void;
+}) {
   const { childAccount, refetch } = props;
   const imgSrc = childAccount?.display?.thumbnail?.url;
   const { network } = useParams();
@@ -309,6 +313,7 @@ function AccountOwnedInfo(props: { address?: string | null }) {
   const { data, isPending, refetch } = useOwnedAccountInfo(address);
   const { network } = useParams();
 
+  console.log("display", data);
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
       <TypeH3>Owned Account</TypeH3>
@@ -331,13 +336,37 @@ function AccountOwnedInfo(props: { address?: string | null }) {
         <>
           {data.owner && (
             <div className={"flex flex-row items-center justify-start gap-2"}>
-              <TypeLabel>Owned by:</TypeLabel>
-              <a
-                href={`/${network}/account/${data.owner}`}
-                className={"underline"}
-              >
-                {data.owner}
-              </a>
+
+              {data?.display && (
+                <div className={"flex flex-row items-center gap-2"}>
+                  <Image
+                    unoptimized
+                    src={data.display.thumbnail?.url}
+                    alt={data?.display?.name || ""}
+                    width={20}
+                    height={20}
+                    className={"h-auto w-12"}
+                  />
+                  <div className={"flex flex-col items-start justify-start"}>
+                    <a href={`/${network}/account/${data.owner}`}>
+                      <TypeH3 className={"underline"}>{data.owner}</TypeH3>
+                    </a>
+                    {data?.display && (
+                      <p className={"inline-flex flex-wrap gap-1 text-sm"}>
+                        <span className={"font-bold"}>{data?.display?.name}</span>
+                        <span className={"opacity-50"}>|</span>
+                        <span>{data?.display?.description}</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <SetupDisplay
+                address={data.owner}
+                type={"owned"}
+                refetch={refetch}
+              />
             </div>
           )}
 
@@ -696,19 +725,26 @@ function PublishToParent(props: { refetch: () => void }) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-function SetupDisplay(props: { address: string; refetch?: () => void }) {
+function SetupDisplay(props: {
+  address: string;
+  refetch?: () => void;
+  type?: string;
+}) {
   const { address, refetch } = props;
+  const { type = "child" } = props;
 
   const [showOverlay, setShowOverlay] = useState(false);
   const mainInput = useRef<HTMLInputElement>(null);
 
-  const [txProgress, setTxProgress] = useState<boolean>(false);
-  const [txStatus, setTxStatus] = useState<any>(null);
+  const [txProgress, setInProgress] = useState<boolean>(false);
+  const [txStatus, setStatus] = useState<any>(null);
 
   const displaySchema = z.object({
     name: z.string().min(1, `name is required`),
     description: z.string().optional(),
-    thumbnail: z.union([z.string().url(`Invalid URL`), z.literal("")]).optional(),
+    thumbnail: z
+      .union([z.string().url(`Invalid URL`), z.literal("")])
+      .optional(),
   });
 
   const {
@@ -728,17 +764,30 @@ function SetupDisplay(props: { address: string; refetch?: () => void }) {
 
   const onSubmit = async (data: z.infer<typeof displaySchema>) => {
     try {
-      setTxProgress(true);
+      setInProgress(true);
 
-      await setChildDisplay(
-        {
-          childAddress: address,
-          name: data.name,
-          description: data.description || "",
-          thumbnail: data.thumbnail || "",
-        },
-        { setInProgress: setTxProgress, setStatus: setTxStatus },
-      );
+      if (type === "child") {
+        // Set child display
+        await setChildDisplay(
+          {
+            childAddress: address,
+            name: data.name,
+            description: data.description || "",
+            thumbnail: data.thumbnail || "",
+          },
+          { setInProgress, setStatus },
+        );
+      } else {
+        // Set owned display
+        await setOwnedDisplay(
+          {
+            name: data.name,
+            description: data.description || "",
+            thumbnail: data.thumbnail || "",
+          },
+          { setInProgress, setStatus },
+        );
+      }
 
       reset();
       refetch?.();
@@ -746,7 +795,7 @@ function SetupDisplay(props: { address: string; refetch?: () => void }) {
     } catch (e) {
       console.error(e);
     } finally {
-      setTxProgress(false);
+      setInProgress(false);
     }
   };
 
@@ -797,7 +846,9 @@ function SetupDisplay(props: { address: string; refetch?: () => void }) {
                 autoComplete="off"
               />
               {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message as string}</p>
+                <p className="text-sm text-red-500">
+                  {errors.name.message as string}
+                </p>
               )}
             </div>
 
@@ -825,7 +876,9 @@ function SetupDisplay(props: { address: string; refetch?: () => void }) {
                 )}
               />
               {errors.thumbnail && (
-                <p className="text-sm text-red-500">{errors.thumbnail.message as string}</p>
+                <p className="text-sm text-red-500">
+                  {errors.thumbnail.message as string}
+                </p>
               )}
             </div>
 
