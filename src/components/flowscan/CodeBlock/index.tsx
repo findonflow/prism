@@ -41,6 +41,7 @@ interface CodeBlockProps {
   setEditorPropLift?: Dispatch<SetStateAction<any>>;
   editable?: boolean;
   newCode?: string;
+  onChange?: (value: string) => void;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -225,6 +226,7 @@ export default function CodeBlock(props: CodeBlockProps) {
             //   verticalScrollbarSize: 5,
             // },
           }}
+          onChange={(value) => props.onChange?.(value ?? "")}
           onMount={onMount}
           beforeMount={(monaco: any) => makeTheme(monaco, themeName)}
         />

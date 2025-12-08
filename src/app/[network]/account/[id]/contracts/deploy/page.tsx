@@ -2,14 +2,14 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import { TypeH1, TypeP } from "@/components/ui/typography";
 import { BigButton, hoverClasses } from "@/components/ui/button";
-import { CloudUpload, Loader2 } from "lucide-react";
+import { CloudUpload, Loader2, OctagonX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FilePicker } from "@/components/ui/file-picker";
 import CodeBlock from "@/components/flowscan/CodeBlock";
 import { useRef, useState } from "react";
-import { useParams } from "next/navigation";
 import * as fcl from "@onflow/fcl";
 import { Panel } from "@/components/ui/primitive";
+import { extractCadenceContractName } from "@/lib/cadenceContract";
 
 // Transaction to deploy a new contract
 const deployContractTransaction = `
@@ -20,11 +20,11 @@ const deployContractTransaction = `
   }
 `;
 
+// TODO: Use some regexp to catch contract declaration and extract name - we don't need full package...
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function DeployContractPage() {
-  const { network, id } = useParams();
   const [fileCode, setFileCode] = useState<string>("");
-  const [contractName, setContractName] = useState<string>("");
+  const [contractName, setContractName] = useState<string | null>(null);
   const [isDeploying, setIsDeploying] = useState<boolean>(false);
   const editorRef = useRef<any>(null);
 
@@ -41,12 +41,6 @@ export default function DeployContractPage() {
   };
 
   const handleDeploy = async () => {
-    console.log({contractName, fileCode})
-    if (!contractName) {
-      // toast.error("Please enter a contract name");
-      return;
-    }
-
     try {
       setIsDeploying(true);
 
@@ -54,7 +48,12 @@ export default function DeployContractPage() {
       const code =
         editorRef.current?.getValue() || fileCode.replace(/^\/\/.*\n/, "");
 
-      console.log({code})
+      const contractName = extractCadenceContractName(code);
+      setContractName(contractName);
+
+      if (!contractName) {
+        throw new Error("No contract name provided");
+      }
 
       // Convert code to hex
       const hexCode = Buffer.from(code).toString("hex");
@@ -95,31 +94,21 @@ export default function DeployContractPage() {
     editorRef.current = editor;
   };
 
+
+  const canUpload = Boolean(contractName);
+
   return (
     <div className={"w-full space-y-6"}>
       <Panel>
-        <TypeH1 className={"text-left"}>Deploy a new contract</TypeH1>
+        <TypeH1 className={"text-left"}>
+          Deploy a new contract: <b>{contractName}</b>
+        </TypeH1>
         <TypeP>
-          Paste or upload your contract code, enter a name, and click "Deploy"
-          to deploy it to the blockchain.
+          Paste or upload your contract code and click "Deploy" to deploy it to
+          the blockchain.
         </TypeP>
 
         <div className="space-y-4">
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <label htmlFor="contract-name">Contract Name</label>
-            <input
-              id="contract-name"
-              placeholder="MyContract"
-              value={contractName}
-              onChange={(e) => setContractName(e.target.value)}
-              className="input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md"
-            />
-            <p className="text-muted-foreground text-sm">
-              The name of your contract (must match the contract name in the
-              code)
-            </p>
-          </div>
-
           <div
             className={"flex w-full flex-row items-center justify-between pt-2"}
           >
@@ -132,10 +121,16 @@ export default function DeployContractPage() {
               className={cn(
                 "flex flex-row items-center gap-2 px-6 text-lg",
                 hoverClasses,
-                isDeploying && "cursor-not-allowed opacity-70",
+                isDeploying && "cursor-not-allowed",
+                "disabled:opacity-30",
               )}
+              title={
+                canUpload
+                  ? "Deploy contract to the chain"
+                  : "Can't upload contract: contract name is not specified"
+              }
               onClick={handleDeploy}
-              disabled={isDeploying}
+              disabled={isDeploying || !canUpload}
             >
               {isDeploying ? (
                 <>
@@ -144,7 +139,11 @@ export default function DeployContractPage() {
                 </>
               ) : (
                 <>
-                  <CloudUpload className={"h-[1.35em] w-[1.35em]"} />
+                  {canUpload ? (
+                    <CloudUpload className={"h-[1.35em] w-[1.35em]"} />
+                  ) : (
+                    <OctagonX className={"h-[1.35em] w-[1.35em]"} />
+                  )}
                   <span>Deploy</span>
                 </>
               )}
@@ -158,6 +157,10 @@ export default function DeployContractPage() {
         newCode={fileCode}
         editable={true}
         setEditorPropLift={handleEditorDidMount}
+        onChange={(v) => {
+          const name = extractCadenceContractName(v);
+          setContractName(name);
+        }}
       />
     </div>
   );
