@@ -11,7 +11,8 @@ export const buttonClasses = cn(
   "cursor-pointer"
 );
 
-export const hoverClasses = "bg-prism-primary/10 hover:bg-prism-primary/25";
+export const primaryHover = "bg-prism-primary/10 hover:bg-prism-primary/25";
+export const hoverClasses = "bg-prism-level-3 hover:bg-prism-level-4";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface ButtonProps {

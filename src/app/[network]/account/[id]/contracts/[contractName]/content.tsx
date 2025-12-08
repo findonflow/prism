@@ -55,7 +55,7 @@ export default function ContractDetailsContent(props: {
   return (
     <div className={"w-full space-y-6"}>
       <div className={"bg-prism-level-2 space-y-6 p-6 text-left"}>
-        <TypeH1 className={"text-left"}>{shortName}</TypeH1>
+        <TypeH1 className={"text-left"}>Contract: {shortName}</TypeH1>
         <TypeP>
           Paste or upload the new contract code here and click "Update" to upgrade the existing contract.
         </TypeP>
