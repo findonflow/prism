@@ -258,7 +258,7 @@ export function BasicAccountDetails(props: { address?: string | null }) {
   }
 
   return (
-    <div className={"my-4 flex w-full flex-col space-y-4 overflow-hidden"}>
+    <div className={"my-4 flex w-full flex-col space-y-4"}>
       <BalanceBlock title={"Balance"} balance={data?.balance} />
       <BalanceBlock title={"Available Balance"} balance={data?.balance} />
       <StorageBlock used={data?.storageUsed} capacity={data?.storageCapacity} />

@@ -52,8 +52,6 @@ export function TransactionSidebarDisplay(
     <ChevronRight className="h-4 w-4" />
   );
 
-  console.log({ hash,data });
-
   const isCollapsed = !isExpanded;
   const ariaLabel = `${isExpanded ? "Collapse" : "Expand"} sidebar`;
 

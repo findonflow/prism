@@ -32,6 +32,7 @@ import {
 } from "@/mutate/hybrid-custody";
 import { Input } from "@/components/ui/input";
 import useAccountResolver from "@/hooks/useAccountResolver";
+import useResolver from "@/hooks/useResolver";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function LinkedAccountsContent() {
@@ -336,7 +337,6 @@ function AccountOwnedInfo(props: { address?: string | null }) {
         <>
           {data.owner && (
             <div className={"flex flex-row items-center justify-start gap-2"}>
-
               {data?.display && (
                 <div className={"flex flex-row items-center gap-2"}>
                   <Image
@@ -353,7 +353,9 @@ function AccountOwnedInfo(props: { address?: string | null }) {
                     </a>
                     {data?.display && (
                       <p className={"inline-flex flex-wrap gap-1 text-sm"}>
-                        <span className={"font-bold"}>{data?.display?.name}</span>
+                        <span className={"font-bold"}>
+                          {data?.display?.name}
+                        </span>
                         <span className={"opacity-50"}>|</span>
                         <span>{data?.display?.description}</span>
                       </p>
@@ -550,6 +552,8 @@ const schema = z.object({
 });
 /*--------------------------------------------------------------------------------------------------------------------*/
 function PublishToParent(props: { refetch: () => void }) {
+  const { address } = useResolver();
+  const { user } = useLoginContext();
   const { refetch } = props;
   const [showOverlay, setShowOverlay] = useState(false);
   const mainInput = useRef<HTMLInputElement>(null);
@@ -559,6 +563,8 @@ function PublishToParent(props: { refetch: () => void }) {
 
   const defaultFactoryAddress = "0x1b7fa5972fcb8af5";
   const defaultFilterAddress = "0xe2664be06bb0fe62";
+
+  const canPublish = user?.address && user.address === address;
 
   const {
     register,
@@ -619,9 +625,15 @@ function PublishToParent(props: { refetch: () => void }) {
 
   return (
     <>
-      <div>
+      <div className={"mt-4"}>
         <button
-          className={cn(buttonClasses, hoverClasses)}
+          disabled={!canPublish}
+          className={cn(
+            buttonClasses,
+            hoverClasses,
+            "disabled:opacity-35",
+            canPublish ? "cursor-pointer" : "cursor-not-allowed",
+          )}
           onClick={() => setShowOverlay(true)}
         >
           Publish to Parent
