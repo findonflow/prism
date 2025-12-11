@@ -121,7 +121,7 @@ export default function DeployContractPage() {
   }, []);
 
   return (
-    <div className={"w-full space-y-6"}>
+    <div className={"w-full space-y-6 px-3"}>
       <Panel>
         <TypeH1 className={"text-left"}>
           Deploy a new contract: <b>{contractName}</b>
@@ -257,7 +257,7 @@ function DeploymentError(props: { error: any; cleanError: () => void }) {
       >
         <CircleX className={"h-5 w-5"} />
       </button>
-      <p className={"text-md whitespace-pre"}>{error.message}</p>
+      <p className={"text-md whitespace-pre"}>{error}</p>
     </div>
   );
 }
