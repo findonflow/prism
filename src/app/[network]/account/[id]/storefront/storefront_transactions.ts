@@ -4,6 +4,9 @@ import cadenceCleanupGhosted from "@/fetch/cadence/cadence-cleanup-ghosted";
 import cadenceCleanupPurchased from "@/fetch/cadence/cadence-cleanup-purchased";
 import cadenceSetupAccount from "@/fetch/cadence/cadence-setup-account";
 import * as fcl from "@onflow/fcl";
+import { toast } from "react-hot-toast";
+import { transactionStatusCallback } from "./utils";
+
 export const TxStatus = {
   // Initializing: Initialing
   // the transaction is waiting to be approved
@@ -26,6 +29,42 @@ export const TxStatus = {
 };
 
 const publicConfig: any = {};
+export function txStatusCallbackResolutionToast(
+  res: string,
+  successMessage: string,
+  errorMessage: string,
+  setIsLoading?: (loading: boolean) => void,
+) {
+  let toastId: string;
+  const toastPromise = new Promise((resolve, reject) =>
+    transactionStatusCallback(res, (status: any) => {
+      setIsLoading?.(true);
+      if (status.status === 4 && !Boolean(status.errorMessage.length)) {
+        // Transaction successful
+        resolve(successMessage);
+        setIsLoading?.(false);
+        toast.success(successMessage, {
+          id: toastId,
+        });
+      } else if (status.status === 4 && Boolean(status.errorMessage.length)) {
+        // Transaction failed
+        reject(errorMessage);
+        setIsLoading?.(false);
+        toast.error(errorMessage, {
+          id: toastId,
+        });
+      } else if (status.status >= 0) {
+        // Transaction pending or in progress
+        if (toastId)
+          toast.loading(status.statusString, {
+            id: toastId,
+          });
+        else toastId = toast.loading("LOADING");
+      }
+    }),
+  );
+  return toastPromise;
+}
 
 export const txHandler = async (
   txFunc: () => Promise<string | null>,
@@ -38,6 +77,11 @@ export const txHandler = async (
 
   try {
     transactionId = await txFunc();
+    txStatusCallbackResolutionToast(
+      transactionId || "",
+      "Transaction Submitted",
+      "Error Submitting Transaction",
+    );
     setTransactionStatus(TxStatus.pending(transactionId));
     console.log({ transactionId });
 

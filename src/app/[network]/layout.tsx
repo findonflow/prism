@@ -3,6 +3,7 @@ import { CSSProperties, Suspense } from "react";
 import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
 import QueryProvider, { FCLProvider } from "@/fetch/provider";
+import { Toaster } from "react-hot-toast";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 interface NetworkLayoutProps {
@@ -36,6 +37,7 @@ export default async function NetworkLayout(props: NetworkLayoutProps) {
           }
         >
           <Suspense>
+            <Toaster position="bottom-right" containerClassName="mb-18" />
             <QueryProvider>{children}</QueryProvider>
           </Suspense>
         </main>

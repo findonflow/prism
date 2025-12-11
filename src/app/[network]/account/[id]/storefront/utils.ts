@@ -1,9 +1,17 @@
 import { CID } from "multiformats/cid";
+import * as fcl from "@onflow/fcl";
 
 export function handleIpfs(src: string) {
   return src.startsWith("ipfs")
     ? `https://ipfs.io/ipfs/${src.split("//")[1] ? src.split("//")[1] : src}`
     : src;
+}
+
+export function transactionStatusCallback(
+  txId: string,
+  callback: (status: any) => void,
+) {
+  fcl.tx(txId).subscribe(callback);
 }
 
 export const getRarityColor = (rarity: string) => {

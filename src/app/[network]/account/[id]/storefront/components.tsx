@@ -1,6 +1,7 @@
 "use client";
 import ImageClient from "@/components/flowscan/ImageClient";
 import { fetchAPIDirect } from "@/interfaces/client";
+import { cn } from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -14,11 +15,9 @@ import {
 import {
   getCollectionStoragePath,
   getContractInfoFromTypeId,
-  getImageSrcFromMetadataViewsFile,
   getPaymentTokenSymbol,
   getRarityColor,
 } from "./utils";
-import { cn } from "@/lib/utils";
 
 export interface Listing {
   details: {
