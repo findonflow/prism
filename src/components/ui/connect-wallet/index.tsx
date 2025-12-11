@@ -151,10 +151,7 @@ function LoggedInWalletButton(props: {
               <ChevronRight className={"h-4 w-4 opacity-50"} />
             </div>
           </Link>
-          <Link
-            href={`/${network}/account/${user.address}/contracts/deploy`}
-            className=""
-          >
+          <Link href={`/${network}/deploy`} className="">
             <div
               className={cn(
                 "flex w-full flex-row items-center justify-between p-3 text-left",
