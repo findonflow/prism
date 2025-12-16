@@ -73,7 +73,17 @@ export default function TokensPageContent() {
     const emptyBalance = token?.balance && parseFloat(token?.balance) === 0;
     const matchEmpty = empty ? true : !emptyBalance;
     return matchesFilter && matchesRegistry && matchEmpty;
-  });
+  }).sort((a,b)=> {
+    const aName = a?.registryData?.name || "";
+    const aSymbol = a?.registryData?.symbol || "";
+    const aDisplayName = aName || aSymbol || a.path.split("/")[2];
+
+    const bName = b?.registryData?.name || "";
+    const bSymbol = b?.registryData?.symbol || "";
+    const bDisplayName = bName || bSymbol || b.path.split("/")[2];
+
+    return aDisplayName.toLowerCase() > bDisplayName.toLowerCase() ? 1 : -1;
+  })
 
   const items = filtered.slice(
     parseInt(offset),
