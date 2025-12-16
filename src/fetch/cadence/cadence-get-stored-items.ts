@@ -32,20 +32,22 @@ access(all) struct Item {
   access(all) let path: String
   access(all) let type: Type
   access(all) let isResource: Bool
+  access(all) let resourceData: &AnyResource?
   access(all) let isNFTCollection: Bool
   access(all) let display: CollectionDisplay?
-    access(all) let collectionData: CollectionData?
-    access(all) let tokenIDs: [UInt64]
+  access(all) let collectionData: CollectionData?
+  access(all) let tokenIDs: [UInt64]
   access(all) let isVault: Bool
   access(all) let balance: UFix64?
 
     init(address: Address, path: String, type: Type, isResource: Bool,
     isNFTCollection: Bool, display: CollectionDisplay?, collectionData: CollectionData?,
-    tokenIDs: [UInt64], isVault: Bool, balance: UFix64?) {
+    tokenIDs: [UInt64], isVault: Bool, balance: UFix64?, resourceData: &AnyResource?) {
     self.address = address
     self.path = path
     self.type = type
     self.isResource = isResource
+    self.resourceData = resourceData
     self.isNFTCollection = isNFTCollection
     self.display = display
     self.collectionData = collectionData
@@ -68,6 +70,11 @@ access(all) fun main(address: Address, pathIdentifiers: [String]): [Item] {
 
     if let type = account.storage.type(at: path) {
       let isResource = type.isSubtype(of: resourceType)
+      var resourceData: &AnyResource? = nil
+      if (isResource) {
+        resourceData = account.storage.borrow<&AnyResource>(from: path)
+      }
+      
       let isNFTCollection = type.isSubtype(of: collectionType)
       let conformedMetadataViews = type.isSubtype(of: metadataViewType)
 
@@ -125,7 +132,8 @@ access(all) fun main(address: Address, pathIdentifiers: [String]): [Item] {
         collectionData: collectionData,
         tokenIDs: tokenIDs,
         isVault: isVault,
-        balance: balance
+        balance: balance,
+        resourceData: resourceData,
     )
 
       items.append(item)
