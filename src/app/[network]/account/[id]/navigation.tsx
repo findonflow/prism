@@ -59,13 +59,13 @@ function SelectNavigation() {
   const navigationItems: Record<string, string> = {
     Collections: "collections",
     Contracts: "contracts",
-    "Linked Accounts": "",
+    Tokens: "",
     "Public Keys": "keys",
     "Public Storage": "public-storage",
     Staking: "staking",
     "Stored Items": "stored-items",
-    Tokens: "tokens",
     Storefront: "storefront",
+    "Linked Accounts": "Linked Accounts",
   };
 
   const labels = Object.keys(navigationItems);
@@ -110,16 +110,19 @@ export default function FlatAccountNavigation() {
         }
       >
         <NavigationGroup>
-          <NavigationLink to={""}>Linked Accounts</NavigationLink>
+          <NavigationLink to={""}>Tokens</NavigationLink>
+          <NavigationLink to={"collections"}>Collections</NavigationLink>
           <NavigationLink to={"staking"}>Staking</NavigationLink>
-          <NavigationLink to={"public-storage"}>Public Storage</NavigationLink>
-          <NavigationLink to={"stored-items"}>Stored Items</NavigationLink>
         </NavigationGroup>
 
         {/* Second Group*/}
         <NavigationGroup>
-          <NavigationLink to={"tokens"}>Tokens</NavigationLink>
-          <NavigationLink to={"collections"}>Collections</NavigationLink>
+          <NavigationLink to={"public-storage"}>Public Storage</NavigationLink>
+          <NavigationLink to={"stored-items"}>Stored Items</NavigationLink>
+
+          <NavigationLink to={"linked-accounts"}>
+            Linked Accounts
+          </NavigationLink>
         </NavigationGroup>
 
         {/* Third Group*/}
