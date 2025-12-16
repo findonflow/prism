@@ -314,7 +314,6 @@ function AccountOwnedInfo(props: { address?: string | null }) {
   const { data, isPending, refetch } = useOwnedAccountInfo(address);
   const { network } = useParams();
 
-  console.log("display", data);
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
       <TypeH3>Owned Account</TypeH3>
