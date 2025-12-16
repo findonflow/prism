@@ -10,7 +10,8 @@ export async function getStoredResource(
 ): Promise<FlowAccountDetails | null> {
   try {
     const cadence = cadenceGetStoredItems;
-    const cleanPath = path.startsWith("/") ? path.split("/")[2] : path;
+    const clip = "/storage/"
+    const cleanPath = path.startsWith(clip) ? path.slice(clip.length) : path;
 
     const result = await query({
       cadence,
@@ -35,6 +36,7 @@ export async function getStoredResourceNew(
   try {
     const cadence = cadenceGetStoredResource;
     const cleanPath = path.startsWith("/") ? path.split("/")[2] : path;
+
 
     return query({
       cadence,
