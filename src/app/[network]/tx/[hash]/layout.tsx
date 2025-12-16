@@ -10,7 +10,8 @@ interface TransactionProps {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function TransactionDetailsLayout(props: TransactionProps) {
+export default async function TransactionDetailsLayout(props: TransactionProps) {
+  const { hash } = await props.params;
   const { children } = props;
 
   return (
@@ -30,7 +31,7 @@ export default function TransactionDetailsLayout(props: TransactionProps) {
         }
       >
         <Suspense>
-          <TransactionSidebar />
+          <TransactionSidebar hash={hash}/>
         </Suspense>
       </aside>
 

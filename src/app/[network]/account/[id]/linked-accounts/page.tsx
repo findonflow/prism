@@ -1,12 +1,12 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import TokensPageContent from "./content";
 import PageLayout from "@/components/ui/layout";
+import LinkedAccountsContent from "./content";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function TokensPage() {
+export default function LinkedAccountsPage() {
   return (
-    <PageLayout title={"Account Tokens"}>
-      <TokensPageContent />
+    <PageLayout title={"Linked Accounts"}>
+      <LinkedAccountsContent />
     </PageLayout>
   );
 }

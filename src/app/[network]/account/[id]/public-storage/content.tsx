@@ -215,8 +215,6 @@ function PublicCapability(props: {
   const referenceKind = reference?.kind;
   const title = `Reference Kind: ${referenceKind}`;
 
-  console.log({ token });
-
   return (
     <FatRow
       key={capability.path}

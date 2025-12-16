@@ -15,7 +15,6 @@ export async function loginFlow(
   config(params);
 
   currentUser.subscribe((user: any) => {
-    console.log("Current user:", user);
     callback(user);
   });
 
@@ -25,5 +24,4 @@ export async function loginFlow(
 
 export async function logoutFlow() {
   currentUser.unauthenticate();
-  console.log("User logged out");
 }

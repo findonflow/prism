@@ -52,8 +52,6 @@ export function TransactionSidebarDisplay(
     <ChevronRight className="h-4 w-4" />
   );
 
-  console.log({ hash,data });
-
   const isCollapsed = !isExpanded;
   const ariaLabel = `${isExpanded ? "Collapse" : "Expand"} sidebar`;
 
@@ -209,7 +207,7 @@ export function TransactionSidebarDisplay(
             <div className="flex w-full flex-col items-start gap-4">
               <hr className="w-full border-gray-400/20" />
 
-              <div className="flex w-full flex-col items-start gap-1">
+              <div className="flex w-full flex-col items-start gap-1 mb-6">
                 <div className="flex w-full flex-row justify-between">
                   <TypeLabel>Gas:</TypeLabel>
                   <TagGas gas={data.gasLimit} />

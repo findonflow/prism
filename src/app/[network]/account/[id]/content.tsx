@@ -1,40 +1,27 @@
-/*--------------------------------------------------------------------------------------------------------------------*/
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import Image from "next/image";
 import { useParams } from "next/navigation";
-import { Blend, Check, MailQuestionMark, Wallet } from "lucide-react";
-import { TypeH3, TypeLabel, TypeSubsection } from "@/components/ui/typography";
-import JumpingDots, { LoadingBlock } from "@/components/flowscan/JumpingDots";
-import { useAccountCoa } from "@/hooks/useAccountCoa";
-import CopyText from "@/components/flowscan/CopyText";
-import FlowTokens from "@/components/flowscan/FlowTokens";
-import { useHybridCustody } from "@/hooks/useHybridCustody";
-import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
-import BasicAccountDetails from "@/components/ui/account-details";
-import { useOwnedAccountInfo } from "@/hooks/useOwnedAccountInfo";
-import SimpleTag from "@/components/flowscan/SimpleTag";
-import { cn } from "@/lib/utils";
-import { Entitlement } from "@/components/ui/hybrid-custody";
-import { Divider } from "@/components/ui/primitive";
-import { useLoginContext } from "@/fetch/provider";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { buttonClasses, hoverClasses } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
-import {
-  claimChildAccount,
-  publishToParent,
-  removeParent,
-  setChildDisplay,
-  setOwnedDisplay,
-} from "@/mutate/hybrid-custody";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import useAccountResolver from "@/hooks/useAccountResolver";
+import { TypeLabel } from "@/components/ui/typography";
+import { LoadingBlock } from "@/components/flowscan/JumpingDots";
+import { useTokenList, useTokenRegistry } from "@/hooks/useTokenList";
+import FatRow, { FatRowDetails } from "@/components/flowscan/FatRow";
+import Image from "next/image";
+import { VaultBalance } from "@/components/ui/tags";
+import { cn } from "@/lib/utils";
+import CopyText from "@/components/flowscan/CopyText";
+import SimpleTag from "@/components/flowscan/SimpleTag";
+import { SearchBar } from "@/components/flowscan/SearchBar";
+import Select from "@/components/flowscan/Select";
+import SimpleClientPagination from "@/components/flowscan/SimpleClientPagination";
+import useQueryParams from "@/hooks/utils/useQueryParams";
+import { variants } from "@/lib/animate";
+import { Checkbox } from "@/components/ui/checkbox";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function LinkedAccountsContent() {
+export default function TokensPageContent() {
   const { id } = useParams();
 
   const { data: resolved, isPending: isResolving } = useAccountResolver(
@@ -42,875 +29,308 @@ export default function LinkedAccountsContent() {
   );
   const address = resolved?.owner;
 
+  const { data: tokenRegistry, isPending: fetchingRegistry } =
+    useTokenRegistry();
+  const { data: list, isPending } = useTokenList(address);
+
+  const { setQueryParams, getQueryParams } = useQueryParams();
+  const [offset = "0", limit = "25", registryFilter = "All", showEmpty = "0"] =
+    getQueryParams(["offset", "limit", "registry", "showEmpty"]);
+
+  const [filter, setFilter] = useState("");
+  const [registryStatus, setRegistryStatus] = useState(registryFilter);
+  const [empty, setEmpty] = useState<boolean>(showEmpty == "1");
+
+  const isLoading = isResolving || isPending || fetchingRegistry;
+
+  const formatted =
+    list?.map((item) => {
+      const registryData = tokenRegistry
+        ? (tokenRegistry as any).tokenByPath[item.path]
+        : null;
+      return {
+        ...item,
+        registryData,
+      };
+    }) || [];
+
+  const filtered = formatted.filter((token) => {
+    const name = token?.registryData?.name || "";
+    const symbol = token?.registryData?.symbol || "";
+    const displayName = name || symbol || token.path.split("/")[2];
+
+    const matchesFilter =
+      displayName.toLowerCase().includes(filter.toLowerCase()) ||
+      token.path.toLowerCase().includes(filter.toLowerCase());
+
+    let matchesRegistry = true;
+    if (registryStatus === "Registered") {
+      matchesRegistry = Boolean(token.registryData);
+    } else if (registryStatus === "Unknown") {
+      matchesRegistry = !Boolean(token.registryData);
+    }
+
+    const emptyBalance = token?.balance && parseFloat(token?.balance) === 0;
+    const matchEmpty = empty ? true : !emptyBalance;
+    return matchesFilter && matchesRegistry && matchEmpty;
+  }).sort((a,b)=> {
+    const aName = a?.registryData?.name || "";
+    const aSymbol = a?.registryData?.symbol || "";
+    const aDisplayName = aName || aSymbol || a.path.split("/")[2];
+
+    const bName = b?.registryData?.name || "";
+    const bSymbol = b?.registryData?.symbol || "";
+    const bDisplayName = bName || bSymbol || b.path.split("/")[2];
+
+    return aDisplayName.toLowerCase() > bDisplayName.toLowerCase() ? 1 : -1;
+  })
+
+  const items = filtered.slice(
+    parseInt(offset),
+    parseInt(offset) + parseInt(limit),
+  );
+
+  const haveItemsButHidden =
+    filtered.length === 0 && Boolean(formatted) && formatted.length > 0;
+
   return (
     <div className={"flex w-full flex-col gap-4"}>
-      {isResolving && (
-        <LoadingBlock title={`Resolving address for ${id} ... `} />
-      )}
-      {address && <AccountCoa address={address} />}
-      {address && <AccountHybrid address={address} />}
-      {address && <AccountOwnedInfo address={address} />}
-    </div>
-  );
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-function AccountCoa(props: { address?: string | null }) {
-  const { address } = props;
-  const { data, isPending } = useAccountCoa(address);
-
-  const coa = data ? data[0] : null;
-  const coaBalance = data ? data[1] : null;
-  const coaPrefixed = `0x${coa}`;
-
-  return (
-    <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeH3>COA</TypeH3>
-      {isPending && <LoadingBlock title={`Loading coa for ${address} ... `} />}
-      {!coa && !isPending && (
-        <p className={"opacity-50"}>This account doesn't have COA set up</p>
-      )}
-      {coa && (
-        <>
-          <div
-            className={"flex w-full flex-row items-center justify-start gap-2"}
-          >
-            <TypeLabel>Address:</TypeLabel>
-            <p className={"truncate"}>{coaPrefixed}</p>
-            <CopyText text={coaPrefixed} className={"text-lg"} />
-          </div>
-
-          <div className={"flex flex-row gap-2"}>
-            <div className={"flex flex-row items-center gap-2"}>
-              <Wallet className={"h-5 w-5"} />
-              <TypeLabel className={"whitespace-nowrap"}>
-                COA Balance:
-              </TypeLabel>
-            </div>
-
-            <FlowTokens
-              animated
-              digits={6}
-              value={coaBalance}
-              iconClassName={"w-4 h-4"}
-              className={"w-auto"}
-            />
-          </div>
-        </>
-      )}
-      <hr className={"border-prism-border w-full"} />
-    </div>
-  );
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-function AccountHybrid(props: { address?: string | null }) {
-  const { address } = props;
-  const { data, isPending, refetch } = useHybridCustody(address);
-
-  return (
-    <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeSubsection className={"capitalize"}>Hybrid Custody</TypeSubsection>
-      <TypeH3>Manager</TypeH3>
-      {isPending && (
-        <LoadingBlock
-          title={`Loading hybrid custody info for ${address} ... `}
+      <div
+        className={
+          "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"
+        }
+      >
+        <SearchBar
+          value={filter}
+          onChange={setFilter}
+          placeholder={"Filter by name or path"}
         />
-      )}
+        <Select
+          value={registryStatus}
+          className={"min-w-[160px] max-md:grow"}
+          initialValue={"All"}
+          options={["All", "Registered", "Unknown"]}
+          onChange={(val) => {
+            setRegistryStatus(val);
+            setQueryParams({ registry: val }, { push: false });
+          }}
+        />
+        <Checkbox
+          label="Show empty"
+          checked={empty}
+          onChange={(e) => {
+            setEmpty(e.target.checked)
+            setQueryParams({
+              showEmpty: e.target.checked ? "1" : "0",
+            })
+          }}
+        />
+      </div>
 
-      {!isPending && data?.childAccounts && (
-        <TypeLabel>Child Accounts:</TypeLabel>
+      {isLoading && (
+        <LoadingBlock title={`Loading tokens for ${address}... `} />
       )}
-      {data?.childAccounts?.length === 0 && (
-        <p className={"mb-4 opacity-50"}>
-          This Manager doesn't control any <b>ChildAccounts</b>
+      {haveItemsButHidden && (
+        <p className={"text-md opacity-50"}>
+          There are {formatted.length} tokens, but all of them are hidden. Try
+          to relax filter criteria
         </p>
       )}
-      {data?.childAccounts?.map((childAccount: FlowChildAccount) => {
-        return (
-          <SingleChildAccount
-            childAccount={childAccount}
-            refetch={refetch}
-            key={childAccount.address}
-          />
-        );
-      })}
-
-      {!isPending && data?.childAccounts && (
-        <TypeLabel>Owned Accounts:</TypeLabel>
+      {filtered.length > 0 && !isLoading && (
+        <SimpleClientPagination totalItems={filtered.length} />
       )}
-      {data?.ownedAccounts?.length === 0 && (
-        <p className={"opacity-50"}>
-          This Manager doesn't control any <b>OwnedAccounts</b>
-        </p>
-      )}
-
-      {data?.ownedAccounts?.map((childAccount: FlowChildAccount) => {
-        return (
-          <SingleChildAccount
-            childAccount={childAccount}
-            refetch={refetch}
-            key={childAccount.address}
-          />
-        );
-      })}
+      <motion.div className="fat-row-column flex flex-col gap-px">
+        <AnimatePresence mode="popLayout">
+          {items.map((token) => {
+            return (
+              <motion.div
+                layout
+                variants={variants}
+                className={"w-full"}
+                exit={{ opacity: 0, height: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                key={token.path}
+              >
+                <SingleToken token={token} />
+              </motion.div>
+            );
+          })}
+          {items.length === 0 && !isLoading && (
+            <motion.div
+              layout
+              variants={variants}
+              className={"w-full"}
+              animate={{ opacity: 1, scale: 1 }}
+              key={"no-tokens-to-show"}
+            >
+              <TypeLabel className={"opacity-50"}>No tokens to show.</TypeLabel>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
 
-function SingleChildAccount(props: {
-  childAccount: FlowChildAccount;
-  refetch?: () => void;
-}) {
-  const { childAccount, refetch } = props;
-  const imgSrc = childAccount?.display?.thumbnail?.url;
-  const { network } = useParams();
+function SingleToken(props: { token: any }) {
+  const { token } = props;
+
+  const symbol = token?.registryData?.symbol || "";
+  const name = token?.registryData?.name || "";
+  const imageSrc = token?.registryData?.logoURI || "";
+  const displayName = name || symbol || token.path.split("/")[2];
+  const unknown = !(name || symbol);
+
+  const previewImage = imageSrc ? (
+    <Image
+      src={imageSrc}
+      alt={""}
+      width={20}
+      height={20}
+      unoptimized
+      className={"h-6 w-6 flex-0 rounded-full"}
+    />
+  ) : (
+    <div
+      className={
+        "bg-prism-level-2 text-prism-text-muted flex h-full w-full flex-0 flex-row items-center justify-center font-bold"
+      }
+    >
+      ?
+    </div>
+  );
+
   return (
     <FatRow
-      key={childAccount.address}
-      id={"child-account"}
-      details={<ChildAccountDetails account={childAccount} />}
+      id={"token"}
+      details={<SingleTokenDetails token={token} />}
       className={[]}
     >
-      <div
-        className={"flex w-full flex-row items-center justify-start gap-2 p-4"}
-      >
-        {imgSrc && (
-          <Image
-            unoptimized
-            src={imgSrc}
-            alt={childAccount?.display?.name || ""}
-            width={20}
-            height={20}
-            className={"h-auto w-12"}
-          />
-        )}
-        <div className={"flex flex-col items-start justify-start"}>
-          <a href={`/${network}/account/${childAccount.address}`}>
-            <TypeH3 className={"underline"}>{childAccount.address}</TypeH3>
-          </a>
-          {childAccount?.display && (
-            <p className={"inline-flex flex-wrap gap-1 text-sm"}>
-              <span className={"font-bold"}>{childAccount?.display?.name}</span>
-              <span className={"opacity-50"}>|</span>
-              <span>{childAccount?.display?.description}</span>
-            </p>
-          )}
+      <div className="flex w-full flex-row items-center justify-between gap-2 p-4">
+        <div
+          className={
+            "flex w-full flex-col flex-row items-start justify-start gap-4 lg:items-center"
+          }
+        >
+          <div
+            className={
+              "flex h-8 w-8 flex-col items-center justify-center overflow-hidden rounded-full"
+            }
+          >
+            {previewImage}
+          </div>
+
+          <div
+            className={cn(
+              "flex w-full flex-row flex-wrap items-start justify-start gap-2 truncate font-bold lg:gap-4",
+              unknown && "font-normal opacity-50",
+            )}
+          >
+            <span>{displayName}</span>
+            {token?.registryData?.tags && (
+              <div className={"flex flex-row flex-wrap gap-0 lg:gap-2"}>
+                {token?.registryData?.tags.map((tag: string) => {
+                  return (
+                    <SimpleTag
+                      label={tag}
+                      className={"text-xs text-gray-500/75"}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <VaultBalance balance={token?.balance} symbol={symbol} />
         </div>
-        <SetupDisplay address={childAccount.address} refetch={refetch} />
       </div>
     </FatRow>
   );
 }
 
-/*--------------------------------------------------------------------------------------------------------------------*/
-function ChildAccountDetails(props: { account: FlowChildAccount }) {
-  const { account } = props;
+function SingleTokenDetails(props: any) {
+  const { token } = props;
+  const { network } = useParams();
+
+  const networkPrefix = network === "testnet" ? "testnet." : "";
+  const hasRegistryName = token?.registryData?.name;
+  const hasSymbol = token?.registryData?.symbol;
+  const contractId = `A.${token?.registryData?.address.slice(2)}.${token?.registryData?.contractName}`;
+  const contractUrl = token?.registryData
+    ? `https://${networkPrefix}flowscan.io/contract/${contractId}`
+    : "";
+  const publicPathReceiver = token.registryData?.path?.receiver;
+  const publicPathBalance = token.registryData?.path?.balance;
+
+  const imageSrc = token.registryData?.logoURI || "";
 
   return (
     <FatRowDetails>
-      <div
-        className={
-          "flex flex-row flex-wrap items-center justify-start gap-2 truncate"
-        }
-      >
-        <TypeLabel>Account address:</TypeLabel>
-        <div className={"flex flex-row flex-wrap items-center gap-2"}>
-          <span className={"text-sm font-bold"}>{account.address}</span>
-          <CopyText text={account.address} />
-        </div>
-      </div>
-
-      <div className={"flex w-full flex-col items-start"}>
-        <BasicAccountDetails address={account.address || ""} />
-      </div>
-
-      {/* Supported types */}
-      <Divider />
-      <div className="flex w-full flex-col gap-2">
-        <TypeLabel>Supported Types:</TypeLabel>
-        <div className={"flex flex-col items-start gap-2"}>
-          {account.factorySupportedTypes?.map((supportedType, index) => {
-            console.log({ supportedType });
-            return (
-              <div className={"flex flex-row items-center gap-2"}>
-                {supportedType.authorization?.kind ===
-                  "EntitlementConjunctionSet" && (
-                  <div className={"flex flex-row items-center gap-2"}>
-                    {supportedType.authorization.entitlements.map(
-                      (ent: any, i: number) => {
-                        return <Entitlement entitlement={ent} />;
-                      },
-                    )}
-                  </div>
-                )}
-
-                {supportedType.type?.kind === "Intersection" && (
-                  <SimpleTag
-                    label={<Blend className={"h-4 w-4"} />}
-                    title={`Intersection: ${supportedType.type?.typeID || ""}`}
-                    className={"text-pink-400"}
-                  />
-                )}
-
-                <div className={"flex flex-row items-center gap-2"}>
-                  {supportedType.type?.types?.map(
-                    (t: any, j: number, arr: any) => {
-                      const last = j === arr.length - 1;
-                      return (
-                        <span className={"text-xs"}>
-                          {t.typeID}
-                          {last ? "" : ","}
-                        </span>
-                      );
-                    },
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <Divider />
-
-      {/* Filter Details */}
-      {account.filterDetails && (
-        <div
-          className={
-            "flex w-full flex-row flex-wrap items-center justify-start gap-2 truncate"
-          }
-        >
-          <TypeLabel>Filter Type:</TypeLabel>
-          <div className={"text-sm font-bold"}>
-            {account.filterDetails?.type?.typeID}
-          </div>
-          <CopyText text={account.filterDetails.type.typeID || ""} />
+      {imageSrc && (
+        <Image
+          src={imageSrc}
+          alt={""}
+          width={20}
+          height={20}
+          unoptimized
+          className={"h-12 w-12 rounded-full"}
+        />
+      )}
+      {hasRegistryName && (
+        <div className={"flex flex-row gap-2"}>
+          <TypeLabel>Name:</TypeLabel>
+          <span className={"text-sm font-bold"}>{token.registryData.name}</span>
         </div>
       )}
 
-      {/* Manager Filter Details */}
-      {account.managerFilterDetails && (
-        <div
-          className={
-            "flex w-full flex-row flex-wrap items-center justify-start gap-2 truncate"
-          }
-        >
-          <TypeLabel>Manager Filter Type:</TypeLabel>
+      {hasSymbol && (
+        <div className={"flex flex-row gap-2"}>
+          <TypeLabel>Symbol:</TypeLabel>
+          <span className={"text-sm font-bold"}>
+            {token.registryData.symbol}
+          </span>
+        </div>
+      )}
 
-          <div className={"text-sm font-bold"}>
-            {account.managerFilterDetails?.type?.typeID}
-          </div>
-          <CopyText text={account.filterDetails.type.typeID || ""} />
+      <hr className={"w-full border-gray-400/50"} />
+      <div className={"flex w-full flex-row items-center gap-2 truncate"}>
+        <TypeLabel>Storage path:</TypeLabel>
+        <span className={"truncate text-sm font-bold"}>{token.path}</span>
+        <CopyText text={token.path} />
+      </div>
+
+      {publicPathBalance && (
+        <div className={"flex w-full flex-row items-center gap-2 truncate"}>
+          <TypeLabel>Balance path:</TypeLabel>
+          <span className={"truncate text-sm font-bold"}>
+            {publicPathBalance}
+          </span>
+          <CopyText text={publicPathBalance} />
+        </div>
+      )}
+
+      {publicPathReceiver && (
+        <div className={"flex w-full flex-row items-center gap-2 truncate"}>
+          <TypeLabel>Receiver path:</TypeLabel>
+          <span className={"truncate text-sm font-bold"}>
+            {publicPathReceiver}
+          </span>
+          <CopyText text={publicPathReceiver} />
+        </div>
+      )}
+      <hr className={"w-full border-gray-400/50"} />
+
+      {contractUrl && (
+        <div className={"flex w-full flex-row items-center gap-2 truncate"}>
+          <TypeLabel>Contract:</TypeLabel>
+          <a
+            href={contractUrl}
+            target={"_blank"}
+            className={"truncate text-sm font-bold underline"}
+          >
+            {contractUrl}
+          </a>
         </div>
       )}
     </FatRowDetails>
-  );
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-function AccountOwnedInfo(props: { address?: string | null }) {
-  const { address } = props;
-  const { data, isPending, refetch } = useOwnedAccountInfo(address);
-  const { network } = useParams();
-
-  console.log("display", data);
-  return (
-    <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeH3>Owned Account</TypeH3>
-      {isPending && (
-        <LoadingBlock
-          title={`Loading hybrid custody info for ${address} ... `}
-        />
-      )}
-
-      {!isPending && !data?.isOwnedAccountExists && (
-        <div>
-          <div className={"opacity-50"}>
-            This account doesn't have <b>OwnedAccount</b> set up
-          </div>
-          <PublishToParent refetch={refetch} />
-        </div>
-      )}
-
-      {!isPending && data?.isOwnedAccountExists && (
-        <>
-          {data.owner && (
-            <div className={"flex flex-row items-center justify-start gap-2"}>
-
-              {data?.display && (
-                <div className={"flex flex-row items-center gap-2"}>
-                  <Image
-                    unoptimized
-                    src={data.display.thumbnail?.url}
-                    alt={data?.display?.name || ""}
-                    width={20}
-                    height={20}
-                    className={"h-auto w-12"}
-                  />
-                  <div className={"flex flex-col items-start justify-start"}>
-                    <a href={`/${network}/account/${data.owner}`}>
-                      <TypeH3 className={"underline"}>{data.owner}</TypeH3>
-                    </a>
-                    {data?.display && (
-                      <p className={"inline-flex flex-wrap gap-1 text-sm"}>
-                        <span className={"font-bold"}>{data?.display?.name}</span>
-                        <span className={"opacity-50"}>|</span>
-                        <span>{data?.display?.description}</span>
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <SetupDisplay
-                address={data.owner}
-                type={"owned"}
-                refetch={refetch}
-              />
-            </div>
-          )}
-
-          <div
-            className={"flex w-full flex-col items-start justify-start gap-2"}
-          >
-            <TypeH3>Parents</TypeH3>
-            <PublishToParent refetch={refetch} />
-            {data?.parents.length === 0 && (
-              <p>This account doesn't have any parents</p>
-            )}
-            {data.parents.map((item: FlowParentAccount) => {
-              return (
-                <div
-                  key={item.address}
-                  className={cn(
-                    "bg-prism-level-3 flex w-full flex-row items-center justify-between p-4",
-                  )}
-                >
-                  <div className="flex flex-row items-center justify-start gap-4">
-                    {item.isClaimed && (
-                      <SimpleTag
-                        label={"Claimed"}
-                        className={"text-prism-primary"}
-                        category={<Check />}
-                      />
-                    )}
-
-                    {!item.isClaimed && (
-                      <SimpleTag
-                        title={"Parent account hasn't claimed this"}
-                        label={"Not Claimed"}
-                        className={"text-prism-text-muted"}
-                        category={<MailQuestionMark />}
-                      />
-                    )}
-
-                    <a
-                      href={`/${network}/account/${item.address}`}
-                      className={"font-bold underline"}
-                    >
-                      {item.address}
-                    </a>
-                  </div>
-
-                  <div
-                    className={"flex flex-row items-center justify-end gap-2"}
-                  >
-                    <RemoveParent
-                      address={item.address}
-                      childAddress={address}
-                    />
-                    <ClaimAccount
-                      address={item.address}
-                      childAddress={address}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-function RemoveParent(props: {
-  address?: string | null;
-  childAddress?: string | null;
-}) {
-  const { address, childAddress } = props;
-  const { user } = useLoginContext();
-
-  const canRemove = user?.address === childAddress;
-  const title = canRemove
-    ? "Remove parent link"
-    : "You are not allowed to control this ChildAccount";
-
-  const [txProgress, setTxProgress] = useState<boolean>(false);
-  const [txStatus, setTxStatus] = useState<any>(null);
-
-  async function processRemove() {
-    if (!childAddress) {
-      return null;
-    }
-    const result = await removeParent(
-      { parentAddress: address },
-      { setStatus: setTxStatus, setInProgress: setTxProgress },
-    );
-  }
-
-  // TODO: Display progress and emit toast when done
-
-  return (
-    <div>
-      {!txProgress && (
-        <button
-          onClick={processRemove}
-          disabled={!canRemove}
-          className={cn(
-            buttonClasses,
-            "text-prism-text-muted",
-            "disabled:bg-prism-level-3 disabled:opacity-50",
-            canRemove && hoverClasses,
-            canRemove ? "cursor-pointer" : "cursor-not-allowed",
-          )}
-          title={title}
-        >
-          Remove parent
-        </button>
-      )}
-      {txProgress && <JumpingDots />}
-    </div>
-  );
-}
-
-function ClaimAccount(props: {
-  address?: string | null;
-  childAddress?: string | null;
-}) {
-  const { address, childAddress } = props;
-  const { user } = useLoginContext();
-
-  const canClaim = user?.address === address;
-  const title = canClaim ? "Claim" : "You can't claim this ChildAccount";
-
-  const [txProgress, setTxProgress] = useState<boolean>(false);
-  const [txStatus, setTxStatus] = useState<any>(null);
-
-  async function processClaiming() {
-    if (!childAddress) {
-      return null;
-    }
-    const result = await claimChildAccount(
-      childAddress,
-      setTxProgress,
-      setTxStatus,
-    );
-  }
-
-  // TODO: Display progress and emit toast when done
-
-  return (
-    <div>
-      {!txProgress && (
-        <button
-          onClick={processClaiming}
-          disabled={!canClaim}
-          className={cn(
-            buttonClasses,
-            "text-prism-text-muted",
-            "disabled:bg-prism-level-3 disabled:opacity-50",
-            canClaim && hoverClasses,
-            canClaim ? "cursor-pointer" : "cursor-not-allowed",
-          )}
-          title={title}
-        >
-          Claim
-        </button>
-      )}
-      {txProgress && <JumpingDots />}
-    </div>
-  );
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-const schema = z.object({
-  parentAddress: z
-    .string()
-    .min(1, `address is required`)
-    .regex(/^0x[a-fA-F0-9]{16}$/, `Invalid address`),
-  filterAddress: z
-    .string()
-    .min(1, `address is required`)
-    .regex(/^0x[a-fA-F0-9]{16}$/, `Invalid address`),
-  factoryAddress: z
-    .string()
-    .min(1, `address is required`)
-    .regex(/^0x[a-fA-F0-9]{16}$/, `Invalid address`),
-});
-/*--------------------------------------------------------------------------------------------------------------------*/
-function PublishToParent(props: { refetch: () => void }) {
-  const { refetch } = props;
-  const [showOverlay, setShowOverlay] = useState(false);
-  const mainInput = useRef<HTMLInputElement>(null);
-
-  const [txProgress, setTxProgress] = useState<boolean>(false);
-  const [txStatus, setTxStatus] = useState<any>(null);
-
-  const defaultFactoryAddress = "0x1b7fa5972fcb8af5";
-  const defaultFilterAddress = "0xe2664be06bb0fe62";
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setValue,
-  } = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      parentAddress: "",
-      filterAddress: defaultFilterAddress,
-      factoryAddress: defaultFactoryAddress,
-    },
-    mode: "onChange",
-  });
-
-  // Set default values after form initialization
-  useEffect(() => {
-    setValue("filterAddress", defaultFilterAddress);
-    setValue("factoryAddress", defaultFactoryAddress);
-  }, [setValue]);
-
-  const onSubmit = async (data: z.infer<typeof schema>) => {
-    try {
-      setTxProgress(true);
-      console.log("Submitting form with data:", data);
-
-      // Ensure all required fields are present
-      if (!data.parentAddress || !data.filterAddress || !data.factoryAddress) {
-        throw new Error("All fields are required");
-      }
-
-      const result = await publishToParent(data, {
-        setInProgress: setTxProgress,
-        setStatus: setTxStatus,
-      });
-
-      console.log({ result });
-
-      reset();
-      refetch();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      // You can add error handling here (e.g., show toast notification)
-    } finally {
-      setTxProgress(false);
-    }
-  };
-
-  useEffect(() => {
-    if (showOverlay && mainInput.current) {
-      mainInput.current.focus();
-    } else if (!showOverlay) {
-      reset();
-    }
-  }, [showOverlay, reset]);
-
-  return (
-    <>
-      <div>
-        <button
-          className={cn(buttonClasses, hoverClasses)}
-          onClick={() => setShowOverlay(true)}
-        >
-          Publish to Parent
-        </button>
-      </div>
-
-      {/* Overlay*/}
-      {showOverlay && (
-        <div
-          className={cn(
-            "bg-prism-level-1/90 fixed top-0 right-0 bottom-0 left-0 z-100 backdrop-blur-xs",
-            "flex items-center justify-center",
-          )}
-        >
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className={cn(
-              "bg-prism-level-2 flex w-full max-w-[360px] flex-col rounded-sm p-6 shadow-2xl",
-              "space-y-4",
-            )}
-          >
-            <TypeH3>Publish to Parent</TypeH3>
-
-            <div className={"flex flex-col gap-2"}>
-              <TypeLabel>Parent Address:</TypeLabel>
-              <Input
-                {...register("parentAddress", {
-                  required: "Parent address is required",
-                })}
-                className={cn(
-                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
-                  errors.parentAddress && "border-red-500",
-                )}
-                placeholder="Enter parent address"
-                autoComplete="off"
-              />
-              {errors.parentAddress && (
-                <p className="text-sm text-red-500">
-                  {errors.parentAddress.message as string}
-                </p>
-              )}
-            </div>
-
-            <div className={"flex flex-col gap-2"}>
-              <TypeLabel>Filter Address:</TypeLabel>
-              <Input
-                {...register("filterAddress")}
-                placeholder={`${defaultFilterAddress} (AllowAll)`}
-                className={cn(
-                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
-                  "placeholder:opacity-50",
-                  errors.filterAddress && "border-red-500",
-                )}
-              />
-            </div>
-
-            <div className={"flex flex-col gap-2"}>
-              <TypeLabel>Factory Address:</TypeLabel>
-              <Input
-                {...register("factoryAddress")}
-                placeholder={`${defaultFactoryAddress} (NFT + FT)`}
-                className={cn(
-                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
-                  "placeholder:opacity-50",
-                  errors.factoryAddress && "border-red-500",
-                )}
-              />
-            </div>
-
-            <div
-              className={
-                "mt-6 flex w-full flex-row items-center justify-between gap-4"
-              }
-            >
-              <button
-                type="submit"
-                disabled={txProgress}
-                className={cn(
-                  buttonClasses,
-                  hoverClasses,
-                  "w-full",
-                  txProgress && "cursor-not-allowed opacity-50",
-                )}
-              >
-                {txProgress ? "Publishing..." : "Publish"}
-              </button>
-
-              <button
-                type={"button"}
-                className={cn(buttonClasses, hoverClasses, "w-full")}
-                onClick={() => setShowOverlay(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-    </>
-  );
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-function SetupDisplay(props: {
-  address: string;
-  refetch?: () => void;
-  type?: string;
-}) {
-  const { address, refetch } = props;
-  const { type = "child" } = props;
-
-  const [showOverlay, setShowOverlay] = useState(false);
-  const mainInput = useRef<HTMLInputElement>(null);
-
-  const [txProgress, setInProgress] = useState<boolean>(false);
-  const [txStatus, setStatus] = useState<any>(null);
-
-  const displaySchema = z.object({
-    name: z.string().min(1, `name is required`),
-    description: z.string().optional(),
-    thumbnail: z
-      .union([z.string().url(`Invalid URL`), z.literal("")])
-      .optional(),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<z.infer<typeof displaySchema>>({
-    resolver: zodResolver(displaySchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      thumbnail: "",
-    },
-    mode: "onChange",
-  });
-
-  const onSubmit = async (data: z.infer<typeof displaySchema>) => {
-    try {
-      setInProgress(true);
-
-      if (type === "child") {
-        // Set child display
-        await setChildDisplay(
-          {
-            childAddress: address,
-            name: data.name,
-            description: data.description || "",
-            thumbnail: data.thumbnail || "",
-          },
-          { setInProgress, setStatus },
-        );
-      } else {
-        // Set owned display
-        await setOwnedDisplay(
-          {
-            name: data.name,
-            description: data.description || "",
-            thumbnail: data.thumbnail || "",
-          },
-          { setInProgress, setStatus },
-        );
-      }
-
-      reset();
-      refetch?.();
-      setShowOverlay(false);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setInProgress(false);
-    }
-  };
-
-  useEffect(() => {
-    if (showOverlay && mainInput.current) {
-      mainInput.current.focus();
-    } else if (!showOverlay) {
-      reset();
-    }
-  }, [showOverlay, reset]);
-
-  return (
-    <>
-      <div>
-        <button
-          className={cn(buttonClasses, hoverClasses)}
-          onClick={() => setShowOverlay(true)}
-        >
-          Setup display
-        </button>
-      </div>
-
-      {showOverlay && (
-        <div
-          className={cn(
-            "bg-prism-level-1/90 fixed top-0 right-0 bottom-0 left-0 z-100 backdrop-blur-xs",
-            "flex items-center justify-center",
-          )}
-        >
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className={cn(
-              "bg-prism-level-2 flex w-full max-w-[360px] flex-col rounded-sm p-6 shadow-2xl",
-              "space-y-4",
-            )}
-          >
-            <TypeH3>Setup Display</TypeH3>
-
-            <div className={"flex flex-col gap-2"}>
-              <TypeLabel>Name:</TypeLabel>
-              <Input
-                {...register("name", { required: "Name is required" })}
-                className={cn(
-                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
-                  errors.name && "border-red-500",
-                )}
-                placeholder="Enter name"
-                autoComplete="off"
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">
-                  {errors.name.message as string}
-                </p>
-              )}
-            </div>
-
-            <div className={"flex flex-col gap-2"}>
-              <TypeLabel>Description:</TypeLabel>
-              <Input
-                {...register("description")}
-                placeholder="Enter description (optional)"
-                className={cn(
-                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
-                  errors.description && "border-red-500",
-                )}
-              />
-            </div>
-
-            <div className={"flex flex-col gap-2"}>
-              <TypeLabel>Thumbnail URL:</TypeLabel>
-              <Input
-                {...register("thumbnail")}
-                placeholder="https://... (optional)"
-                className={cn(
-                  "input bg-prism-level-1 [&:focus]:outline-prism-text-muted max-w-md",
-                  "placeholder:opacity-50",
-                  errors.thumbnail && "border-red-500",
-                )}
-              />
-              {errors.thumbnail && (
-                <p className="text-sm text-red-500">
-                  {errors.thumbnail.message as string}
-                </p>
-              )}
-            </div>
-
-            <div
-              className={
-                "mt-6 flex w-full flex-row items-center justify-between gap-4"
-              }
-            >
-              <button
-                type="submit"
-                disabled={txProgress}
-                className={cn(
-                  buttonClasses,
-                  hoverClasses,
-                  "w-full",
-                  txProgress && "cursor-not-allowed opacity-50",
-                )}
-              >
-                {txProgress ? "Saving..." : "Save"}
-              </button>
-
-              <button
-                type={"button"}
-                className={cn(buttonClasses, hoverClasses, "w-full")}
-                onClick={() => setShowOverlay(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-    </>
   );
 }

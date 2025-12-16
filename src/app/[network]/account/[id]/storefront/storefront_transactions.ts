@@ -39,7 +39,6 @@ export const txHandler = async (
   try {
     transactionId = await txFunc();
     setTransactionStatus(TxStatus.pending(transactionId));
-    console.log({ transactionId });
 
     let res = await fcl.tx(transactionId || "").onceSealed();
     if (res.status === 4) {

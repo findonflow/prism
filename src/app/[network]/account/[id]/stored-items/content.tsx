@@ -402,7 +402,6 @@ function StorageInfoResourceDetails(props: {
   const { path, address } = props;
   const { data, isPending } = useStoredResource(address, path);
 
-  console.log("resource data", { data });
 
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
