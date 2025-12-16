@@ -402,18 +402,43 @@ function StorageInfoResourceDetails(props: {
   const { path, address } = props;
   const { data, isPending } = useStoredResource(address, path);
 
-
   return (
     <div className={"flex flex-col items-start justify-start gap-2"}>
       {isPending && <LoadingBlock title={`Loading resource data... `} />}
-      {!isPending && data && (
-        <div className={"flex w-full flex-col items-start justify-start gap-2"}>
-          <TypeLabel>Resource Details:</TypeLabel>
-          <div className={"bg-prism-level-2 w-full p-4"}>
-            <JsonView src={data} displaySize={"collapsed"} />
-          </div>
-        </div>
-      )}
+      {!isPending &&
+        data &&
+        (() => {
+          const { type, ...sansType } = data;
+          return (
+            <>
+              <div
+                className={
+                  "flex w-full flex-col items-start justify-start gap-2"
+                }
+              >
+                <TypeLabel>Resource Details:</TypeLabel>
+                <div className={"bg-prism-level-2 w-full p-4"}>
+                  <JsonView src={sansType} displaySize={"collapsed"} />
+                </div>
+              </div>
+
+              <div
+                className={
+                  "flex w-full flex-col items-start justify-start gap-2"
+                }
+              >
+                <TypeLabel>Resource Type:</TypeLabel>
+                <div className={"bg-prism-level-2 w-full p-4"}>
+                  <JsonView
+                    src={type}
+                    displaySize={"collapsed"}
+                    collapsed={false}
+                  />
+                </div>
+              </div>
+            </>
+          );
+        })()}
     </div>
   );
 }

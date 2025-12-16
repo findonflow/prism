@@ -7,7 +7,7 @@ import { cadenceGetStoredItems } from "@/fetch/cadence/cadence-get-stored-items"
 export async function getStoredResource(
   address: string,
   path: string,
-): Promise<FlowAccountDetails | null> {
+): Promise<any | null> {
   try {
     const cadence = cadenceGetStoredItems;
     const clip = "/storage/"
