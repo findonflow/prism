@@ -33,7 +33,6 @@ export default function CollectionPathContent() {
     parseInt(offset) + parseInt(limit),
   );
 
-  console.log({ collectionDetails });
 
   if (!address || !collectionName)
     return <div>Please provide a valid account identifier.</div>;
