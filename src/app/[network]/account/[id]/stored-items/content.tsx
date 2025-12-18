@@ -388,7 +388,7 @@ function StorageInfoDetails(props: {
           </div>
         </div>
 
-        <StorageInfoResourceDetails path={storageInfo.path} address={address} />
+        <StorageInfoResourceDetails path={storageInfo.path} address={address} resourceType={storageInfo.type} />
       </div>
     </FatRowDetails>
   );
@@ -398,8 +398,9 @@ function StorageInfoDetails(props: {
 function StorageInfoResourceDetails(props: {
   path: string;
   address?: string | null;
+  resourceType?: any
 }) {
-  const { path, address } = props;
+  const { path, address, resourceType } = props;
   const { data, isPending } = useStoredResource(address, path);
 
   return (
@@ -408,7 +409,6 @@ function StorageInfoResourceDetails(props: {
       {!isPending &&
         data &&
         (() => {
-          const { type, ...sansType } = data;
           return (
             <>
               <div
@@ -418,7 +418,7 @@ function StorageInfoResourceDetails(props: {
               >
                 <TypeLabel>Resource Details:</TypeLabel>
                 <div className={"bg-prism-level-2 w-full p-4"}>
-                  <JsonView src={sansType} displaySize={"collapsed"} />
+                  <JsonView src={data} displaySize={"collapsed"} />
                 </div>
               </div>
 
@@ -430,7 +430,7 @@ function StorageInfoResourceDetails(props: {
                 <TypeLabel>Resource Type:</TypeLabel>
                 <div className={"bg-prism-level-2 w-full p-4"}>
                   <JsonView
-                    src={type}
+                    src={resourceType}
                     displaySize={"collapsed"}
                     collapsed={false}
                   />
