@@ -95,7 +95,7 @@ export async function getStoredResourceLong(
     return extractedData;
   } catch (e) {
 
-    const restrictedFields = extractRestrictedFields(e);
+    const restrictedFields = extractRestrictedFields(e as string);
     const accessProtected = Array.from(new Set(restrictedFields).values());
 
     const retryExtractScript = generateCadenceScript(
