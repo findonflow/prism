@@ -43,6 +43,8 @@ export default function AccountStakingContent() {
   const stakingInfo = data?.stakingInfo;
   const showList = !isPending && Boolean(data?.stakingInfo);
 
+  console.log("stakingInfo", stakingInfo);
+
   return (
     <div className={"flex w-full flex-col items-start justify-start gap-4"}>
       <div className={"fat-row-column w-full"}>
@@ -52,7 +54,7 @@ export default function AccountStakingContent() {
           </motion.div>
         )}
 
-        {!isPending && !stakingInfo && (
+        {!isPending && (!stakingInfo || stakingInfo.delegatorInfos.length === 0) && (
           <motion.div initial={{ y: 10 }} animate={{ y: 0 }}>
             <TypeLabel className={"text-md opacity-50"}>
               This account is not currently staking any tokens.
