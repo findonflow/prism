@@ -133,7 +133,9 @@ export default function TokensPageContent() {
         <LoadingBlock title={`Loading tokens for ${address}... `} />
       )}
       {haveItemsButHidden && (
-        <p className={"text-md opacity-50"}>No results for {filter}</p>
+        <p className={"text-md opacity-50"}>
+          No results for <b>"{filter}"</b>
+        </p>
       )}
       {filtered.length > 0 && !isLoading && (
         <SimpleClientPagination totalItems={filtered.length} />

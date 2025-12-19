@@ -146,7 +146,9 @@ export default function AccountPublicStorageContent() {
         <LoadingBlock title={`Loading ${address} public items... `} />
       )}
       {haveItemsBuHidden && (
-        <p className={"text-md opacity-50"}>No results for {filter}</p>
+        <p className={"text-md opacity-50"}>
+          No results for <b>"{filter}"</b>
+        </p>
       )}
 
       {filteredList && !isLoading && (

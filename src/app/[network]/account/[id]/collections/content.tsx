@@ -87,7 +87,9 @@ export default function AccountCollectionsContent() {
 
       {isPending && <JumpingDots />}
       {haveItemsButHidden && (
-        <p className={"text-md opacity-50"}>No results for {filter}</p>
+        <p className={"text-md opacity-50"}>
+          No results for <b>"{filter}"</b>
+        </p>
       )}
       {sorted && !isPending && (
         <SimpleClientPagination totalItems={sorted?.length} />

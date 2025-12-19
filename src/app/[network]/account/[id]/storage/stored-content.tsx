@@ -154,7 +154,9 @@ export default function AccountStoredItemsContent() {
       )}
 
       {haveItemsBuHidden && (
-        <p className={"text-md opacity-50"}>No results for {filter}</p>
+        <p className={"text-md opacity-50"}>
+          No results for <b>"{filter}"</b>
+        </p>
       )}
 
       {filteredList && !isLoading && (
@@ -385,7 +387,11 @@ function StorageInfoDetails(props: {
           </div>
         </div>
 
-        <StorageInfoResourceDetails path={storageInfo.path} address={address} resourceType={storageInfo.type} />
+        <StorageInfoResourceDetails
+          path={storageInfo.path}
+          address={address}
+          resourceType={storageInfo.type}
+        />
       </div>
     </FatRowDetails>
   );
@@ -395,7 +401,7 @@ function StorageInfoDetails(props: {
 function StorageInfoResourceDetails(props: {
   path: string;
   address?: string | null;
-  resourceType?: any
+  resourceType?: any;
 }) {
   const { path, address, resourceType } = props;
   const { data, isPending } = useStoredResource(address, path);
