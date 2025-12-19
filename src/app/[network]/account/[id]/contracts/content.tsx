@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Code, ExternalLink, Globe } from "lucide-react";
+import { Code, ExternalLink, Globe, Plus } from "lucide-react";
 
 import { AnimatePresence, motion } from "motion/react";
 import CodeBlock from "@/components/flowscan/CodeBlock";
@@ -17,6 +17,9 @@ import { TypeLabel } from "@/components/ui/typography";
 import { variants } from "@/lib/animate";
 import CopyText from "@/components/flowscan/CopyText";
 import { sansPrefix } from "@onflow/fcl";
+import { useLoginContext } from "@/fetch/provider";
+import useResolver from "@/hooks/useResolver";
+import { buttonClasses, hoverClasses } from "@/components/ui/button";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountContractsContent() {
@@ -89,6 +92,36 @@ export default function AccountContractsContent() {
         </AnimatePresence>
       </motion.div>
     </div>
+  );
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+export function DeployContractButton() {
+  const { user } = useLoginContext();
+  const { address } = useResolver();
+  const { id, network } = useParams();
+
+  const href = `/${network}/account/${id}/contracts/deploy`;
+
+  const disabled = user.address !== address;
+  const title = disabled
+    ? "You can't modify the contract"
+    : "Deploy new contract";
+
+  return (
+    <Link
+      href={href}
+      title={title}
+      className={cn(
+        buttonClasses,
+        hoverClasses,
+        "text-prism-primary border-prism-primary/30 flex items-center gap-1 px-3 py-2",
+        disabled && "cursor-not-allowed opacity-50",
+      )}
+    >
+      <span>Deploy contract</span>
+      <Plus className={"h-3.5 w-3.5"} />
+    </Link>
   );
 }
 

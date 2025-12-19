@@ -44,9 +44,8 @@ export function NavigationLink(props: { to: string; children: ReactNode }) {
 /*--------------------------------------------------------------------------------------------------------------------*/
 function SelectNavigation() {
   const pathName = usePathname();
-  const params = useParams();
+  const {id, network} = useParams();
   const router = useRouter();
-  const { id, network } = params;
 
   const baseUrl = `/${network}/account/${id}/storage?domain=`;
 
