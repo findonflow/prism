@@ -14,14 +14,12 @@ import {
   TypeP,
   TypeSubsection,
 } from "@/components/ui/typography";
-import { splitCase } from "@/lib/format";
 import { LoadingBlock } from "@/components/flowscan/JumpingDots";
 import { Panel } from "@/components/ui/primitive";
 import VideoPlayer from "@/components/flowscan/VideoPlayer";
 import TokenImage from "@/components/flowscan/TokenImage";
 import { buttonClasses, hoverClasses } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowLeft, Globe } from "lucide-react";
+import { Globe } from "lucide-react";
 import { FlowtyLogo, FlowverseLogo } from "@/components/ui/icons";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -49,15 +47,6 @@ export default function SingleCollectionItemPage() {
 
   return (
     <div className={"flex flex-col items-start justify-start space-y-6"}>
-      <Link
-        href={`/${network}/account/${id}/collections/${collectionName}`}
-        className={
-          "text-prism-primary flex flex-row items-center gap-1 underline"
-        }
-      >
-        <ArrowLeft className={"h-4 w-4"} />
-        <span>Back to collection</span>
-      </Link>
       {loading && <LoadingBlock />}
       {showData && (
         <>
@@ -167,7 +156,7 @@ export default function SingleCollectionItemPage() {
                         "flex flex-row items-center gap-2 py-3 text-center",
                       )}
                     >
-                      <FlowtyLogo className={"rounded-full w-5 h-5"}/>
+                      <FlowtyLogo className={"h-5 w-5 rounded-full"} />
                       <span>Trade on Flowty</span>
                     </a>
                   </div>
