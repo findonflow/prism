@@ -21,27 +21,27 @@ export default async function NetworkLayout(props: NetworkLayoutProps) {
   } as CSSProperties;
 
   return (
-    <FCLProvider>
-      <div
-        className="grid h-full max-h-dvh min-h-dvh w-full grid-rows-[auto_1fr_auto]"
-        style={style}
-      >
-        <Suspense>
-          <Header network={network} />
-        </Suspense>
-
-        <main
-          className={
-            "flex h-full w-full flex-col items-center justify-start overflow-hidden"
-          }
+    <QueryProvider>
+      <FCLProvider>
+        <div
+          className="grid h-full max-h-dvh min-h-dvh w-full grid-rows-[auto_1fr_auto]"
+          style={style}
         >
           <Suspense>
-            <QueryProvider>{children}</QueryProvider>
+            <Header network={network} />
           </Suspense>
-        </main>
 
-        <Footer />
-      </div>
-    </FCLProvider>
+          <main
+            className={
+              "flex h-full w-full flex-col items-center justify-start overflow-hidden"
+            }
+          >
+            <Suspense>{children}</Suspense>
+          </main>
+
+          <Footer />
+        </div>
+      </FCLProvider>
+    </QueryProvider>
   );
 }
