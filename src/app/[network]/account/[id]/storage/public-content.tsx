@@ -146,10 +146,7 @@ export default function AccountPublicStorageContent() {
         <LoadingBlock title={`Loading ${address} public items... `} />
       )}
       {haveItemsBuHidden && (
-        <p className={"text-md opacity-50"}>
-          There are {data?.length} items, but all of them are hidden. Try to
-          relax filter criteria
-        </p>
+        <p className={"text-md opacity-50"}>No results for {filter}</p>
       )}
 
       {filteredList && !isLoading && (

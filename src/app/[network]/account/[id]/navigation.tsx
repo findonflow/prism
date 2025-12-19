@@ -57,15 +57,14 @@ function SelectNavigation() {
 
   // Navigation items mapping: label -> route
   const navigationItems: Record<string, string> = {
-    Collections: "collections",
-    Contracts: "contracts",
     Tokens: "",
-    "Public Keys": "keys",
-    "Public Storage": "public-storage",
+    Collections: "collections",
     Staking: "staking",
-    "Stored Items": "stored-items",
+    "Keys": "keys",
+    Contracts: "contracts",
     Storefront: "storefront",
-    "Linked Accounts": "Linked Accounts",
+    "Linked Accounts": "linked-accounts",
+    "Storage": "storage"
   };
 
   const labels = Object.keys(navigationItems);

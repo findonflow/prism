@@ -87,10 +87,7 @@ export default function AccountCollectionsContent() {
 
       {isPending && <JumpingDots />}
       {haveItemsButHidden && (
-        <p className={"text-md opacity-50"}>
-          There are {data?.length} collections, but all of them are hidden. Try
-          to relax filter criteria
-        </p>
+        <p className={"text-md opacity-50"}>No results for {filter}</p>
       )}
       {sorted && !isPending && (
         <SimpleClientPagination totalItems={sorted?.length} />
