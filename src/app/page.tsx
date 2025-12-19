@@ -31,8 +31,7 @@ export default function Home() {
                 </span>
               </TypeH1>
               <TypeP className={"text-lg text-balance"}>
-                Dissect full spectrum of blockchain data into narrow spectrum
-                you explore
+                Inspect live chain state. Deploy and update contracts directly
               </TypeP>
             </TypeTextBlock>
 
