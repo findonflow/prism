@@ -1,10 +1,18 @@
-/*--------------------------------------------------------------------------------------------------------------------*/
 "use client";
 /*--------------------------------------------------------------------------------------------------------------------*/
-import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+import AccountStoredItemsContent from "@/app/[network]/account/[id]/stored-items/content";
+import AccountPublicStorageContent from "@/app/[network]/account/[id]/public-storage/content";
+import { NavigationGroup } from "@/app/[network]/account/[id]/navigation";
 import { ReactNode } from "react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { TypeLabel } from "@/components/ui/typography";
 import Select from "@/components/flowscan/Select";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -12,19 +20,19 @@ export function NavigationLink(props: { to: string; children: ReactNode }) {
   const { to } = props;
   const { children } = props;
 
-  const pathName = usePathname();
   const params = useParams();
+  const searchParams = useSearchParams();
+  const domain = searchParams.get("domain") || "public";
   const { id, network } = params;
 
-  const baseUrl = `/${network}/account/${id}`;
-
-  const isActive = to === "" ? pathName === baseUrl : pathName.endsWith(to);
+  const href = `/${network}/account/${id}/storage?domain=${to}`;
+  const isActive = to === domain;
 
   return (
     <Link
-      href={`${baseUrl}/${to}`}
+      href={href}
       className={cn(
-        "bg-prism-level-3 hover:bg-prism-interactive/75 px-4 py-3 whitespace-nowrap",
+        "bg-prism-level-3 hover:bg-prism-interactive/75 px-4 py-2 whitespace-nowrap",
         isActive && "bg-prism-interactive hover:bg-prism-interactive",
       )}
     >
@@ -34,38 +42,18 @@ export function NavigationLink(props: { to: string; children: ReactNode }) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export function NavigationGroup(props: { children: ReactNode }) {
-  const { children } = props;
-  return (
-    <div
-      className={
-        "bg-prism-level-2 flex flex-row gap-[2px] overflow-hidden rounded-sm"
-      }
-    >
-      {children}
-    </div>
-  );
-}
-
 function SelectNavigation() {
   const pathName = usePathname();
   const params = useParams();
   const router = useRouter();
   const { id, network } = params;
 
-  const baseUrl = `/${network}/account/${id}`;
+  const baseUrl = `/${network}/account/${id}/storage?domain=`;
 
   // Navigation items mapping: label -> route
   const navigationItems: Record<string, string> = {
-    Collections: "collections",
-    Contracts: "contracts",
-    Tokens: "",
-    "Public Keys": "keys",
-    "Public Storage": "public-storage",
-    Staking: "staking",
-    "Stored Items": "stored-items",
-    Storefront: "storefront",
-    "Linked Accounts": "Linked Accounts",
+    Public: "public",
+    Storage: "storage",
   };
 
   const labels = Object.keys(navigationItems);
@@ -85,12 +73,12 @@ function SelectNavigation() {
 
   const handleChange = (label: string) => {
     const route = navigationItems[label];
-    router.push(`${baseUrl}/${route}`);
+    router.push(`${baseUrl}${route}`);
   };
 
   return (
     <Select
-      className={"mb-6 h-[3rem] w-full px-4"}
+      className={"h-[3rem] w-full px-4"}
       initialValue={getCurrentLabel()}
       options={labels}
       onChange={handleChange}
@@ -98,10 +86,19 @@ function SelectNavigation() {
   );
 }
 
-export default function FlatAccountNavigation() {
+/*--------------------------------------------------------------------------------------------------------------------*/
+export default function AccountStorageContent() {
+  const searchParams = useSearchParams();
+  const domain = searchParams.get("domain") || "public";
+
   return (
-    <div className={"w-full"}>
-      <div className={"flex lg:hidden"}>
+    <div>
+      <div
+        className={
+          "mb-6 flex w-full items-center justify-between gap-8 lg:hidden"
+        }
+      >
+        <TypeLabel>Domain:</TypeLabel>
         <SelectNavigation />
       </div>
       <div
@@ -109,19 +106,15 @@ export default function FlatAccountNavigation() {
           "mb-6 hidden flex-row flex-nowrap items-center gap-4 max-md:flex-wrap lg:flex"
         }
       >
+        <TypeLabel>Domain:</TypeLabel>
         <NavigationGroup>
-          <NavigationLink to={""}>Tokens</NavigationLink>
-          <NavigationLink to={"collections"}>Collections</NavigationLink>
-          <NavigationLink to={"staking"}>Staking</NavigationLink>
-          <NavigationLink to={"keys"}>Keys</NavigationLink>
-          <NavigationLink to={"contracts"}>Contracts</NavigationLink>
-          <NavigationLink to={"storefront"}>Storefront</NavigationLink>
-          <NavigationLink to={"linked-accounts"}>
-            Linked Accounts
-          </NavigationLink>
+          <NavigationLink to={"public"}>Public</NavigationLink>
           <NavigationLink to={"storage"}>Storage</NavigationLink>
         </NavigationGroup>
       </div>
+
+      {domain === "public" && <AccountPublicStorageContent />}
+      {domain === "storage" && <AccountStoredItemsContent />}
     </div>
   );
 }

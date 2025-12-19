@@ -92,7 +92,6 @@ export default function AccountPublicStorageContent() {
 
   return (
     <div className={"flex w-full flex-col gap-4"}>
-      <TypeLabel>Account Public Storage:</TypeLabel>
       <div
         className={
           "flex w-full flex-row items-center justify-start gap-4 max-md:flex-wrap"
@@ -189,9 +188,7 @@ export default function AccountPublicStorageContent() {
               animate={{ opacity: 1, scale: 1 }}
               key={"no-items-to-show"}
             >
-              <TypeLabel className={"opacity-50"}>
-                No items to show.
-              </TypeLabel>
+              <TypeLabel className={"opacity-50"}>No items to show.</TypeLabel>
             </motion.div>
           )}
         </AnimatePresence>
@@ -246,14 +243,18 @@ function PublicCapability(props: {
           />
 
           {referenceKind === "Intersection" && (
-            <SimpleTag label={<Blend className={"h-4 w-4"} />} title={title} className={"text-pink-400"} />
+            <SimpleTag
+              label={<Blend className={"h-4 w-4"} />}
+              title={title}
+              className={"text-pink-400"}
+            />
           )}
 
           {referenceKind === "Resource" && (
             <SimpleTag
               label={<Bolt className={"h-4 w-4"} />}
               title={title}
-              className={"text-violet-400 text-xs"}
+              className={"text-xs text-violet-400"}
             />
           )}
 
