@@ -34,12 +34,18 @@ export default function TokensPageContent() {
   const { data: list, isPending } = useTokenList(address);
 
   const { setQueryParams, getQueryParams } = useQueryParams();
-  const [offset = "0", limit = "25", registryFilter = "All", showEmpty = "0"] =
-    getQueryParams(["offset", "limit", "registry", "showEmpty"]);
+  const [
+    offset = "0",
+    limit = "25",
+    registryFilter = "All",
+    showEmpty = "0",
+    sortBy = "name",
+  ] = getQueryParams(["offset", "limit", "registry", "showEmpty", "sortBy"]);
 
   const [filter, setFilter] = useState("");
   const [registryStatus, setRegistryStatus] = useState(registryFilter);
   const [empty, setEmpty] = useState<boolean>(showEmpty == "1");
+  const [sortType, setSortBy] = useState<string>(sortBy);
 
   const isLoading = isResolving || isPending || fetchingRegistry;
 
@@ -54,36 +60,45 @@ export default function TokensPageContent() {
       };
     }) || [];
 
-  const filtered = formatted.filter((token) => {
-    const name = token?.registryData?.name || "";
-    const symbol = token?.registryData?.symbol || "";
-    const displayName = name || symbol || token.path.split("/")[2];
+  const filtered = formatted
+    .filter((token) => {
+      const name = token?.registryData?.name || "";
+      const symbol = token?.registryData?.symbol || "";
+      const displayName = name || symbol || token.path.split("/")[2];
 
-    const matchesFilter =
-      displayName.toLowerCase().includes(filter.toLowerCase()) ||
-      token.path.toLowerCase().includes(filter.toLowerCase());
+      const matchesFilter =
+        displayName.toLowerCase().includes(filter.toLowerCase()) ||
+        token.path.toLowerCase().includes(filter.toLowerCase());
 
-    let matchesRegistry = true;
-    if (registryStatus === "Registered") {
-      matchesRegistry = Boolean(token.registryData);
-    } else if (registryStatus === "Unknown") {
-      matchesRegistry = !Boolean(token.registryData);
-    }
+      let matchesRegistry = true;
+      if (registryStatus === "Registered") {
+        matchesRegistry = Boolean(token.registryData);
+      } else if (registryStatus === "Unknown") {
+        matchesRegistry = !Boolean(token.registryData);
+      }
 
-    const emptyBalance = token?.balance && parseFloat(token?.balance) === 0;
-    const matchEmpty = empty ? true : !emptyBalance;
-    return matchesFilter && matchesRegistry && matchEmpty;
-  }).sort((a,b)=> {
-    const aName = a?.registryData?.name || "";
-    const aSymbol = a?.registryData?.symbol || "";
-    const aDisplayName = aName || aSymbol || a.path.split("/")[2];
+      const emptyBalance = token?.balance && parseFloat(token?.balance) === 0;
+      const matchEmpty = empty ? true : !emptyBalance;
+      return matchesFilter && matchesRegistry && matchEmpty;
+    })
+    .sort((a, b) => {
+      if (sortType.toLowerCase() == "name") {
+        const aName = a?.registryData?.name || "";
+        const aSymbol = a?.registryData?.symbol || "";
+        const aDisplayName = aName || aSymbol || a.path.split("/")[2];
 
-    const bName = b?.registryData?.name || "";
-    const bSymbol = b?.registryData?.symbol || "";
-    const bDisplayName = bName || bSymbol || b.path.split("/")[2];
+        const bName = b?.registryData?.name || "";
+        const bSymbol = b?.registryData?.symbol || "";
+        const bDisplayName = bName || bSymbol || b.path.split("/")[2];
 
-    return aDisplayName.toLowerCase() > bDisplayName.toLowerCase() ? 1 : -1;
-  })
+        return aDisplayName.toLowerCase() > bDisplayName.toLowerCase() ? 1 : -1;
+      } else {
+        const aBalance = a?.balance || 0;
+        const bBalance = b?.balance || 0;
+
+        return bBalance - aBalance;
+      }
+    });
 
   const items = filtered.slice(
     parseInt(offset),
@@ -105,24 +120,41 @@ export default function TokensPageContent() {
           onChange={setFilter}
           placeholder={"Filter by name or path"}
         />
-        <Select
-          value={registryStatus}
-          className={"min-w-[160px] max-md:grow"}
-          initialValue={"All"}
-          options={["All", "Registered", "Unknown"]}
-          onChange={(val) => {
-            setRegistryStatus(val);
-            setQueryParams({ registry: val }, { push: false });
-          }}
-        />
+
+        <div className={"flex flex-row items-center justify-start gap-2"}>
+          <TypeLabel className={"flex-0"}>Type:</TypeLabel>
+          <Select
+            value={registryStatus}
+            className={"min-w-[160px] max-md:grow"}
+            initialValue={"All"}
+            options={["All", "Registered", "Unknown"]}
+            onChange={(val) => {
+              setRegistryStatus(val);
+              setQueryParams({ registry: val }, { push: false });
+            }}
+          />
+        </div>
+        <div className={"flex flex-row items-center justify-start gap-2"}>
+          <TypeLabel className={"flex-0 whitespace-nowrap"}>Sort By:</TypeLabel>
+          <Select
+            value={sortBy}
+            className={"min-w-[160px] max-md:grow"}
+            initialValue={`${sortBy[0].toUpperCase() + sortBy.slice(1)}`}
+            options={["Name", "Balance"]}
+            onChange={(val) => {
+              setSortBy(val.toLowerCase());
+              setQueryParams({ sortBy: val.toLowerCase() }, { push: false });
+            }}
+          />
+        </div>
         <Checkbox
           label="Show empty"
           checked={empty}
           onChange={(e) => {
-            setEmpty(e.target.checked)
+            setEmpty(e.target.checked);
             setQueryParams({
               showEmpty: e.target.checked ? "1" : "0",
-            })
+            });
           }}
         />
       </div>
@@ -132,8 +164,7 @@ export default function TokensPageContent() {
       )}
       {haveItemsButHidden && (
         <p className={"text-md opacity-50"}>
-          There are {formatted.length} tokens, but all of them are hidden. Try
-          to relax filter criteria
+          No results for <b>"{filter}"</b>
         </p>
       )}
       {filtered.length > 0 && !isLoading && (

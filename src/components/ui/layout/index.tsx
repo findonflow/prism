@@ -8,11 +8,16 @@ import { TypeSubsection } from "@/components/ui/typography";
 export default function PageLayout(props: {
   title: string;
   children: ReactNode;
+  extra?: ReactNode;
 }) {
-  const { title, children } = props;
+  const { title, children, extra } = props;
+
   return (
     <div className={"w-full space-y-4"}>
-      <TypeSubsection className={"capitalize"}>{title}</TypeSubsection>
+      <div className={"flex w-full justify-between items-center"}>
+        <TypeSubsection className={"capitalize"}>{title}</TypeSubsection>
+        {extra}
+      </div>
       <Suspense fallback={<LoadingBlock />}>{children}</Suspense>
     </div>
   );

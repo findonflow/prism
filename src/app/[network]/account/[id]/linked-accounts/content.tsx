@@ -44,7 +44,7 @@ export default function LinkedAccountsContent() {
   const address = resolved?.owner;
 
   return (
-    <div className={"flex w-full flex-col gap-4"}>
+    <div className={"flex w-full flex-col gap-6"}>
       {isResolving && (
         <LoadingBlock title={`Resolving address for ${id} ... `} />
       )}
@@ -65,42 +65,48 @@ function AccountCoa(props: { address?: string | null }) {
   const coaPrefixed = `0x${coa}`;
 
   return (
-    <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeH3>COA</TypeH3>
-      {isPending && <LoadingBlock title={`Loading coa for ${address} ... `} />}
-      {!coa && !isPending && (
-        <p className={"opacity-50"}>This account doesn't have COA set up</p>
-      )}
-      {coa && (
-        <>
-          <div
-            className={"flex w-full flex-row items-center justify-start gap-2"}
-          >
-            <TypeLabel>Address:</TypeLabel>
-            <p className={"truncate"}>{coaPrefixed}</p>
-            <CopyText text={coaPrefixed} className={"text-lg"} />
-          </div>
-
-          <div className={"flex flex-row gap-2"}>
-            <div className={"flex flex-row items-center gap-2"}>
-              <Wallet className={"h-5 w-5"} />
-              <TypeLabel className={"whitespace-nowrap"}>
-                COA Balance:
-              </TypeLabel>
+    <>
+      <div className={"flex flex-col items-start justify-start gap-2"}>
+        <TypeH3>COA</TypeH3>
+        {isPending && (
+          <LoadingBlock title={`Loading coa for ${address} ... `} />
+        )}
+        {!coa && !isPending && (
+          <p className={"opacity-50"}>This account doesn't have COA set up</p>
+        )}
+        {coa && (
+          <>
+            <div
+              className={
+                "flex w-full flex-row items-center justify-start gap-2"
+              }
+            >
+              <TypeLabel>Address:</TypeLabel>
+              <p className={"truncate"}>{coaPrefixed}</p>
+              <CopyText text={coaPrefixed} className={"text-lg"} />
             </div>
 
-            <FlowTokens
-              animated
-              digits={6}
-              value={coaBalance}
-              iconClassName={"w-4 h-4"}
-              className={"w-auto"}
-            />
-          </div>
-        </>
-      )}
+            <div className={"flex flex-row gap-2"}>
+              <div className={"flex flex-row items-center gap-2"}>
+                <Wallet className={"h-5 w-5"} />
+                <TypeLabel className={"whitespace-nowrap"}>
+                  COA Balance:
+                </TypeLabel>
+              </div>
+
+              <FlowTokens
+                animated
+                digits={6}
+                value={coaBalance}
+                iconClassName={"w-4 h-4"}
+                className={"w-auto"}
+              />
+            </div>
+          </>
+        )}
+      </div>
       <hr className={"border-prism-border w-full"} />
-    </div>
+    </>
   );
 }
 
@@ -110,52 +116,55 @@ function AccountHybrid(props: { address?: string | null }) {
   const { data, isPending, refetch } = useHybridCustody(address);
 
   return (
-    <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeSubsection className={"capitalize"}>Hybrid Custody</TypeSubsection>
-      <TypeH3>Manager</TypeH3>
-      {isPending && (
-        <LoadingBlock
-          title={`Loading hybrid custody info for ${address} ... `}
-        />
-      )}
-
-      {!isPending && data?.childAccounts && (
-        <TypeLabel>Child Accounts:</TypeLabel>
-      )}
-      {data?.childAccounts?.length === 0 && (
-        <p className={"mb-4 opacity-50"}>
-          This Manager doesn't control any <b>ChildAccounts</b>
-        </p>
-      )}
-      {data?.childAccounts?.map((childAccount: FlowChildAccount) => {
-        return (
-          <SingleChildAccount
-            childAccount={childAccount}
-            refetch={refetch}
-            key={childAccount.address}
+    <>
+      <div className={"flex flex-col items-start justify-start gap-2"}>
+        <TypeSubsection className={"capitalize"}>Hybrid Custody</TypeSubsection>
+        <TypeH3>Manager</TypeH3>
+        {isPending && (
+          <LoadingBlock
+            title={`Loading hybrid custody info for ${address} ... `}
           />
-        );
-      })}
+        )}
 
-      {!isPending && data?.childAccounts && (
-        <TypeLabel>Owned Accounts:</TypeLabel>
-      )}
-      {data?.ownedAccounts?.length === 0 && (
-        <p className={"opacity-50"}>
-          This Manager doesn't control any <b>OwnedAccounts</b>
-        </p>
-      )}
+        {!isPending && data?.childAccounts && (
+          <TypeLabel>Child Accounts:</TypeLabel>
+        )}
+        {data?.childAccounts?.length === 0 && (
+          <p className={"mb-4 opacity-50"}>
+            This Manager doesn't control any <b>ChildAccounts</b>
+          </p>
+        )}
+        {data?.childAccounts?.map((childAccount: FlowChildAccount) => {
+          return (
+            <SingleChildAccount
+              childAccount={childAccount}
+              refetch={refetch}
+              key={childAccount.address}
+            />
+          );
+        })}
 
-      {data?.ownedAccounts?.map((childAccount: FlowChildAccount) => {
-        return (
-          <SingleChildAccount
-            childAccount={childAccount}
-            refetch={refetch}
-            key={childAccount.address}
-          />
-        );
-      })}
-    </div>
+        {!isPending && data?.childAccounts && (
+          <TypeLabel>Owned Accounts:</TypeLabel>
+        )}
+        {data?.ownedAccounts?.length === 0 && (
+          <p className={"opacity-50"}>
+            This Manager doesn't control any <b>OwnedAccounts</b>
+          </p>
+        )}
+
+        {data?.ownedAccounts?.map((childAccount: FlowChildAccount) => {
+          return (
+            <SingleChildAccount
+              childAccount={childAccount}
+              refetch={refetch}
+              key={childAccount.address}
+            />
+          );
+        })}
+      </div>
+      <hr className={"border-prism-border w-full"} />
+    </>
   );
 }
 
@@ -315,123 +324,125 @@ function AccountOwnedInfo(props: { address?: string | null }) {
   const { network } = useParams();
 
   return (
-    <div className={"flex flex-col items-start justify-start gap-2"}>
-      <TypeH3>Owned Account</TypeH3>
-      {isPending && (
-        <LoadingBlock
-          title={`Loading hybrid custody info for ${address} ... `}
-        />
-      )}
+    <>
+      <div className={"flex flex-col items-start justify-start gap-2"}>
+        <TypeH3>Owned Account</TypeH3>
+        {isPending && (
+          <LoadingBlock
+            title={`Loading hybrid custody info for ${address} ... `}
+          />
+        )}
 
-      {!isPending && !data?.isOwnedAccountExists && (
-        <div>
-          <div className={"opacity-50"}>
-            This account doesn't have <b>OwnedAccount</b> set up
-          </div>
-          <PublishToParent refetch={refetch} />
-        </div>
-      )}
-
-      {!isPending && data?.isOwnedAccountExists && (
-        <>
-          {data.owner && (
-            <div className={"flex flex-row items-center justify-start gap-2"}>
-              {data?.display && (
-                <div className={"flex flex-row items-center gap-2"}>
-                  <Image
-                    unoptimized
-                    src={data.display.thumbnail?.url}
-                    alt={data?.display?.name || ""}
-                    width={20}
-                    height={20}
-                    className={"h-auto w-12"}
-                  />
-                  <div className={"flex flex-col items-start justify-start"}>
-                    <a href={`/${network}/account/${data.owner}`}>
-                      <TypeH3 className={"underline"}>{data.owner}</TypeH3>
-                    </a>
-                    {data?.display && (
-                      <p className={"inline-flex flex-wrap gap-1 text-sm"}>
-                        <span className={"font-bold"}>
-                          {data?.display?.name}
-                        </span>
-                        <span className={"opacity-50"}>|</span>
-                        <span>{data?.display?.description}</span>
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <SetupDisplay
-                address={data.owner}
-                type={"owned"}
-                refetch={refetch}
-              />
+        {!isPending && !data?.isOwnedAccountExists && (
+          <div>
+            <div className={"opacity-50"}>
+              This account doesn't have <b>OwnedAccount</b> set up
             </div>
-          )}
-
-          <div
-            className={"flex w-full flex-col items-start justify-start gap-2"}
-          >
-            <TypeH3>Parents</TypeH3>
-            <PublishToParent refetch={refetch} />
-            {data?.parents.length === 0 && (
-              <p>This account doesn't have any parents</p>
-            )}
-            {data.parents.map((item: FlowParentAccount) => {
-              return (
-                <div
-                  key={item.address}
-                  className={cn(
-                    "bg-prism-level-3 flex w-full flex-row items-center justify-between p-4",
-                  )}
-                >
-                  <div className="flex flex-row items-center justify-start gap-4">
-                    {item.isClaimed && (
-                      <SimpleTag
-                        label={"Claimed"}
-                        className={"text-prism-primary"}
-                        category={<Check />}
-                      />
-                    )}
-
-                    {!item.isClaimed && (
-                      <SimpleTag
-                        title={"Parent account hasn't claimed this"}
-                        label={"Not Claimed"}
-                        className={"text-prism-text-muted"}
-                        category={<MailQuestionMark />}
-                      />
-                    )}
-
-                    <a
-                      href={`/${network}/account/${item.address}`}
-                      className={"font-bold underline"}
-                    >
-                      {item.address}
-                    </a>
-                  </div>
-
-                  <div
-                    className={"flex flex-row items-center justify-end gap-2"}
-                  >
-                    <RemoveParent
-                      address={item.address}
-                      childAddress={address}
-                    />
-                    <ClaimAccount
-                      address={item.address}
-                      childAddress={address}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+            {/*<PublishToParent refetch={refetch} />*/}
           </div>
-        </>
-      )}
-    </div>
+        )}
+
+        {!isPending && data?.isOwnedAccountExists && (
+          <>
+            {data.owner && (
+              <div className={"flex flex-row items-center justify-start gap-2"}>
+                {data?.display && (
+                  <div className={"flex flex-row items-center gap-2"}>
+                    <Image
+                      unoptimized
+                      src={data.display.thumbnail?.url}
+                      alt={data?.display?.name || ""}
+                      width={20}
+                      height={20}
+                      className={"h-auto w-12"}
+                    />
+                    <div className={"flex flex-col items-start justify-start"}>
+                      <a href={`/${network}/account/${data.owner}`}>
+                        <TypeH3 className={"underline"}>{data.owner}</TypeH3>
+                      </a>
+                      {data?.display && (
+                        <p className={"inline-flex flex-wrap gap-1 text-sm"}>
+                          <span className={"font-bold"}>
+                            {data?.display?.name}
+                          </span>
+                          <span className={"opacity-50"}>|</span>
+                          <span>{data?.display?.description}</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <SetupDisplay
+                  address={data.owner}
+                  type={"owned"}
+                  refetch={refetch}
+                />
+              </div>
+            )}
+
+            <div
+              className={"flex w-full flex-col items-start justify-start gap-2"}
+            >
+              <TypeH3>Parents</TypeH3>
+              <PublishToParent refetch={refetch} />
+              {data?.parents.length === 0 && (
+                <p>This account doesn't have any parents</p>
+              )}
+              {data.parents.map((item: FlowParentAccount) => {
+                return (
+                  <div
+                    key={item.address}
+                    className={cn(
+                      "bg-prism-level-3 flex w-full flex-row items-center justify-between p-4",
+                    )}
+                  >
+                    <div className="flex flex-row items-center justify-start gap-4">
+                      {item.isClaimed && (
+                        <SimpleTag
+                          label={"Claimed"}
+                          className={"text-prism-primary"}
+                          category={<Check />}
+                        />
+                      )}
+
+                      {!item.isClaimed && (
+                        <SimpleTag
+                          title={"Parent account hasn't claimed this"}
+                          label={"Not Claimed"}
+                          className={"text-prism-text-muted"}
+                          category={<MailQuestionMark />}
+                        />
+                      )}
+
+                      <a
+                        href={`/${network}/account/${item.address}`}
+                        className={"font-bold underline"}
+                      >
+                        {item.address}
+                      </a>
+                    </div>
+
+                    <div
+                      className={"flex flex-row items-center justify-end gap-2"}
+                    >
+                      <RemoveParent
+                        address={item.address}
+                        childAddress={address}
+                      />
+                      <ClaimAccount
+                        address={item.address}
+                        childAddress={address}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }
 

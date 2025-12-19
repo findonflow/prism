@@ -16,7 +16,6 @@ import { TypeLabel } from "@/components/ui/typography";
 import { motion } from "motion/react";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-
 export function getRole(roleNumber: number | string) {
   const key = typeof roleNumber === "string" ? Number(roleNumber) : roleNumber;
   const roles = [
@@ -30,6 +29,7 @@ export function getRole(roleNumber: number | string) {
   return roles[key] || "Unknown";
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 export default function AccountStakingContent() {
   const { id } = useParams();
 
@@ -43,6 +43,8 @@ export default function AccountStakingContent() {
   const stakingInfo = data?.stakingInfo;
   const showList = !isPending && Boolean(data?.stakingInfo);
 
+  console.log("stakingInfo", stakingInfo);
+
   return (
     <div className={"flex w-full flex-col items-start justify-start gap-4"}>
       <div className={"fat-row-column w-full"}>
@@ -52,10 +54,10 @@ export default function AccountStakingContent() {
           </motion.div>
         )}
 
-        {!isPending && !stakingInfo && (
+        {!isPending && (!stakingInfo || stakingInfo.delegatorInfos.length === 0) && (
           <motion.div initial={{ y: 10 }} animate={{ y: 0 }}>
             <TypeLabel className={"text-md opacity-50"}>
-              This account hasn't participated in staking activity
+              This account is not currently staking any tokens.
             </TypeLabel>
           </motion.div>
         )}
@@ -160,6 +162,7 @@ export default function AccountStakingContent() {
   );
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 function DelegatorDetails(props: { delegatorInfo: DelegatorInfo }) {
   const { delegatorInfo } = props;
 
@@ -230,6 +233,7 @@ function DelegatorDetails(props: { delegatorInfo: DelegatorInfo }) {
   );
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 function NodeInfo(props: { nodeInfo: NodeInfo }) {
   const { nodeInfo } = props;
 

@@ -31,14 +31,13 @@ export default function Home() {
                 </span>
               </TypeH1>
               <TypeP className={"text-lg text-balance"}>
-                Dissect full spectrum of blockchain data into narrow spectrum
-                you explore
+                Inspect live chain state. Deploy and update contracts directly
               </TypeP>
             </TypeTextBlock>
 
             <div className={"flex flex-col space-y-6"}>
               <TypeP className={"text-md text-prism-text-muted"}>
-                Pick the network you want to work with
+                Pick the network you want to access
               </TypeP>
               <div
                 className={

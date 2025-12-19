@@ -8,6 +8,7 @@ import { Divider } from "@/components/ui/primitive";
 import { useLoginContext } from "@/fetch/provider";
 import { cn } from "@/lib/utils";
 import "./styles.css";
+import useResolver from "@/hooks/useResolver";
 
 /* --------------------------------------------------------------------------------------------- */
 export function truncateHash(hash?: string, steps: number = 4): string {
@@ -76,6 +77,7 @@ function LoggedInWalletButton(props: {
   const pathname = usePathname();
   const { className, overrideNetwork } = props;
   const { user, logoutUser } = useLoginContext();
+  const { address } = useResolver();
   const [showDropdown, setShowDropdown] = useState(false);
   const oldPathName = useRef(pathname);
   const { network = overrideNetwork || "mainnet" } = useParams() as Record<
@@ -140,7 +142,15 @@ function LoggedInWalletButton(props: {
             "connect-dropdown",
           )}
         >
-          <Link href={`/${network}/account/${user.address}`} className="">
+          <Link
+            href={`/${network}/account/${user.address}`}
+            className=""
+            onClick={() => {
+              if (address === user.address) {
+                setShowDropdown(false);
+              }
+            }}
+          >
             <div
               className={cn(
                 "flex w-full flex-row items-center justify-between p-3 text-left",
@@ -151,7 +161,7 @@ function LoggedInWalletButton(props: {
               <ChevronRight className={"h-4 w-4 opacity-50"} />
             </div>
           </Link>
-          <Link href={`/${network}/deploy`} className="">
+          <Link href={`/${network}/account/${user.address}/contracts/deploy`} className="">
             <div
               className={cn(
                 "flex w-full flex-row items-center justify-between p-3 text-left",

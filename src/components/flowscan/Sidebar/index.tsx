@@ -10,7 +10,6 @@ import CopyText from "@/components/flowscan/CopyText";
 import SimpleTag from "@/components/flowscan/SimpleTag";
 import { TagNotFound } from "@/components/ui/tags";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 /* --------------------------------------------------------------------------------------------- */
 export function SidebarHorizontalValue(props: {
@@ -55,7 +54,7 @@ export function SidebarLongId(props: {
   return (
     <div className="wrap-text flex w-full shrink flex-row gap-1">
       <CopyText className="text-prism-primary mt-px" text={text} />
-      {href ? <Link href={href} className={"underline"}>{content}</Link> : content}
+      {href ? <p className={""}>{content}</p> : content}
     </div>
   );
 }

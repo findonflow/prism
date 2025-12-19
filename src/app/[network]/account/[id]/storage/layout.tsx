@@ -1,12 +1,8 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
-import AccountStoredItemsContent from "@/app/[network]/account/[id]/stored-items/content";
 import PageLayout from "@/components/ui/layout";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-export default function AccountPublicStorage() {
-  return (
-    <PageLayout title={"Account Storage"}>
-      <AccountStoredItemsContent />
-    </PageLayout>
-  );
+export default function StorageLayout(props: { children: React.ReactNode }) {
+  const { children } = props;
+  return <PageLayout title={"Account Storage"}>{children}</PageLayout>;
 }
