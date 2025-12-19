@@ -34,12 +34,18 @@ export default function TokensPageContent() {
   const { data: list, isPending } = useTokenList(address);
 
   const { setQueryParams, getQueryParams } = useQueryParams();
-  const [offset = "0", limit = "25", registryFilter = "All", showEmpty = "0"] =
-    getQueryParams(["offset", "limit", "registry", "showEmpty"]);
+  const [
+    offset = "0",
+    limit = "25",
+    registryFilter = "All",
+    showEmpty = "0",
+    sortBy = "name",
+  ] = getQueryParams(["offset", "limit", "registry", "showEmpty", "sortBy"]);
 
   const [filter, setFilter] = useState("");
   const [registryStatus, setRegistryStatus] = useState(registryFilter);
   const [empty, setEmpty] = useState<boolean>(showEmpty == "1");
+  const [sortType, setSortBy] = useState<string>(sortBy);
 
   const isLoading = isResolving || isPending || fetchingRegistry;
 
@@ -76,15 +82,22 @@ export default function TokensPageContent() {
       return matchesFilter && matchesRegistry && matchEmpty;
     })
     .sort((a, b) => {
-      const aName = a?.registryData?.name || "";
-      const aSymbol = a?.registryData?.symbol || "";
-      const aDisplayName = aName || aSymbol || a.path.split("/")[2];
+      if (sortType.toLowerCase() == "name") {
+        const aName = a?.registryData?.name || "";
+        const aSymbol = a?.registryData?.symbol || "";
+        const aDisplayName = aName || aSymbol || a.path.split("/")[2];
 
-      const bName = b?.registryData?.name || "";
-      const bSymbol = b?.registryData?.symbol || "";
-      const bDisplayName = bName || bSymbol || b.path.split("/")[2];
+        const bName = b?.registryData?.name || "";
+        const bSymbol = b?.registryData?.symbol || "";
+        const bDisplayName = bName || bSymbol || b.path.split("/")[2];
 
-      return aDisplayName.toLowerCase() > bDisplayName.toLowerCase() ? 1 : -1;
+        return aDisplayName.toLowerCase() > bDisplayName.toLowerCase() ? 1 : -1;
+      } else {
+        const aBalance = a?.balance || 0;
+        const bBalance = b?.balance || 0;
+
+        return bBalance - aBalance;
+      }
     });
 
   const items = filtered.slice(
@@ -107,16 +120,33 @@ export default function TokensPageContent() {
           onChange={setFilter}
           placeholder={"Filter by name or path"}
         />
-        <Select
-          value={registryStatus}
-          className={"min-w-[160px] max-md:grow"}
-          initialValue={"All"}
-          options={["All", "Registered", "Unknown"]}
-          onChange={(val) => {
-            setRegistryStatus(val);
-            setQueryParams({ registry: val }, { push: false });
-          }}
-        />
+
+        <div className={"flex flex-row items-center justify-start gap-2"}>
+          <TypeLabel className={"flex-0"}>Type:</TypeLabel>
+          <Select
+            value={registryStatus}
+            className={"min-w-[160px] max-md:grow"}
+            initialValue={"All"}
+            options={["All", "Registered", "Unknown"]}
+            onChange={(val) => {
+              setRegistryStatus(val);
+              setQueryParams({ registry: val }, { push: false });
+            }}
+          />
+        </div>
+        <div className={"flex flex-row items-center justify-start gap-2"}>
+          <TypeLabel className={"flex-0 whitespace-nowrap"}>Sort By:</TypeLabel>
+          <Select
+            value={sortBy}
+            className={"min-w-[160px] max-md:grow"}
+            initialValue={`${sortBy[0].toUpperCase() + sortBy.slice(1)}`}
+            options={["Name", "Balance"]}
+            onChange={(val) => {
+              setSortBy(val.toLowerCase());
+              setQueryParams({ sortBy: val.toLowerCase() }, { push: false });
+            }}
+          />
+        </div>
         <Checkbox
           label="Show empty"
           checked={empty}
