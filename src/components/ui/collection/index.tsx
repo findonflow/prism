@@ -8,11 +8,16 @@ import { TypeH1, TypeP } from "@/components/ui/typography";
 import { Panel } from "@/components/ui/primitive";
 import { useCollectionRegistry } from "@/hooks/useCollectionDetails";
 import { ReactNode } from "react";
-import { Gamepad, Globe, Instagram, Twitter } from "lucide-react";
+import { Globe, Instagram, Twitter } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonClasses, hoverClasses } from "@/components/ui/button";
 import { withPrefix } from "@/lib/validate";
-import { FlowtyLogo, FlowverseLogo } from "@/components/ui/icons";
+import {
+  DiscordIcon,
+  FlowtyLogo,
+  FlowverseLogo,
+  TickTokIcon,
+} from "@/components/ui/icons";
 
 export function NftCard(props: { token: any }) {
   const { token } = props;
@@ -197,7 +202,8 @@ const socials: Record<string, ReactNode> = {
   instagram: <Instagram className={"h-4 w-4"} />,
   twitter: <Twitter className={"h-4 w-4"} />,
   website: <Globe className={"h-4 w-4"} />,
-  discord: <Gamepad className={"h-4 w-4"} />,
+  discord: <DiscordIcon className={"h-4 w-4"} />,
+  tiktok: <TickTokIcon className={"h-4 w-4"} />,
 };
 
 export function mapExtensions(
@@ -206,6 +212,8 @@ export function mapExtensions(
   if (!extraDetails) {
     return null;
   }
+
+  console.log({ extraDetails });
 
   return Object.entries(extraDetails).map(([key, value]) => {
     const title = key[0].toUpperCase() + key.slice(1);
