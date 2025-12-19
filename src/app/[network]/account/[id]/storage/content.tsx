@@ -6,8 +6,8 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import AccountStoredItemsContent from "@/app/[network]/account/[id]/stored-items/content";
-import AccountPublicStorageContent from "@/app/[network]/account/[id]/public-storage/content";
+import AccountStoredItemsContent from "@/app/[network]/account/[id]/storage/stored-content";
+import AccountPublicStorageContent from "@/app/[network]/account/[id]/storage/public-content";
 import { NavigationGroup } from "@/app/[network]/account/[id]/navigation";
 import { ReactNode } from "react";
 import Link from "next/link";

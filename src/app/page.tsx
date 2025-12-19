@@ -38,7 +38,7 @@ export default function Home() {
 
             <div className={"flex flex-col space-y-6"}>
               <TypeP className={"text-md text-prism-text-muted"}>
-                Pick the network you want to work with
+                Pick the network you want to access
               </TypeP>
               <div
                 className={
